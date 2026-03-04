@@ -22,17 +22,19 @@ export function Footer() {
       className="relative min-h-[220px] lg:min-h-[280px] flex flex-col lg:grid lg:grid-cols-[1fr_1.25fr] items-stretch gap-6 lg:gap-0"
       style={{ backgroundColor: "#4c4a46" }}
     >
-      {/* Left: logo — big */}
-      <div className="flex justify-center lg:justify-end items-center px-4 sm:px-6 lg:pl-8 lg:pr-4 pt-10 lg:pt-0 lg:py-14 order-1">
-        <Link href="/" className="inline-block mr-8 lg:mr-12" aria-label="Tanzania Wildmakers Safaris - Home">
-          <Image
-            src="/logo-footer.png"
-            alt="Tanzania Wildmakers Safaris"
-            width={280}
-            height={80}
-            className="h-16 sm:h-20 lg:h-24 w-auto object-contain object-left"
-          />
-        </Link>
+      {/* Left: logo in its own container, aligned left */}
+      <div className="flex justify-center lg:justify-start items-center pt-10 lg:pt-0 lg:py-14 order-1 pl-4 sm:pl-6 lg:pl-8 lg:pr-4">
+        <div className="footer-logo-container w-fit max-w-[280px] lg:max-w-none ml-6 lg:ml-20 pr-6 sm:pr-8 lg:pr-10 xl:pr-12">
+          <Link href="/" className="block" aria-label="Tanzania Wildmakers Safaris - Home">
+            <Image
+              src="/logo-footer.png"
+              alt="Tanzania Wildmakers Safaris"
+              width={280}
+              height={80}
+              className="h-16 sm:h-20 lg:h-24 w-auto object-contain object-left"
+            />
+          </Link>
+        </div>
       </div>
 
       {/* Right: footer image — larger */}
