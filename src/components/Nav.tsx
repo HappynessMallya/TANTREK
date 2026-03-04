@@ -5,17 +5,32 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { circuits, getDestinationsByCircuit } from "@/data/destinations";
+import type { Circuit } from "@/data/destinations";
 
-const navLinks = [
+const circuitOrder: Circuit[] = ["northern", "southern", "western"];
+
+const destinationNavGroups = circuitOrder.map((circuitKey) => {
+  const circuit = circuits[circuitKey];
+  const parks = getDestinationsByCircuit(circuitKey);
+  return {
+    circuitLabel: circuit.name,
+    circuitHref: `/destinations/${circuit.slug}`,
+    parks: parks.map((p) => ({ label: p.name, href: `/destinations/${p.slug}` })),
+  };
+});
+
+type NavLinkItem =
+  | { href: string; label: string }
+  | { label: string; isDestinations: true }
+  | { label: string; children: { href: string; label: string }[] };
+
+const navLinks: NavLinkItem[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   {
     label: "Destinations",
-    children: [
-      { href: "/destinations/northern", label: "Northern Circuit" },
-      { href: "/destinations/southern", label: "Southern Circuit" },
-      { href: "/destinations/western", label: "Western Circuit" },
-    ],
+    isDestinations: true,
   },
   {
     label: "Experiences",
@@ -89,23 +104,53 @@ export function Nav() {
                     </svg>
                   </button>
                   <AnimatePresence>
-                    {openDropdown === item.label && item.children && (
+                    {openDropdown === item.label && (
                       <motion.div
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        className="absolute top-full left-0 pt-2 min-w-[200px]"
+                        className="absolute top-full left-0 pt-2 min-w-[520px]"
                       >
-                        <div className="glass-card rounded-lg py-2 shadow-xl">
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              className="block px-4 py-2 text-sm text-safari-sand-light hover:bg-white/5 hover:text-safari-gold-light"
-                            >
-                              {child.label}
-                            </Link>
-                          ))}
+                        <div className="glass-card rounded-lg py-3 px-3 shadow-xl max-h-[70vh] overflow-y-auto">
+                          {"isDestinations" in item && item.isDestinations
+                            ? (
+                                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                                  {destinationNavGroups.map((group) => (
+                                    <div key={group.circuitHref} className="min-w-0">
+                                      <Link
+                                        href={group.circuitHref}
+                                        className="block px-2 pt-1 pb-0.5 text-sm font-medium text-safari-gold-light hover:bg-white/5 rounded"
+                                      >
+                                        {group.circuitLabel}
+                                      </Link>
+                                      <p className="px-2 pb-1 text-xs text-safari-sand-muted/90 uppercase tracking-wider">
+                                        Parks in this circuit
+                                      </p>
+                                      <ul className="list-disc list-inside px-2 pb-2 space-y-0.5 text-safari-sand-light/90 text-sm">
+                                        {group.parks.map((park) => (
+                                          <li key={park.href}>
+                                            <Link
+                                              href={park.href}
+                                              className="hover:text-safari-gold-light hover:underline transition-colors"
+                                            >
+                                              {park.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  ))}
+                                </div>
+                              )
+                            : "children" in item && item.children?.map((child: { href: string; label: string }) => (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  className="block px-4 py-2 text-sm text-safari-sand-light hover:bg-white/5 hover:text-safari-gold-light"
+                                >
+                                  {child.label}
+                                </Link>
+                              ))}
                         </div>
                       </motion.div>
                     )}
@@ -113,14 +158,6 @@ export function Nav() {
                 </div>
               )
             )}
-            <a
-              href="https://wa.me/255762111315"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-safari-gold hover:underline"
-            >
-              WhatsApp
-            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -168,27 +205,47 @@ export function Nav() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </span>
-                      {item.children?.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          onClick={() => setMobileOpen(false)}
-                          className="block pl-8 py-2 text-safari-sand-light hover:bg-white/5"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                      {"isDestinations" in item && item.isDestinations
+                        ? destinationNavGroups.map((group) => (
+                            <div key={group.circuitHref} className="mt-2 pl-8">
+                              <Link
+                                href={group.circuitHref}
+                                onClick={() => setMobileOpen(false)}
+                                className="block py-1.5 text-safari-gold-light hover:bg-white/5 font-medium"
+                              >
+                                {group.circuitLabel}
+                              </Link>
+                              <p className="text-xs text-safari-sand-muted/90 uppercase tracking-wider py-0.5">
+                                Parks in this circuit
+                              </p>
+                              <ul className="list-disc list-inside space-y-0.5 text-safari-sand-light text-sm">
+                                {group.parks.map((park) => (
+                                  <li key={park.href}>
+                                    <Link
+                                      href={park.href}
+                                      onClick={() => setMobileOpen(false)}
+                                      className="hover:text-safari-gold-light hover:underline"
+                                    >
+                                      {park.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))
+                        : "children" in item && item.children?.map((child: { href: string; label: string }) => (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => setMobileOpen(false)}
+                              className="block pl-8 py-2 text-safari-sand-light hover:bg-white/5"
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
                     </div>
                   )
                 )}
-                <a
-                  href="https://wa.me/255762111315"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 text-safari-gold"
-                >
-                  WhatsApp
-                </a>
               </div>
             </motion.div>
           )}
