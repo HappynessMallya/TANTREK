@@ -44,9 +44,9 @@ export function Nav() {
             <Image
               src="/logo.png"
               alt="Tanzania Wildmakers Safaris"
-              width={180}
-              height={48}
-              className="h-10 w-auto lg:h-12 object-contain object-left"
+              width={260}
+              height={72}
+              className="h-14 w-auto lg:h-16 object-contain object-left"
               priority
             />
           </Link>
