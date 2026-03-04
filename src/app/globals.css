@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --safari-green: #2c5c44;
+  --safari-green-dark: #1e4030;
+  --safari-gold: #c4a967;
+  --safari-gold-light: #e1d3b4;
+  --safari-sand: #66532c;
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-safari-green-dark text-safari-cream font-body antialiased;
+}
+
+/* Dust particle background layer — gold #c4a967 */
+.dust-layer {
+  background-image: radial-gradient(
+      2px 2px at 20px 30px,
+      rgba(196, 169, 103, 0.35),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 40px 70px,
+      rgba(225, 211, 180, 0.25),
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 50px 160px,
+      rgba(102, 83, 44, 0.2),
+      transparent
+    );
+  background-size: 200px 200px;
+  animation: dustFloat 25s linear infinite;
+}
+
+@keyframes dustFloat {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50px, -100px);
+  }
+}
+
+/* Glass card base */
+.glass-card {
+  @apply bg-glass-light border border-glass-border backdrop-blur-md;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-safari-gold/30 text-safari-green;
+}

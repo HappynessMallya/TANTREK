@@ -1,0 +1,15 @@
+skills:
+  - Luxury travel website architecture
+  - Advanced SEO strategy
+  - Safari tourism marketing
+  - UX for high-net-worth travelers
+  - Conversion optimization
+  - Schema markup implementation
+  - Cinematic UI design
+  - Glassmorphism interface
+  - Server-side rendering (Next.js)
+  - Image performance optimization
+  - Structured content hierarchy
+  - Travel destination storytelling
+  - Multi-page SEO structuring
+  - Safari content keyword research

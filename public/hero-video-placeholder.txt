@@ -1,0 +1,11 @@
+Replace this file with your hero video: hero-safari.mp4
+
+Recommended: 8–12 second ultra-HD slow-motion drone footage
+- Elephant herd at sunrise (Julius Nyerere or Ruaha)
+- Golden light, dust particles, minimal motion
+- Format: MP4 (H.264), 1920x1080 or 4K
+
+Then in src/app/page.tsx you can switch the hero background from the static image to:
+<video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-90">
+  <source src="/hero-safari.mp4" type="video/mp4" />
+</video>
