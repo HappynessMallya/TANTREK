@@ -143,7 +143,7 @@ export function PlanYourSafariForm() {
                 >
                   {field.label}
                 </label>
-                {field.type === "select" && (
+                {field.type === "select" && "options" in field && (
                   <select
                     id={field.name}
                     value={(form[field.name] as string) || ""}
@@ -151,16 +151,16 @@ export function PlanYourSafariForm() {
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-safari-cream focus:border-safari-gold focus:ring-1 focus:ring-safari-gold outline-none"
                   >
                     <option value="">Select...</option>
-                    {field.options?.map((opt) => (
+                    {field.options.map((opt) => (
                       <option key={opt} value={opt}>
                         {opt}
                       </option>
                     ))}
                   </select>
                 )}
-                {field.type === "multiselect" && (
+                {field.type === "multiselect" && "options" in field && (
                   <div className="flex flex-wrap gap-2">
-                    {field.options?.map((opt) => {
+                    {field.options.map((opt) => {
                       const arr = (form[field.name] as string[]) || [];
                       const checked = arr.includes(opt);
                       return (
