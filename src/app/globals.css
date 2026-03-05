@@ -10,6 +10,19 @@
   --safari-sand: #66532c;
   --glass-bg: rgba(255, 255, 255, 0.06);
   --glass-border: rgba(255, 255, 255, 0.12);
+  /* Luxury palette */
+  --luxury-gold: #D4AF37;
+  --luxury-gold-hover: #E6C96A;
+  --champagne: #F6F3EB;
+  --safari-sand-warm: #F4EFE6;
+  --dark-emerald: #081f1a;
+  --jungle-from: #0c2f28;
+  --jungle-to: #0f3f33;
+  --map-from: #0f3a31;
+  --map-to: #0b2923;
+  --experiences-from: #0b2d26;
+  --experiences-to: #051a16;
+  --overlay-dark: rgba(5, 20, 15, 0.75);
 }
 
 html {
@@ -106,45 +119,195 @@ body {
   border: 1px solid rgba(196, 169, 103, 0.2);
 }
 
-/* Homepage section backgrounds — distinct, luxurious */
+/* Luxury texture overlays — 3–5% opacity */
+.texture-linen {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+}
+.texture-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+.luxury-dust-overlay {
+  background-image: radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.25), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(212, 175, 55, 0.2), transparent),
+    radial-gradient(2px 2px at 50px 160px, rgba(212, 175, 55, 0.15), transparent);
+  background-size: 200px 200px;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  animation: dustFloat 25s linear infinite;
+}
+.luxury-dust-float {
+  opacity: 0.02;
+  pointer-events: none;
+}
+
+/* Gold accent line — under headings */
+.luxury-gold-line {
+  height: 2px;
+  width: 80px;
+  background: var(--luxury-gold);
+}
+.luxury-gold-line-wide {
+  height: 2px;
+  width: 120px;
+  background: var(--luxury-gold);
+}
+
+/* Homepage section backgrounds — luxury principles */
 .section-bg-press {
-  background: linear-gradient(90deg, rgba(30, 64, 48, 0.97) 0%, rgba(44, 92, 68, 0.25) 50%, rgba(30, 64, 48, 0.97) 100%);
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03);
+  background: var(--champagne);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
 }
+.section-bg-press .press-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+
 .section-bg-sanctuaries {
-  background-color: #1a3828;
-  background-image: radial-gradient(ellipse 80% 60% at 85% 100%, rgba(196, 169, 103, 0.08) 0%, transparent 55%);
+  background: linear-gradient(180deg, var(--jungle-from) 0%, var(--jungle-to) 100%);
 }
+.section-bg-sanctuaries .sanctuaries-dust {
+  background-image: radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(212, 175, 55, 0.25), transparent);
+  background-size: 200px 200px;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  animation: dustFloat 25s linear infinite;
+}
+
 .section-bg-distinction {
-  background-color: #1e4030;
-  background-image: radial-gradient(circle at 2px 2px, rgba(196, 169, 103, 0.04) 1px, transparent 0);
+  background: var(--dark-emerald);
+  background-image: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.12), transparent 60%);
+}
+.section-bg-distinction .distinction-texture {
+  background-image: radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.04) 1px, transparent 0);
   background-size: 32px 32px;
+  opacity: 0.6;
 }
+.luxury-pillar-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.luxury-pillar-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
 .section-bg-our-story {
-  background-color: #1e4030;
-  background-image: linear-gradient(180deg, rgba(196, 169, 103, 0.03) 0%, transparent 30%, transparent 70%, rgba(30, 64, 48, 0.4) 100%);
+  /* Background image + overlay applied in JSX */
+  background-color: var(--dark-emerald);
 }
+.section-bg-our-story .our-story-overlay {
+  background: linear-gradient(var(--overlay-dark), var(--overlay-dark));
+}
+
 .section-bg-testimonials {
-  background-color: #182e24;
-  background-image: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(196, 169, 103, 0.07) 0%, transparent 65%);
+  background: var(--safari-sand-warm);
 }
+.section-bg-testimonials .testimonials-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+.luxury-testimonial-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.35s ease;
+}
+.luxury-testimonial-card:hover {
+  transform: scale(1.03);
+}
+
 .section-bg-where-we-go {
-  background-color: #1e4030;
-  background-image:
-    radial-gradient(ellipse 70% 50% at 80% 10%, rgba(196, 169, 103, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 10% 95%, rgba(196, 169, 103, 0.05) 0%, transparent 45%);
+  background: linear-gradient(180deg, var(--map-from) 0%, var(--map-to) 100%);
 }
+.section-bg-where-we-go .where-we-go-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+.luxury-circuit-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+.luxury-circuit-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+  z-index: 0;
+}
+.luxury-circuit-card:hover {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
 .section-bg-experiences {
-  background-color: #1a3528;
-  background-image:
-    radial-gradient(ellipse 120% 40% at 50% 100%, rgba(196, 169, 103, 0.06) 0%, transparent 55%),
-    linear-gradient(180deg, #1a3528 0%, #1e4030 50%, #1e4030 100%);
+  background: linear-gradient(180deg, var(--experiences-from) 0%, var(--experiences-to) 100%);
+  background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.12), transparent 70%),
+    linear-gradient(180deg, var(--experiences-from) 0%, var(--experiences-to) 100%);
 }
+.luxury-experience-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
+}
+
 .section-bg-frontier {
-  background-color: #1e4030;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(196, 169, 103, 0.06) 0%, transparent 60%),
-    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+  background-color: #0b1f1a;
+}
+.section-bg-frontier .frontier-overlay {
+  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65));
+}
+.luxury-cta-frontier {
+  background: var(--luxury-gold);
+  color: #0B1F1A;
+  border-radius: 40px;
+  padding: 16px 34px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.luxury-cta-frontier:hover {
+  background: var(--luxury-gold-hover);
+  transform: translateY(-2px);
+}
+.luxury-cta-glow {
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+}
+
+/* Sanctuary overlapping images — luxury treatment */
+.sanctuary-frame {
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.35s ease;
+}
+.sanctuary-frame:hover,
+.sanctuary-frame.sanctuary-frame-active {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Section breathing space */
+.luxury-section-padding {
+  padding-top: 7.5rem;
+  padding-bottom: 7.5rem;
+}
+@media (min-width: 1024px) {
+  .luxury-section-padding {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
 }
 
 /* Footer — luxurious depth */

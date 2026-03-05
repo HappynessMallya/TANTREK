@@ -21,6 +21,14 @@ const config: Config = {
           "gold-dark": "#66532c",
           cream: "#e1d3b4",
         },
+        luxury: {
+          gold: "#D4AF37",
+          "gold-hover": "#E6C96A",
+          champagne: "#F6F3EB",
+          "sand-warm": "#F4EFE6",
+          "dark-emerald": "#081f1a",
+          "overlay-dark": "rgba(5, 20, 15, 0.75)",
+        },
         glass: {
           light: "rgba(30,64,48,0.92)",
           border: "rgba(255,255,255,0.2)",

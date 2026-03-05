@@ -162,26 +162,27 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Media mentions — prestige strip */}
-      <section className="section-bg-press relative z-20 px-4 sm:px-6 lg:px-8 py-10 backdrop-blur-sm border-t border-white/5">
-        <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-10 sm:gap-16 md:gap-24 opacity-40 grayscale contrast-125">
-          <span className="font-display text-lg sm:text-xl tracking-tight text-white/90">Condé Nast <span className="font-bold">Traveler</span></span>
-          <span className="font-display text-xl font-bold tracking-widest uppercase text-white/90">Vogue</span>
-          <span className="font-display text-lg tracking-tight text-white/90">Financial Times</span>
-          <span className="font-display text-xl italic tracking-tight text-white/90">Departures</span>
-          <span className="font-body font-bold text-sm tracking-[0.25em] uppercase text-white/90">Tatler</span>
+      {/* Media mentions — prestige strip: champagne, minimal luxury */}
+      <section className="section-bg-press relative z-20 px-4 sm:px-6 lg:px-8 py-12 overflow-hidden">
+        <div className="absolute inset-0 press-texture pointer-events-none" aria-hidden />
+        <div className="relative z-10 max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-10 sm:gap-16 md:gap-24">
+          <span className="font-display text-lg sm:text-xl tracking-tight text-luxury-gold/80 hover:brightness-[1.2] transition-[filter] duration-300">Condé Nast <span className="font-bold">Traveler</span></span>
+          <span className="font-display text-xl font-bold tracking-widest uppercase text-luxury-gold/80 hover:brightness-[1.2] transition-[filter] duration-300">Vogue</span>
+          <span className="font-display text-lg tracking-tight text-luxury-gold/80 hover:brightness-[1.2] transition-[filter] duration-300">Financial Times</span>
+          <span className="font-display text-xl italic tracking-tight text-luxury-gold/80 hover:brightness-[1.2] transition-[filter] duration-300">Departures</span>
+          <span className="font-body font-bold text-sm tracking-[0.25em] uppercase text-luxury-gold/80 hover:brightness-[1.2] transition-[filter] duration-300">Tatler</span>
         </div>
       </section>
 
-      {/* Sanctuaries of the Savanna — Private Collection with overlapping images */}
-      <section className="section-bg-sanctuaries relative py-20 lg:py-32 overflow-hidden">
-        {/* Subtle background image for atmosphere */}
+      {/* Sanctuaries of the Wild — immersive nature, jungle gradient + dust */}
+      <section className="section-bg-sanctuaries relative luxury-section-padding overflow-hidden">
+        <div className="absolute inset-0 sanctuaries-dust pointer-events-none" aria-hidden />
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.11]"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.12]"
           style={{ backgroundImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=60)" }}
           aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-safari-green-dark/70 via-safari-green-dark/40 to-transparent" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-r from-safari-green-dark/50 via-safari-green-dark/30 to-transparent" aria-hidden />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
@@ -214,10 +215,10 @@ export default function HomePage() {
                 tabIndex={0}
                 onClick={() => setSanctuaryFrameOnTop(0)}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(0); } }}
-                className={`absolute right-0 top-0 w-[85%] lg:w-4/5 aspect-[3/4] cursor-pointer select-none transition-all duration-300 ${sanctuaryFrameOnTop === 0 ? "z-30 ring-2 ring-safari-gold/50 ring-offset-2 ring-offset-safari-green-dark rounded-sm" : "z-10"}`}
+                className={`absolute right-0 top-0 w-[85%] lg:w-4/5 aspect-[3/4] cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 0 ? "z-30 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-10"}`}
                 aria-label="Focus lodge image"
               >
-                <div className="relative w-full h-full overflow-hidden rounded-sm shadow-2xl">
+                <div className="relative w-full h-full overflow-hidden rounded-[18px]">
                   <Image
                     src="/lodgejpg"
                     alt="Luxury safari lodge"
@@ -234,7 +235,7 @@ export default function HomePage() {
                 tabIndex={0}
                 onClick={() => setSanctuaryFrameOnTop(1)}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(1); } }}
-                className={`absolute -bottom-12 -left-4 lg:-bottom-20 lg:-left-10 w-[60%] lg:w-3/5 aspect-[4/5] overflow-hidden rounded-sm shadow-2xl border-4 border-safari-green-dark cursor-pointer select-none transition-all duration-300 ${sanctuaryFrameOnTop === 1 ? "z-30 ring-2 ring-safari-gold/50 ring-offset-2 ring-offset-safari-green-dark" : "z-20"}`}
+                className={`absolute -bottom-12 -left-4 lg:-bottom-20 lg:-left-10 w-[60%] lg:w-3/5 aspect-[4/5] overflow-hidden rounded-[18px] border-4 border-safari-green-dark cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 1 ? "z-30 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-20"}`}
                 aria-label="Focus wilderness image"
               >
                 <Image
@@ -251,7 +252,7 @@ export default function HomePage() {
                 tabIndex={0}
                 onClick={() => setSanctuaryFrameOnTop(2)}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(2); } }}
-                className={`absolute -top-6 -right-4 lg:-top-12 lg:-right-8 w-[45%] lg:w-2/5 aspect-square overflow-hidden rounded-sm cursor-pointer select-none transition-all duration-300 ${sanctuaryFrameOnTop === 2 ? "z-30 opacity-100 grayscale-0 ring-2 ring-safari-gold/50 ring-offset-2 ring-offset-safari-green-dark" : "z-0 opacity-50 grayscale"}`}
+                className={`absolute -top-6 -right-4 lg:-top-12 lg:-right-8 w-[45%] lg:w-2/5 aspect-square overflow-hidden rounded-[18px] cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 2 ? "z-30 opacity-100 grayscale-0 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-0 opacity-50 grayscale"}`}
                 aria-label="Focus safari image"
               >
                 <Image
@@ -267,23 +268,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Distinction — The Tanzania Wildmakers Standard */}
-      <section className="section-bg-distinction relative py-20 lg:py-32 border-t border-white/5 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
-          style={{ backgroundImage: "url(/wild.jpg)" }}
-          aria-hidden
-        />
+      {/* Distinction — brand authority: dark emerald + gold radial + glass pillar cards */}
+      <section className="section-bg-distinction relative luxury-section-padding overflow-hidden">
+        <div className="absolute inset-0 distinction-texture pointer-events-none" aria-hidden />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 lg:mb-24 space-y-4">
-            <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase">
+            <p className="font-body text-luxury-gold text-[10px] font-bold tracking-[0.35em] uppercase">
               Distinction
             </p>
-            <h2 className="font-display text-4xl sm:text-5xl text-white italic font-light">
+            <div className="luxury-gold-line mx-auto" aria-hidden />
+            <h2 className="font-display text-4xl sm:text-5xl text-white italic font-light mt-4">
               The Tanzania Wildmakers Standard
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             {[
               { icon: "diamond", title: "Bespoke Curation", copy: "Every itinerary is a unique masterpiece, shaped around your dates, interests, and the wilderness you want to experience." },
               { icon: "guide", title: "Elite Guidance", copy: "Our guides hold the highest level of certification, offering deep insight into wildlife, ecosystems, and local culture." },
@@ -296,27 +294,27 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="space-y-6 text-center px-2"
+                className="luxury-pillar-card rounded-xl p-8 lg:p-10 text-center space-y-6"
               >
                 <div className="flex justify-center">
                   {item.icon === "diamond" && (
-                    <svg className="w-8 h-8 text-safari-gold" fill="currentColor" viewBox="0 0 24 24" aria-hidden><path d="M12 2L2 7l10 15 10-15-10-5z" /></svg>
+                    <svg className="w-8 h-8 text-luxury-gold" fill="currentColor" viewBox="0 0 24 24" aria-hidden><path d="M12 2L2 7l10 15 10-15-10-5z" /></svg>
                   )}
                   {item.icon === "guide" && (
-                    <svg className="w-8 h-8 text-safari-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    <svg className="w-8 h-8 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                   )}
                   {item.icon === "heart" && (
-                    <svg className="w-8 h-8 text-safari-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                    <svg className="w-8 h-8 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                   )}
                   {item.icon === "care" && (
-                    <svg className="w-8 h-8 text-safari-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                    <svg className="w-8 h-8 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
                   )}
                 </div>
                 <div className="space-y-3">
                   <h3 className="font-body text-white text-[11px] font-semibold uppercase tracking-widest">
                     {item.title}
                   </h3>
-                  <p className="text-safari-sand-light/60 text-[13px] font-light leading-relaxed tracking-wide">
+                  <p className="text-safari-sand-light/70 text-[13px] font-light leading-relaxed tracking-wide">
                     {item.copy}
                   </p>
                 </div>
@@ -326,19 +324,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About — authority & positioning: premium statement block */}
-      <section className="section-bg-our-story relative py-28 lg:py-36 overflow-hidden">
-        {/* Parallax-style background */}
+      {/* Our Story — editorial: large cinematic photo + dark overlay + gold line under quote */}
+      <section className="section-bg-our-story relative luxury-section-padding overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.14]"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
               "url(https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80)",
           }}
           aria-hidden
         />
-        <div className="absolute inset-0 bg-safari-green-dark/88" aria-hidden />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-safari-green-dark/60" aria-hidden />
+        <div className="absolute inset-0 our-story-overlay" aria-hidden />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -346,16 +342,16 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <p className="font-body text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-safari-gold-light/90">
+            <p className="font-body text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-luxury-gold">
               Our Story
             </p>
-            <div className="mt-4 h-px w-12 mx-auto bg-gradient-to-r from-transparent via-safari-gold/60 to-transparent" aria-hidden />
             <p
               className="font-display mt-8 text-2xl sm:text-3xl lg:text-4xl text-safari-gold-light leading-snug"
               style={{ fontFeatureSettings: '"kern" 1' }}
             >
-              “We are wilderness architects.”
+              &quot;We are wilderness architects.&quot;
             </p>
+            <div className="luxury-gold-line-wide mx-auto mt-6" aria-hidden />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -364,7 +360,7 @@ export default function HomePage() {
             transition={{ delay: 0.08 }}
             className="mt-10 lg:mt-12 px-0 sm:px-4"
           >
-            <div className="border-l-2 border-safari-gold/40 pl-6 sm:pl-8 py-1 text-safari-sand-light/95 text-base sm:text-lg leading-relaxed space-y-5">
+            <div className="border-l-2 border-luxury-gold/50 pl-6 sm:pl-8 py-1 text-safari-sand-light/95 text-base sm:text-lg leading-relaxed space-y-5">
               <p>
                 We are not the northern circuit. We are the frontier—Southern and
                 Western Tanzania, where low-density tourism meets raw wilderness:
@@ -391,13 +387,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Traveler testimonials — carousel */}
-      <section className="section-bg-testimonials relative py-20 lg:py-28 border-t border-white/5 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.09] pointer-events-none"
-          style={{ backgroundImage: "url(/wild.jpg)" }}
-          aria-hidden
-        />
+      {/* Testimonials — light & airy: warm safari sand + grain, white cards, gold stars */}
+      <section className="section-bg-testimonials relative luxury-section-padding overflow-hidden">
+        <div className="absolute inset-0 testimonials-grain pointer-events-none" aria-hidden />
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -405,11 +397,11 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <p className="font-body text-xs font-semibold tracking-[0.25em] uppercase text-safari-gold-light/90">
+            <p className="font-body text-xs font-semibold tracking-[0.25em] uppercase text-luxury-gold">
               In their words
             </p>
-            <div className="mt-3 h-px w-12 mx-auto bg-safari-gold/50" aria-hidden />
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-safari-cream mt-6">
+            <div className="luxury-gold-line mx-auto mt-3" aria-hidden />
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-stone-800 mt-6">
               Traveler stories
             </h2>
           </motion.div>
@@ -424,9 +416,9 @@ export default function HomePage() {
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="w-full"
               >
-                <div className="rounded-2xl border border-safari-gold/20 bg-safari-green/30 backdrop-blur-sm p-8 sm:p-10 lg:p-12 text-center">
+                <div className="luxury-testimonial-card p-8 sm:p-10 lg:p-12 text-center">
                   <div className="flex justify-center mb-6">
-                    <span className="text-safari-gold" aria-hidden>
+                    <span className="text-luxury-gold" aria-hidden>
                       {[1, 2, 3, 4, 5].map((i) => (
                         <svg key={i} className="inline-block w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -434,17 +426,17 @@ export default function HomePage() {
                       ))}
                     </span>
                   </div>
-                  <blockquote className="font-display text-lg sm:text-xl lg:text-2xl text-safari-sand-light/95 leading-relaxed italic">
-                    “{TESTIMONIALS[testimonialIndex].quote}”
+                  <blockquote className="font-display text-lg sm:text-xl lg:text-2xl text-stone-700 leading-relaxed italic">
+                    &quot;{TESTIMONIALS[testimonialIndex].quote}&quot;
                   </blockquote>
                   <footer className="mt-8 flex flex-col items-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-safari-gold/40 bg-safari-gold/10 font-display text-sm font-semibold text-safari-gold-light">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-luxury-gold/40 bg-luxury-gold/10 font-display text-sm font-semibold text-stone-800">
                       {TESTIMONIALS[testimonialIndex].initials}
                     </div>
-                    <p className="mt-3 font-body font-semibold text-safari-gold-light">
+                    <p className="mt-3 font-body font-semibold text-stone-800">
                       {TESTIMONIALS[testimonialIndex].name}
                     </p>
-                    <p className="mt-1 font-body text-sm text-safari-sand-muted">
+                    <p className="mt-1 font-body text-sm text-stone-600">
                       {TESTIMONIALS[testimonialIndex].trip}
                     </p>
                   </footer>
@@ -456,7 +448,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => goTo(testimonialIndex - 1)}
-                className="p-2 rounded-full border border-safari-gold/30 text-safari-gold-light transition-colors hover:bg-safari-gold/10 hover:border-safari-gold/50"
+                className="p-2 rounded-full border border-luxury-gold/50 text-stone-700 transition-colors hover:bg-luxury-gold/10 hover:border-luxury-gold"
                 aria-label="Previous testimonial"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -470,7 +462,7 @@ export default function HomePage() {
                     type="button"
                     onClick={() => setTestimonialIndex(i)}
                     className={`h-2 rounded-full transition-all duration-300 ${
-                      i === testimonialIndex ? "w-8 bg-safari-gold" : "w-2 bg-white/30 hover:bg-white/50"
+                      i === testimonialIndex ? "w-8 bg-luxury-gold" : "w-2 bg-stone-400 hover:bg-stone-500"
                     }`}
                     aria-label={`Go to testimonial ${i + 1}`}
                   />
@@ -479,7 +471,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => goTo(testimonialIndex + 1)}
-                className="p-2 rounded-full border border-safari-gold/30 text-safari-gold-light transition-colors hover:bg-safari-gold/10 hover:border-safari-gold/50"
+                className="p-2 rounded-full border border-luxury-gold/50 text-stone-700 transition-colors hover:bg-luxury-gold/10 hover:border-luxury-gold"
                 aria-label="Next testimonial"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -491,25 +483,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Where We Go — premium circuits */}
-      <section className="section-bg-where-we-go relative py-24 lg:py-32 border-t border-white/5 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
-          style={{ backgroundImage: "url(/wild.jpg)" }}
-          aria-hidden
-        />
+      {/* Where We Go — map-inspired gradient + faint texture, circuit cards with bg images */}
+      <section className="section-bg-where-we-go relative luxury-section-padding overflow-hidden">
+        <div className="absolute inset-0 where-we-go-texture pointer-events-none" aria-hidden />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4"
+              className="font-body text-luxury-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4"
             >
               Explore
             </motion.p>
             <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px w-12 bg-safari-gold/40" aria-hidden />
+              <div className="luxury-gold-line" aria-hidden />
               <motion.h2
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -518,7 +506,7 @@ export default function HomePage() {
               >
                 Where We Go
               </motion.h2>
-              <div className="h-px w-12 bg-safari-gold/40" aria-hidden />
+              <div className="luxury-gold-line" aria-hidden />
             </div>
             <motion.p
               initial={{ opacity: 0 }}
@@ -532,9 +520,9 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {[
-              { title: "Northern Circuit", desc: "Serengeti, Ngorongoro, Tarangire, Lake Manyara.", href: "/destinations/northern" },
-              { title: "Southern Circuit", desc: "Julius Nyerere, Ruaha — the soul of wilderness.", href: "/destinations/southern" },
-              { title: "Western Circuit", desc: "Katavi — Africa&apos;s last true frontier.", href: "/destinations/western" },
+              { title: "Northern Circuit", desc: "Serengeti, Ngorongoro, Tarangire, Lake Manyara.", href: "/destinations/northern", bgImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70)" },
+              { title: "Southern Circuit", desc: "Julius Nyerere, Ruaha — the soul of wilderness.", href: "/destinations/southern", bgImage: "url(https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=70)" },
+              { title: "Western Circuit", desc: "Katavi — Africa&apos;s last true frontier.", href: "/destinations/western", bgImage: "url(/wild.jpg)" },
             ].map((item, i) => (
               <motion.div
                 key={item.href}
@@ -545,17 +533,20 @@ export default function HomePage() {
               >
                 <Link
                   href={item.href}
-                  className="group block rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-8 lg:p-10 h-full transition-all duration-500 hover:border-safari-gold/40 hover:bg-white/[0.06] hover:shadow-[0_0_40px_rgba(196,169,103,0.08)]"
+                  className="luxury-circuit-card group block p-8 lg:p-10 h-full min-h-[280px] flex flex-col justify-end transition-all duration-500"
+                  style={{ backgroundImage: item.bgImage, backgroundSize: "cover", backgroundPosition: "center" }}
                 >
-                  <div className="h-px w-10 bg-safari-gold/50 mb-6 group-hover:w-14 transition-all duration-300" aria-hidden />
-                  <h3 className="font-display text-xl lg:text-2xl text-white font-medium tracking-tight group-hover:text-safari-gold-light transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-safari-sand-light/70 text-sm font-body leading-relaxed">
-                    {item.desc}
-                  </p>
-                  <span className="inline-block mt-6 font-body text-safari-gold text-[10px] font-semibold tracking-[0.2em] uppercase group-hover:tracking-[0.3em] transition-all">
-                    Discover →
+                  <span className="relative z-10">
+                    <div className="h-px w-10 bg-luxury-gold/70 mb-6 group-hover:w-14 transition-all duration-300" aria-hidden />
+                    <h3 className="font-display text-xl lg:text-2xl text-white font-medium tracking-tight group-hover:text-safari-gold-light transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-white/90 text-sm font-body leading-relaxed">
+                      {item.desc}
+                    </p>
+                    <span className="inline-block mt-6 font-body text-luxury-gold text-[10px] font-semibold tracking-[0.2em] uppercase group-hover:tracking-[0.3em] transition-all">
+                      Discover →
+                    </span>
                   </span>
                 </Link>
               </motion.div>
@@ -578,24 +569,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Safari Experiences — refined links */}
-      <section className="section-bg-experiences relative py-24 lg:py-32 border-t border-white/5 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
-          style={{ backgroundImage: "url(/wild.jpg)" }}
-          aria-hidden
-        />
+      {/* Safari Experiences — dark emerald + gold glow, gold divider under heading */}
+      <section className="section-bg-experiences relative luxury-section-padding overflow-hidden">
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4"
+              className="font-body text-luxury-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4"
             >
               Curated journeys
             </motion.p>
-            <div className="h-px w-12 mx-auto bg-safari-gold/40 mb-6" aria-hidden />
+            <div className="luxury-experience-divider w-12 mx-auto mb-6" aria-hidden />
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -631,7 +617,7 @@ export default function HomePage() {
               >
                 <Link
                   href={item.href}
-                  className="inline-block px-6 py-3.5 rounded-lg border border-safari-gold/25 bg-white/[0.02] font-body text-[11px] font-medium tracking-[0.2em] uppercase text-safari-sand-light/95 hover:border-safari-gold/50 hover:bg-safari-gold/10 hover:text-safari-gold-light transition-all duration-300"
+                  className="inline-block px-6 py-3.5 rounded-lg border border-luxury-gold/30 bg-white/[0.03] font-body text-[11px] font-medium tracking-[0.2em] uppercase text-safari-sand-light/95 hover:border-luxury-gold/50 hover:bg-luxury-gold/10 hover:text-safari-gold-light transition-all duration-300"
                 >
                   {item.label}
                 </Link>
@@ -646,7 +632,7 @@ export default function HomePage() {
           >
             <Link
               href="/experiences"
-              className="font-body text-safari-gold/90 text-xs tracking-widest uppercase hover:text-safari-gold-light transition-colors"
+              className="font-body text-luxury-gold text-xs tracking-widest uppercase hover:text-luxury-gold-hover transition-colors"
             >
               All curated journeys →
             </Link>
@@ -654,24 +640,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Begin Your Frontier — premium CTA */}
-      <section className="section-bg-frontier relative py-28 lg:py-36 overflow-hidden">
+      {/* Begin Your Frontier — cinematic golden sunset + dark overlay + gold CTA glow */}
+      <section className="section-bg-frontier relative luxury-section-padding overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.42]"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=70)" }}
           aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/70 via-safari-green-dark/82 to-safari-green-dark" aria-hidden />
+        <div className="absolute inset-0 frontier-overlay" aria-hidden />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-body text-safari-gold text-[10px] font-bold tracking-[0.4em] uppercase mb-6"
+            className="font-body text-luxury-gold text-[10px] font-bold tracking-[0.4em] uppercase mb-6"
           >
             Your journey
           </motion.p>
-          <div className="h-px w-16 mx-auto bg-safari-gold/50 mb-8" aria-hidden />
+          <div className="luxury-gold-line mx-auto mb-8" aria-hidden />
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -685,7 +671,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.08 }}
-            className="mt-8 text-safari-sand-light/85 font-body text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
+            className="mt-8 text-safari-sand-light/90 font-body text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
           >
             Tell us your dates, budget, and dreams. We&apos;ll craft an itinerary that belongs only to you.
           </motion.p>
@@ -698,7 +684,7 @@ export default function HomePage() {
           >
             <Link
               href="/plan-your-safari"
-              className="inline-flex items-center justify-center bg-safari-gold text-safari-green-dark font-body text-xs font-bold tracking-[0.25em] uppercase px-10 py-4 rounded-lg hover:bg-safari-gold-light transition-colors duration-300 w-full sm:w-auto"
+              className="luxury-cta-frontier luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
             >
               Plan your safari
             </Link>
