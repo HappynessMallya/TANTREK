@@ -33,19 +33,9 @@ const TESTIMONIALS = [
 
 type SanctuaryFrame = 0 | 1 | 2; // 0 = lodge (main), 1 = wild (overlap), 2 = safari (back)
 
-const HERO_SEASONS = [
-  { value: "", label: "Preferred season" },
-  { value: "dry-jun-oct", label: "Dry season (Jun – Oct)" },
-  { value: "green-dec-mar", label: "Green season (Dec – Mar)" },
-  { value: "shoulder", label: "Shoulder (Apr – May, Nov)" },
-  { value: "flexible", label: "Flexible" },
-];
-
 export default function HomePage() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [sanctuaryFrameOnTop, setSanctuaryFrameOnTop] = useState<SanctuaryFrame>(0);
-  const [heroSeason, setHeroSeason] = useState("");
-  const [heroEmail, setHeroEmail] = useState("");
 
   const goTo = useCallback((index: number) => {
     setTestimonialIndex((prev) => {
@@ -101,67 +91,19 @@ export default function HomePage() {
             Private safaris across Serengeti, Ruaha, and Katavi—crafted for travelers who seek profound wilderness without compromise.
           </p>
 
-          {/* Primary hero CTAs — Begin Your Journey / Explore Our Sanctuaries */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* Hero glass CTA bar — Begin Your Journey + Explore Our Sanctuaries */}
+          <div className="hero-journey-bar mt-10 sm:mt-12 px-4 py-4 rounded-lg max-w-2xl mx-auto w-full flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/plan-your-safari"
-              className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase"
+              className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
             >
               Begin Your Journey
             </Link>
             <Link
               href="/destinations"
-              className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase"
+              className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase w-full sm:w-auto"
             >
               Explore Our Sanctuaries
-            </Link>
-          </div>
-
-          {/* Journey CTA bar — Preferred Season, Email, Begin Your Journey (functional) */}
-          <div className="hero-journey-bar mt-12 sm:mt-14 p-1.5 rounded-lg max-w-3xl mx-auto w-full flex flex-col md:flex-row items-stretch gap-0">
-            <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
-              <svg className="w-5 h-5 shrink-0 text-safari-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <select
-                value={heroSeason}
-                onChange={(e) => setHeroSeason(e.target.value)}
-                className="bg-transparent border-none focus:ring-0 text-white w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none cursor-pointer appearance-none [&>option]:bg-safari-green-dark [&>option]:text-white"
-                aria-label="Preferred season"
-              >
-                {HERO_SEASONS.map((opt) => (
-                  <option key={opt.value || "placeholder"} value={opt.value} className="bg-safari-green-dark text-white">
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="h-px w-full md:h-8 md:w-px md:min-h-[1px] bg-white/10 shrink-0" aria-hidden />
-            <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
-              <svg className="w-5 h-5 shrink-0 text-safari-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <input
-                type="email"
-                placeholder="Your email"
-                value={heroEmail}
-                onChange={(e) => setHeroEmail(e.target.value)}
-                className="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/40 w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none"
-                aria-label="Your email"
-              />
-            </div>
-            <Link
-              href={
-                heroSeason || heroEmail
-                  ? `/plan-your-safari?${new URLSearchParams({
-                      ...(heroSeason && { season: heroSeason }),
-                      ...(heroEmail && { email: heroEmail.trim() }),
-                    }).toString()}`
-                  : "/plan-your-safari"
-              }
-              className="inline-flex items-center justify-center bg-safari-gold text-safari-green-dark font-body text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase px-8 py-4 hover:bg-safari-gold-light transition-colors duration-300 w-full md:w-auto shrink-0 rounded-md"
-            >
-              Begin Your Journey
             </Link>
           </div>
         </motion.div>

@@ -5,8 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?w=1920&q=80";
+const HERO_IMAGE = "/land.jpg";
 
 const PILLARS = [
   {

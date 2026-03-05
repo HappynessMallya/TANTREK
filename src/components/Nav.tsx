@@ -114,19 +114,19 @@ export function Nav() {
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        className={`absolute top-full left-0 pt-2 ${"isDestinations" in item && item.isDestinations ? "min-w-[520px]" : "w-max min-w-[200px]"}`}
+                        className={`absolute top-full left-0 pt-2 ${"isDestinations" in item && item.isDestinations ? "min-w-[560px]" : "w-max min-w-[220px]"}`}
                       >
-                        <div className="nav-dropdown-panel py-3 px-3 max-h-[70vh] overflow-y-auto rounded-xl">
+                        <div className="nav-dropdown-panel py-4 px-4 max-h-[70vh] overflow-y-auto rounded-xl">
                           {"isDestinations" in item && item.isDestinations
                             ? (
                                 <div>
                                   <Link
                                     href="/destinations"
-                                    className="nav-dropdown-heading mb-3 block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors text-center"
+                                    className="nav-dropdown-heading mb-4 block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors text-center"
                                   >
                                     Our Sanctuaries
                                   </Link>
-                                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                                  <div className="grid grid-cols-2 gap-x-8 gap-y-5">
                                   {destinationNavGroups.map((group) => (
                                     <div key={group.circuitHref} className="min-w-0">
                                       <Link
@@ -135,15 +135,15 @@ export function Nav() {
                                       >
                                         {group.circuitLabel}
                                       </Link>
-                                      <p className="px-2 pt-1.5 pb-1 text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider">
+                                      <p className="pt-2 pb-1.5 text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider">
                                         Parks in this circuit
                                       </p>
-                                      <ul className="list-disc list-inside px-2 pb-2 space-y-0.5 text-sm">
+                                      <ul className="list-disc list-outside pl-5 pr-0 pb-2 space-y-1 text-sm text-left">
                                         {group.parks.map((park) => (
-                                          <li key={park.href}>
+                                          <li key={park.href} className="leading-snug">
                                             <Link
                                               href={park.href}
-                                              className="nav-dropdown-link block py-0.5 px-1 -ml-1 rounded hover:underline transition-colors"
+                                              className="nav-dropdown-link inline py-0.5 rounded hover:underline transition-colors"
                                             >
                                               {park.label}
                                             </Link>
@@ -240,13 +240,13 @@ export function Nav() {
                               <p className="text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider py-1">
                                 Parks in this circuit
                               </p>
-                              <ul className="list-disc list-inside space-y-0.5 text-sm">
+                              <ul className="list-disc list-outside pl-5 space-y-1 text-sm">
                                 {group.parks.map((park) => (
-                                  <li key={park.href}>
+                                  <li key={park.href} className="leading-snug">
                                     <Link
                                       href={park.href}
                                       onClick={() => setMobileOpen(false)}
-                                      className="nav-dropdown-link block py-1 -ml-1 rounded hover:underline"
+                                      className="nav-dropdown-link inline py-0.5 rounded hover:underline"
                                     >
                                       {park.label}
                                     </Link>
