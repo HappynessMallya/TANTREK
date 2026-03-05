@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const EXPLORE_LINKS = [
   { label: "Destinations", href: "/destinations" },
-  { label: "Our Lodges", href: "/destinations" },
+  { label: "Our Sanctuaries", href: "/destinations" },
   { label: "The Safari", href: "/experiences" },
 ];
 

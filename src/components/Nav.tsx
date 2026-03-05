@@ -53,7 +53,7 @@ export function Nav() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/5 border-b border-white/10 backdrop-blur-md">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-safari-green-dark/90 border-b border-luxury-gold/10 backdrop-blur-lg">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="Tanzania Wildmakers Safaris - Home">
@@ -71,17 +71,17 @@ export function Nav() {
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((item) =>
               "href" in item ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`text-sm font-medium transition-colors ${
-                    pathname === item.href
-                      ? "text-safari-gold-light"
-                      : "text-safari-sand-light/90 hover:text-safari-gold-light"
-                  }`}
-                >
-                  {item.label}
-                </Link>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`text-sm font-medium tracking-[0.16em] uppercase pb-1 border-b border-transparent transition-colors ${
+                      pathname === item.href
+                        ? "text-safari-gold-light border-luxury-gold"
+                        : "text-safari-sand-light/90 hover:text-safari-gold-light"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
               ) : (
                 <div
                   key={item.label}
@@ -91,7 +91,11 @@ export function Nav() {
                 >
                   <button
                     type="button"
-                    className="flex items-center gap-1 text-sm font-medium text-safari-sand-light/90 hover:text-safari-gold-light transition-colors"
+                    className={`flex items-center gap-1 text-sm font-medium tracking-[0.16em] uppercase pb-1 border-b transition-colors ${
+                      openDropdown === item.label
+                        ? "text-safari-gold-light border-luxury-gold"
+                        : "text-safari-sand-light/90 border-transparent hover:text-safari-gold-light"
+                    }`}
                   >
                     {item.label}
                     <svg
@@ -112,13 +116,13 @@ export function Nav() {
                         exit={{ opacity: 0, y: -8 }}
                         className={`absolute top-full left-0 pt-2 ${"isDestinations" in item && item.isDestinations ? "min-w-[520px]" : "w-max min-w-[200px]"}`}
                       >
-                        <div className="rounded-lg py-3 px-3 shadow-xl max-h-[70vh] overflow-y-auto bg-safari-green-dark/98 border border-white/20 backdrop-blur-md">
+                        <div className="nav-dropdown-panel py-3 px-3 max-h-[70vh] overflow-y-auto rounded-xl">
                           {"isDestinations" in item && item.isDestinations
                             ? (
                                 <div>
                                   <Link
                                     href="/destinations"
-                                    className="mb-3 block px-3 py-2 text-sm font-medium text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 transition-colors text-center"
+                                    className="nav-dropdown-heading mb-3 block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors text-center"
                                   >
                                     Our Sanctuaries
                                   </Link>
@@ -127,19 +131,19 @@ export function Nav() {
                                     <div key={group.circuitHref} className="min-w-0">
                                       <Link
                                         href={group.circuitHref}
-                                        className="inline-block px-3 py-2 text-sm font-medium text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 transition-colors"
+                                        className="nav-dropdown-heading inline-block px-3 py-2 text-sm font-medium rounded-lg transition-colors"
                                       >
                                         {group.circuitLabel}
                                       </Link>
-                                      <p className="px-2 pb-1 text-xs font-bold text-safari-gold-light uppercase tracking-wider">
+                                      <p className="px-2 pt-1.5 pb-1 text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider">
                                         Parks in this circuit
                                       </p>
-                                      <ul className="list-disc list-inside px-2 pb-2 space-y-0.5 text-safari-sand-light/90 text-sm">
+                                      <ul className="list-disc list-inside px-2 pb-2 space-y-0.5 text-sm">
                                         {group.parks.map((park) => (
                                           <li key={park.href}>
                                             <Link
                                               href={park.href}
-                                              className="hover:text-safari-gold-light hover:underline transition-colors"
+                                              className="nav-dropdown-link block py-0.5 px-1 -ml-1 rounded hover:underline transition-colors"
                                             >
                                               {park.label}
                                             </Link>
@@ -155,7 +159,7 @@ export function Nav() {
                                 <Link
                                   key={child.href}
                                   href={child.href}
-                                  className="block px-4 py-2 text-sm text-safari-sand-light hover:bg-white/5 hover:text-safari-gold-light"
+                                  className="nav-dropdown-link block px-4 py-2.5 text-sm rounded-lg transition-colors"
                                 >
                                   {child.label}
                                 </Link>
@@ -193,22 +197,22 @@ export function Nav() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden rounded-b-lg overflow-hidden bg-safari-green-dark/98 border border-t-0 border-x border-b border-white/20 backdrop-blur-md"
+              className="lg:hidden rounded-b-xl overflow-hidden bg-[#0b2520] border border-t-0 border-x border-b border-luxury-gold/30 shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
             >
-              <div className="py-4 space-y-1">
+              <div className="py-4 space-y-1 px-2">
                 {navLinks.map((item) =>
                   "href" in item ? (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="block px-4 py-2 text-safari-sand-light hover:bg-white/5"
+                      className="block px-4 py-2.5 text-[#e8ddc8] hover:bg-luxury-gold/10 rounded-lg transition-colors"
                     >
                       {item.label}
                     </Link>
                   ) : (
                     <div key={item.label}>
-                      <span className="flex items-center gap-2 px-4 py-2 text-safari-sand-muted text-sm font-medium">
+                      <span className="flex items-center gap-2 px-4 py-2 text-luxury-gold/90 text-sm font-medium uppercase tracking-wider">
                         {item.label}
                         <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -220,29 +224,29 @@ export function Nav() {
                               <Link
                                 href="/destinations"
                                 onClick={() => setMobileOpen(false)}
-                                className="mt-2 inline-block py-2 px-3 my-1 text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 font-medium transition-colors"
+                                className="nav-dropdown-heading mt-2 inline-block py-2.5 px-4 my-1 rounded-lg font-medium transition-colors"
                               >
                                 Our Sanctuaries
                               </Link>
                               {destinationNavGroups.map((group) => (
-                            <div key={group.circuitHref} className="mt-2 pl-8">
+                            <div key={group.circuitHref} className="mt-2 pl-6">
                               <Link
                                 href={group.circuitHref}
                                 onClick={() => setMobileOpen(false)}
-                                className="inline-block py-2 px-3 my-1 text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 font-medium transition-colors"
+                                className="nav-dropdown-heading inline-block py-2 px-3 my-1 rounded-lg font-medium transition-colors"
                               >
                                 {group.circuitLabel}
                               </Link>
-                              <p className="text-xs font-bold text-safari-gold-light uppercase tracking-wider py-0.5">
+                              <p className="text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider py-1">
                                 Parks in this circuit
                               </p>
-                              <ul className="list-disc list-inside space-y-0.5 text-safari-sand-light text-sm">
+                              <ul className="list-disc list-inside space-y-0.5 text-sm">
                                 {group.parks.map((park) => (
                                   <li key={park.href}>
                                     <Link
                                       href={park.href}
                                       onClick={() => setMobileOpen(false)}
-                                      className="hover:text-safari-gold-light hover:underline"
+                                      className="nav-dropdown-link block py-1 -ml-1 rounded hover:underline"
                                     >
                                       {park.label}
                                     </Link>
@@ -258,7 +262,7 @@ export function Nav() {
                               key={child.href}
                               href={child.href}
                               onClick={() => setMobileOpen(false)}
-                              className="block pl-8 py-2 text-safari-sand-light hover:bg-white/5"
+                              className="nav-dropdown-link block pl-8 py-2.5 rounded-lg"
                             >
                               {child.label}
                             </Link>

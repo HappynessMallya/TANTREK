@@ -98,10 +98,26 @@ export default function HomePage() {
             <span className="italic font-light">Meets Refined Luxury</span>
           </h1>
           <p className="mt-6 text-sm sm:text-base text-white/70 max-w-xl mx-auto font-body font-light leading-relaxed tracking-wide">
-            Curating Tanzania’s most exclusive safari experiences. Tailored for those who seek the profound beauty of the Serengeti, Ruaha, and Katavi without compromise.
+            Private safaris across Serengeti, Ruaha, and Katavi—crafted for travelers who seek profound wilderness without compromise.
           </p>
 
-          {/* Journey CTA bar — Preferred Season, Email, Begin Journey (functional) */}
+          {/* Primary hero CTAs — Begin Your Journey / Explore Our Sanctuaries */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/plan-your-safari"
+              className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase"
+            >
+              Begin Your Journey
+            </Link>
+            <Link
+              href="/destinations"
+              className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase"
+            >
+              Explore Our Sanctuaries
+            </Link>
+          </div>
+
+          {/* Journey CTA bar — Preferred Season, Email, Begin Your Journey (functional) */}
           <div className="hero-journey-bar mt-12 sm:mt-14 p-1.5 rounded-lg max-w-3xl mx-auto w-full flex flex-col md:flex-row items-stretch gap-0">
             <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
               <svg className="w-5 h-5 shrink-0 text-safari-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -145,7 +161,7 @@ export default function HomePage() {
               }
               className="inline-flex items-center justify-center bg-safari-gold text-safari-green-dark font-body text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase px-8 py-4 hover:bg-safari-gold-light transition-colors duration-300 w-full md:w-auto shrink-0 rounded-md"
             >
-              Begin Journey
+              Begin Your Journey
             </Link>
           </div>
         </motion.div>
