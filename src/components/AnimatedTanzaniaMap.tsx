@@ -37,14 +37,14 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute inset-0 z-[5] flex flex-col items-center justify-center bg-[#081F1A]"
         >
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0">
             <video
               src="/map.mp4"
               autoPlay
               muted
               loop
               playsInline
-              className="w-full h-full max-w-5xl max-h-[85vh] object-contain"
+              className="absolute inset-0 w-full h-full object-cover"
               aria-label="Tanzania safari map"
             />
           </div>
