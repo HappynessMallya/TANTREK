@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -151,7 +153,7 @@ export function Footer() {
               </h3>
               <ul className="space-y-2 text-[11px] font-body text-[#E8DFC9]/70">
                 {COMPANY_LINKS.map(({ label, href }) => (
-                  <li key={href}>
+                  <li key={`${href}-${label}`}>
                     <Link href={href} className="hover:text-luxury-gold transition-colors">
                       {label}
                     </Link>
