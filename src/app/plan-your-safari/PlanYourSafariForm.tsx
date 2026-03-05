@@ -120,9 +120,24 @@ const radioCardDefault =
 const radioCardChecked =
   "border-safari-gold/60 bg-safari-gold/10 text-safari-gold-light";
 
-export function PlanYourSafariForm({ inline = false }: { inline?: boolean }) {
+function getInitialFormState(initialEmail?: string, initialSeason?: string): FormState {
+  const state = { ...defaultState } as FormState;
+  if (typeof initialEmail === "string" && initialEmail.trim()) state.email = initialEmail.trim();
+  if (typeof initialSeason === "string" && initialSeason === "flexible") state.travel_month = "Flexible";
+  return state;
+}
+
+export function PlanYourSafariForm({
+  inline = false,
+  initialEmail,
+  initialSeason,
+}: {
+  inline?: boolean;
+  initialEmail?: string;
+  initialSeason?: string;
+}) {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState<FormState>(defaultState);
+  const [form, setForm] = useState<FormState>(() => getInitialFormState(initialEmail, initialSeason));
   const [submitted, setSubmitted] = useState(false);
 
   const currentStep = STEPS[step];

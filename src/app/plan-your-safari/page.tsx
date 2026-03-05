@@ -12,7 +12,18 @@ export const metadata: Metadata = {
 const PLAN_PAGE_BG =
   "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
 
-export default function PlanYourSafariPage() {
+type PlanPageProps = {
+  searchParams?: Promise<{ season?: string; email?: string }> | { season?: string; email?: string };
+};
+
+export default async function PlanYourSafariPage(props: PlanPageProps) {
+  const raw = props.searchParams;
+  const resolved = raw && typeof (raw as Promise<unknown>).then === "function"
+    ? await (raw as Promise<{ season?: string; email?: string }>)
+    : (raw as { season?: string; email?: string } | undefined) ?? {};
+  const initialEmail = typeof resolved.email === "string" ? resolved.email : "";
+  const initialSeason = typeof resolved.season === "string" ? resolved.season : "";
+
   return (
     <main className="relative flex min-h-screen flex-col pt-20">
       {/* Full-bleed background image */}
@@ -123,7 +134,16 @@ export default function PlanYourSafariPage() {
 
           {/* Right column: glassmorphism form */}
           <div className="glassmorphism-panel rounded-xl p-6 shadow-2xl sm:p-8 lg:p-10">
-            <PlanYourSafariForm inline />
+            {initialSeason && (
+              <p className="mb-4 font-body text-xs uppercase tracking-widest text-safari-gold-light/90">
+                Preferred season from homepage:{" "}
+                {initialSeason === "dry-jun-oct" && "Dry (Jun – Oct)"}
+                {initialSeason === "green-dec-mar" && "Green (Dec – Mar)"}
+                {initialSeason === "shoulder" && "Shoulder (Apr – May, Nov)"}
+                {initialSeason === "flexible" && "Flexible"}
+              </p>
+            )}
+            <PlanYourSafariForm inline initialEmail={initialEmail} initialSeason={initialSeason} />
           </div>
         </div>
 

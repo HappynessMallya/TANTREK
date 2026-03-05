@@ -33,9 +33,19 @@ const TESTIMONIALS = [
 
 type SanctuaryFrame = 0 | 1 | 2; // 0 = lodge (main), 1 = wild (overlap), 2 = safari (back)
 
+const HERO_SEASONS = [
+  { value: "", label: "Preferred season" },
+  { value: "dry-jun-oct", label: "Dry season (Jun – Oct)" },
+  { value: "green-dec-mar", label: "Green season (Dec – Mar)" },
+  { value: "shoulder", label: "Shoulder (Apr – May, Nov)" },
+  { value: "flexible", label: "Flexible" },
+];
+
 export default function HomePage() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [sanctuaryFrameOnTop, setSanctuaryFrameOnTop] = useState<SanctuaryFrame>(0);
+  const [heroSeason, setHeroSeason] = useState("");
+  const [heroEmail, setHeroEmail] = useState("");
 
   const goTo = useCallback((index: number) => {
     setTestimonialIndex((prev) => {
@@ -91,18 +101,24 @@ export default function HomePage() {
             Curating Tanzania’s most exclusive safari experiences. Tailored for those who seek the profound beauty of the Serengeti, Ruaha, and Katavi without compromise.
           </p>
 
-          {/* Journey CTA bar — Preferred Season, Email, Begin Journey */}
+          {/* Journey CTA bar — Preferred Season, Email, Begin Journey (functional) */}
           <div className="hero-journey-bar mt-12 sm:mt-14 p-1.5 rounded-lg max-w-3xl mx-auto w-full flex flex-col md:flex-row items-stretch gap-0">
             <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
               <svg className="w-5 h-5 shrink-0 text-safari-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <input
-                type="text"
-                placeholder="Preferred season"
-                className="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/40 w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none"
+              <select
+                value={heroSeason}
+                onChange={(e) => setHeroSeason(e.target.value)}
+                className="bg-transparent border-none focus:ring-0 text-white w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none cursor-pointer appearance-none [&>option]:bg-safari-green-dark [&>option]:text-white"
                 aria-label="Preferred season"
-              />
+              >
+                {HERO_SEASONS.map((opt) => (
+                  <option key={opt.value || "placeholder"} value={opt.value} className="bg-safari-green-dark text-white">
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="h-px w-full md:h-8 md:w-px md:min-h-[1px] bg-white/10 shrink-0" aria-hidden />
             <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
@@ -112,12 +128,21 @@ export default function HomePage() {
               <input
                 type="email"
                 placeholder="Your email"
+                value={heroEmail}
+                onChange={(e) => setHeroEmail(e.target.value)}
                 className="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/40 w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none"
                 aria-label="Your email"
               />
             </div>
             <Link
-              href="/plan-your-safari"
+              href={
+                heroSeason || heroEmail
+                  ? `/plan-your-safari?${new URLSearchParams({
+                      ...(heroSeason && { season: heroSeason }),
+                      ...(heroEmail && { email: heroEmail.trim() }),
+                    }).toString()}`
+                  : "/plan-your-safari"
+              }
               className="inline-flex items-center justify-center bg-safari-gold text-safari-green-dark font-body text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase px-8 py-4 hover:bg-safari-gold-light transition-colors duration-300 w-full md:w-auto shrink-0 rounded-md"
             >
               Begin Journey
@@ -244,7 +269,12 @@ export default function HomePage() {
 
       {/* Distinction — The Tanzania Wildmakers Standard */}
       <section className="section-bg-distinction relative py-20 lg:py-32 border-t border-white/5 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
+          style={{ backgroundImage: "url(/wild.jpg)" }}
+          aria-hidden
+        />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 lg:mb-24 space-y-4">
             <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase">
               Distinction
@@ -363,6 +393,11 @@ export default function HomePage() {
 
       {/* Traveler testimonials — carousel */}
       <section className="section-bg-testimonials relative py-20 lg:py-28 border-t border-white/5 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.09] pointer-events-none"
+          style={{ backgroundImage: "url(/wild.jpg)" }}
+          aria-hidden
+        />
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -458,6 +493,11 @@ export default function HomePage() {
 
       {/* Where We Go — premium circuits */}
       <section className="section-bg-where-we-go relative py-24 lg:py-32 border-t border-white/5 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
+          style={{ backgroundImage: "url(/wild.jpg)" }}
+          aria-hidden
+        />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.p
@@ -540,7 +580,12 @@ export default function HomePage() {
 
       {/* Safari Experiences — refined links */}
       <section className="section-bg-experiences relative py-24 lg:py-32 border-t border-white/5 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
+          style={{ backgroundImage: "url(/wild.jpg)" }}
+          aria-hidden
+        />
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
