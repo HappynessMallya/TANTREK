@@ -10,6 +10,10 @@ export interface Destination {
   bestTime: string;
   luxuryCamps: string[];
   migrationNote?: string;
+  /** Optional: e.g. "Short-grass plains, Acacia woodland" for Fast Facts */
+  ecosystem?: string;
+  /** Optional: e.g. "24°C - 28°C Day / 13°C Night" for Fast Facts */
+  avgTemp?: string;
   imageUrl: string;
   internalLinks: { label: string; href: string }[];
 }
@@ -37,6 +41,8 @@ export const destinations: Destination[] = [
     bestTime: "Year-round. Migration: Dec–Jul (Ndutu/Serengeti), Jun–Oct (Mara River).",
     luxuryCamps: ["Four Seasons Safari Lodge", "Singita Grumeti", "andBeyond Serengeti Under Canvas"],
     migrationNote: "The Serengeti is the stage for the Great Migration; timing your visit with river crossings or calving season defines the experience.",
+    ecosystem: "Short-grass plains, Acacia woodland",
+    avgTemp: "24°C – 28°C day / 13°C night",
     imageUrl: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80",
     internalLinks: [
       { label: "Ngorongoro Conservation Area", href: "/destinations/ngorongoro" },

@@ -35,6 +35,7 @@ const navLinks: NavLinkItem[] = [
   {
     label: "Experiences",
     children: [
+      { href: "/experiences", label: "Curated Journeys" },
       { href: "/experiences/luxury-fly-in", label: "Luxury Fly-in" },
       { href: "/experiences/honeymoon", label: "Honeymoon" },
       { href: "/experiences/photographic", label: "Photographic" },
@@ -114,7 +115,14 @@ export function Nav() {
                         <div className="rounded-lg py-3 px-3 shadow-xl max-h-[70vh] overflow-y-auto bg-safari-green-dark/98 border border-white/20 backdrop-blur-md">
                           {"isDestinations" in item && item.isDestinations
                             ? (
-                                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                                <div>
+                                  <Link
+                                    href="/destinations"
+                                    className="mb-3 block px-3 py-2 text-sm font-medium text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 transition-colors text-center"
+                                  >
+                                    Our Sanctuaries
+                                  </Link>
+                                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                                   {destinationNavGroups.map((group) => (
                                     <div key={group.circuitHref} className="min-w-0">
                                       <Link
@@ -140,6 +148,7 @@ export function Nav() {
                                       </ul>
                                     </div>
                                   ))}
+                                  </div>
                                 </div>
                               )
                             : "children" in item && item.children?.map((child: { href: string; label: string }) => (
@@ -206,7 +215,16 @@ export function Nav() {
                         </svg>
                       </span>
                       {"isDestinations" in item && item.isDestinations
-                        ? destinationNavGroups.map((group) => (
+                        ? (
+                            <>
+                              <Link
+                                href="/destinations"
+                                onClick={() => setMobileOpen(false)}
+                                className="mt-2 inline-block py-2 px-3 my-1 text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 font-medium transition-colors"
+                              >
+                                Our Sanctuaries
+                              </Link>
+                              {destinationNavGroups.map((group) => (
                             <div key={group.circuitHref} className="mt-2 pl-8">
                               <Link
                                 href={group.circuitHref}
@@ -232,7 +250,9 @@ export function Nav() {
                                 ))}
                               </ul>
                             </div>
-                          ))
+                          ))}
+                            </>
+                          )
                         : "children" in item && item.children?.map((child: { href: string; label: string }) => (
                             <Link
                               key={child.href}

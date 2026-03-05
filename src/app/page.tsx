@@ -1,11 +1,50 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import Link from "next/link";
 
+const TESTIMONIALS = [
+  {
+    quote:
+      "We didn’t see another vehicle for three days. Our guide knew every bird, every track—and when we finally found the lions, it was just us and the savannah. This is what luxury safari should be.",
+    name: "Sarah & James M.",
+    trip: "Ruaha & Julius Nyerere, 8 nights",
+    initials: "S & J",
+  },
+  {
+    quote:
+      "From the moment we landed on that dusty airstrip to our last sundowner, every detail felt considered. The camps were intimate, the wildlife encounters raw and unhurried. We’ll be back.",
+    name: "Elena V.",
+    trip: "Southern Circuit honeymoon",
+    initials: "E",
+  },
+  {
+    quote:
+      "Katavi felt like we had Africa to ourselves. Buffalo in the thousands, hippos at arm’s length, and a team that made us feel like family. Wildmakers didn’t just plan a trip—they gave us a story.",
+    name: "Michael T.",
+    trip: "Western Tanzania fly-in",
+    initials: "M",
+  },
+];
+
 export default function HomePage() {
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+
+  const goTo = useCallback((index: number) => {
+    setTestimonialIndex((prev) => {
+      if (index < 0) return TESTIMONIALS.length - 1;
+      if (index >= TESTIMONIALS.length) return 0;
+      return index;
+    });
+  }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => goTo(testimonialIndex + 1), 6000);
+    return () => clearInterval(t);
+  }, [testimonialIndex, goTo]);
   return (
     <>
       {/* Hero — full viewport, cinematic (pt-20 = below fixed nav) */}
@@ -51,7 +90,7 @@ export default function HomePage() {
               <Button href="/plan-your-safari" variant="primary">
                 Plan Your Safari
               </Button>
-              <Button href="/destinations/southern" variant="outline">
+              <Button href="/destinations" variant="outline">
                 Explore Destinations
               </Button>
             </div>
@@ -70,54 +109,162 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* About — authority & positioning */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
-        {/* Parallax-style background: buffalo / Katavi feel — use image */}
+      {/* About — authority & positioning: premium statement block */}
+      <section className="relative py-28 lg:py-36 overflow-hidden">
+        {/* Parallax-style background */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.12]"
           style={{
             backgroundImage:
               "url(https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80)",
           }}
         />
-        <div className="absolute inset-0 bg-safari-green-dark/90" />
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+        <div className="absolute inset-0 bg-safari-green-dark/92" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-display text-2xl sm:text-3xl lg:text-4xl text-safari-gold-light"
+            className="text-center"
           >
-            “We are wilderness architects.”
-          </motion.p>
+            <p className="font-body text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-safari-gold-light/90">
+              Our Story
+            </p>
+            <div className="mt-4 h-px w-12 mx-auto bg-gradient-to-r from-transparent via-safari-gold/60 to-transparent" aria-hidden />
+            <p
+              className="font-display mt-8 text-2xl sm:text-3xl lg:text-4xl text-safari-gold-light leading-snug"
+              style={{ fontFeatureSettings: '"kern" 1' }}
+            >
+              “We are wilderness architects.”
+            </p>
+          </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="mt-6 text-safari-sand-light/90 leading-relaxed space-y-4"
+            transition={{ delay: 0.08 }}
+            className="mt-10 lg:mt-12 px-0 sm:px-4"
           >
-            <p>
-              We are not the northern circuit. We are the frontier—Southern and
-              Western Tanzania, where low-density tourism meets raw wilderness:
-              Ruaha, Julius Nyerere, Katavi. Ultra-exclusive. Cinematic. Silent.
-            </p>
-            <p>
-              Our safaris are crafted for those who seek the road less traveled:
-              remote luxury camps, conservation-driven itineraries, and moments
-              where the only sound is the breath of the wild.
-            </p>
+            <div className="border-l-2 border-safari-gold/40 pl-6 sm:pl-8 py-1 text-safari-sand-light/95 text-base sm:text-lg leading-relaxed space-y-5">
+              <p>
+                We are not the northern circuit. We are the frontier—Southern and
+                Western Tanzania, where low-density tourism meets raw wilderness:
+                Ruaha, Julius Nyerere, Katavi. Ultra-exclusive. Cinematic. Silent.
+              </p>
+              <p>
+                Our safaris are crafted for those who seek the road less traveled:
+                remote luxury camps, conservation-driven itineraries, and moments
+                where the only sound is the breath of the wild.
+              </p>
+            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-10"
+            transition={{ delay: 0.15 }}
+            className="mt-12 text-center"
           >
             <Button href="/about" variant="outline">
               Our Story
             </Button>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Traveler testimonials — carousel */}
+      <section className="relative py-20 lg:py-28 bg-safari-green-dark border-t border-white/5 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 50% 50%, rgba(196,169,103,0.4) 0%, transparent 60%)" }} aria-hidden />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <p className="font-body text-xs font-semibold tracking-[0.25em] uppercase text-safari-gold-light/90">
+              In their words
+            </p>
+            <div className="mt-3 h-px w-12 mx-auto bg-safari-gold/50" aria-hidden />
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-safari-cream mt-6">
+              Traveler stories
+            </h2>
+          </motion.div>
+
+          <div className="relative min-h-[280px] sm:min-h-[260px] flex flex-col items-center justify-center">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={testimonialIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="w-full"
+              >
+                <div className="rounded-2xl border border-safari-gold/20 bg-safari-green/30 backdrop-blur-sm p-8 sm:p-10 lg:p-12 text-center">
+                  <div className="flex justify-center mb-6">
+                    <span className="text-safari-gold" aria-hidden>
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <svg key={i} className="inline-block w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </span>
+                  </div>
+                  <blockquote className="font-display text-lg sm:text-xl lg:text-2xl text-safari-sand-light/95 leading-relaxed italic">
+                    “{TESTIMONIALS[testimonialIndex].quote}”
+                  </blockquote>
+                  <footer className="mt-8 flex flex-col items-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-safari-gold/40 bg-safari-gold/10 font-display text-sm font-semibold text-safari-gold-light">
+                      {TESTIMONIALS[testimonialIndex].initials}
+                    </div>
+                    <p className="mt-3 font-body font-semibold text-safari-gold-light">
+                      {TESTIMONIALS[testimonialIndex].name}
+                    </p>
+                    <p className="mt-1 font-body text-sm text-safari-sand-muted">
+                      {TESTIMONIALS[testimonialIndex].trip}
+                    </p>
+                  </footer>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="flex items-center justify-center gap-4 mt-10">
+              <button
+                type="button"
+                onClick={() => goTo(testimonialIndex - 1)}
+                className="p-2 rounded-full border border-safari-gold/30 text-safari-gold-light transition-colors hover:bg-safari-gold/10 hover:border-safari-gold/50"
+                aria-label="Previous testimonial"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div className="flex gap-2">
+                {TESTIMONIALS.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setTestimonialIndex(i)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      i === testimonialIndex ? "w-8 bg-safari-gold" : "w-2 bg-white/30 hover:bg-white/50"
+                    }`}
+                    aria-label={`Go to testimonial ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => goTo(testimonialIndex + 1)}
+                className="p-2 rounded-full border border-safari-gold/30 text-safari-gold-light transition-colors hover:bg-safari-gold/10 hover:border-safari-gold/50"
+                aria-label="Next testimonial"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -171,7 +318,7 @@ export default function HomePage() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Button href="/destinations/southern" variant="primary">
+            <Button href="/destinations" variant="primary">
               Explore All Destinations
             </Button>
           </div>

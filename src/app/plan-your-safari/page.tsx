@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PlanYourSafariForm } from "./PlanYourSafariForm";
-import { GlassCard } from "@/components/ui/GlassCard";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Plan Your Safari — Bespoke Itinerary Builder",
@@ -8,37 +9,130 @@ export const metadata: Metadata = {
     "Tell us your dates, budget, and dreams. We'll craft a luxury safari itinerary for Southern and Western Tanzania. Smart form and WhatsApp quick contact.",
 };
 
+const PLAN_PAGE_BG =
+  "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
+
 export default function PlanYourSafariPage() {
   return (
-    <>
-      <section className="pt-28 pb-12 lg:pt-36 px-4 sm:px-6">
-        <GlassCard className="max-w-2xl mx-auto p-8 sm:p-10 lg:p-12 text-center rounded-xl">
-          <h1 className="font-display text-4xl lg:text-5xl text-safari-gold-light">
-            Plan Your Safari
-          </h1>
-          <p className="mt-6 text-safari-sand-light/90">
-            Answer a few questions and we’ll design a bespoke itinerary. Or reach
-            us directly on WhatsApp for a quick conversation.
-          </p>
-          <a
-            href="https://wa.me/255762111315"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg border-2 border-green-500 text-green-400 hover:bg-green-500/10 transition-colors text-sm font-medium"
-          >
-            <span>WhatsApp quick contact</span>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-          </a>
-        </GlassCard>
-      </section>
+    <main className="relative flex min-h-screen flex-col pt-20">
+      {/* Full-bleed background image */}
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden>
+        <Image
+          src={PLAN_PAGE_BG}
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div
+          className="absolute inset-0 bg-safari-green-dark/92"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/50 via-safari-green-dark/30 to-safari-green-dark/70"
+          aria-hidden
+        />
+      </div>
+      <div className="relative z-10 flex-1 py-12 px-4 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 lg:items-start">
+          {/* Left column: intro + profile card */}
+          <div className="flex flex-col gap-8 pt-4 lg:pt-8">
+            <div className="space-y-4">
+              <p className="font-body text-xs font-bold uppercase tracking-[0.3em] text-safari-gold-light">
+                Bespoke Excellence
+              </p>
+              <h1 className="font-display text-4xl font-bold leading-tight text-safari-cream sm:text-5xl lg:text-6xl">
+                Plan Your Private Safari
+              </h1>
+              <p className="max-w-lg text-base leading-relaxed text-safari-sand-light/90 sm:text-lg">
+                Every Wildmakers journey is a blank canvas. We curate every detail
+                to align with your personal vision of the wild.
+              </p>
+            </div>
 
-      <section className="pb-20 lg:pb-28">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <PlanYourSafariForm />
+            {/* Profile / concierge card — classic, our palette */}
+            <div className="rounded-xl border border-safari-gold/20 bg-safari-green/40 p-6 sm:p-8 backdrop-blur-sm">
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-6">
+                <div className="shrink-0">
+                  <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-safari-gold/50 sm:h-24 sm:w-24">
+                    <Image
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&q=80"
+                      alt="Your safari architect"
+                      fill
+                      className="object-cover"
+                      sizes="96px"
+                    />
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-display text-xl font-bold text-safari-cream sm:text-2xl">
+                    Your Safari Architect
+                  </h2>
+                  <p className="mt-0.5 font-body text-xs font-semibold uppercase tracking-widest text-safari-gold-light">
+                    Bespoke Itinerary Design
+                  </p>
+                  <p className="mt-4 font-body text-sm italic leading-relaxed text-safari-sand-light/95 sm:text-base">
+                    With years of experience across Southern and Western Tanzania,
+                    we connect you with the heartbeat of the wild—from private
+                    bush dinners to secluded migration crossings. Your journey is
+                    handled with absolute discretion.
+                  </p>
+                  <ul className="mt-4 space-y-2">
+                    <li className="flex items-center gap-3 text-sm text-safari-sand-light/90">
+                      <span
+                        className="text-safari-gold"
+                        aria-hidden
+                      >
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      Expert knowledge: Ruaha, Julius Nyerere & Katavi
+                    </li>
+                    <li className="flex items-center gap-3 text-sm text-safari-sand-light/90">
+                      <span
+                        className="text-safari-gold"
+                        aria-hidden
+                      >
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      English & Swahili speaking
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <Button href="/" variant="outline">
+                Return Home
+              </Button>
+            </div>
+          </div>
+
+          {/* Right column: glassmorphism form */}
+          <div className="glassmorphism-panel rounded-xl p-6 shadow-2xl sm:p-8 lg:p-10">
+            <PlanYourSafariForm inline />
+          </div>
         </div>
-      </section>
-    </>
+
+        <div className="mt-8 flex justify-center lg:hidden">
+          <Button href="/" variant="outline">
+            Return Home
+          </Button>
+        </div>
+      </div>
+    </main>
   );
 }

@@ -7,6 +7,10 @@ export interface Experience {
   highlights: string[];
   cta: string;
   internalLinks: { label: string; href: string }[];
+  /** Optional: for hero and featured image on detail page */
+  imageUrl?: string;
+  /** Optional: eyebrow text above title (e.g. "Ultra-Luxury Aviation") */
+  eyebrow?: string;
 }
 
 export const experiences: Experience[] = [
@@ -29,6 +33,8 @@ export const experiences: Experience[] = [
       { label: "Katavi National Park", href: "/destinations/katavi" },
       { label: "Julius Nyerere National Park", href: "/destinations/julius-nyerere" },
     ],
+    eyebrow: "Ultra-Luxury Aviation",
+    imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80",
   },
   {
     slug: "honeymoon",
@@ -48,6 +54,8 @@ export const experiences: Experience[] = [
       { label: "Ruaha National Park", href: "/destinations/ruaha" },
       { label: "Plan Your Safari", href: "/plan-your-safari" },
     ],
+    eyebrow: "Heritage & Romance",
+    imageUrl: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1200&q=80",
   },
   {
     slug: "photographic",
@@ -68,6 +76,8 @@ export const experiences: Experience[] = [
       { label: "Ruaha National Park", href: "/destinations/ruaha" },
       { label: "Katavi National Park", href: "/destinations/katavi" },
     ],
+    eyebrow: "Designed for the Lens",
+    imageUrl: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80",
   },
   {
     slug: "conservation",
@@ -88,6 +98,8 @@ export const experiences: Experience[] = [
       { label: "Julius Nyerere National Park", href: "/destinations/julius-nyerere" },
       { label: "Ruaha National Park", href: "/destinations/ruaha" },
     ],
+    eyebrow: "Legacy & Impact",
+    imageUrl: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80",
   },
   {
     slug: "corporate",
@@ -107,6 +119,8 @@ export const experiences: Experience[] = [
       { label: "Plan Your Safari", href: "/plan-your-safari" },
       { label: "Luxury Fly-in Safaris", href: "/experiences/luxury-fly-in" },
     ],
+    eyebrow: "Exclusive & Unforgettable",
+    imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80",
   },
 ];
 
