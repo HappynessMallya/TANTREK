@@ -50,7 +50,7 @@ export function Footer() {
       {/* Subtle background image for depth — lodge */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
-        style={{ backgroundImage: "url(/lodgejpg)" }}
+        style={{ backgroundImage: "url(/lodge.jpg)" }}
         aria-hidden
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" aria-hidden />

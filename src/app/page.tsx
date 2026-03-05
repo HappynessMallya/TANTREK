@@ -178,7 +178,7 @@ export default function HomePage() {
               >
                 <div className="relative w-full h-full overflow-hidden rounded-[18px]">
                   <Image
-                    src="/lodgejpg"
+                    src="/lodge.jpg"
                     alt="Luxury safari lodge"
                     fill
                     className="object-cover"
