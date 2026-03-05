@@ -44,7 +44,7 @@ const navLinks: NavLinkItem[] = [
     ],
   },
   { href: "/sustainability", label: "Sustainability" },
-  { href: "/safari-journal", label: "Safari Journal" },
+  { href: "/safari-journal", label: "Blog" },
   { href: "/plan-your-safari", label: "Plan Your Safari" },
 ];
 
@@ -76,7 +76,7 @@ export function Nav() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`text-sm font-medium tracking-[0.16em] uppercase pb-1 border-b border-transparent transition-colors ${
+                    className={`text-xs font-medium tracking-[0.16em] uppercase pb-1 border-b border-transparent transition-colors ${
                       pathname === item.href
                         ? "text-safari-gold-light border-luxury-gold"
                         : "text-safari-sand-light/90 hover:text-safari-gold-light"
@@ -93,10 +93,10 @@ export function Nav() {
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 text-sm font-medium tracking-[0.16em] uppercase pb-1 border-b transition-colors ${
-                      openDropdown === item.label
-                        ? "text-safari-gold-light border-luxury-gold"
-                        : "text-safari-sand-light/90 border-transparent hover:text-safari-gold-light"
+className={`flex items-center gap-1 text-xs font-medium tracking-[0.16em] uppercase pb-1 border-b transition-colors ${
+                        openDropdown === item.label
+                          ? "text-safari-gold-light border-luxury-gold"
+                          : "text-safari-sand-light/90 border-transparent hover:text-safari-gold-light"
                     }`}
                   >
                     {item.label}
@@ -225,7 +225,7 @@ export function Nav() {
                         aria-controls={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
                         id={`mobile-nav-trigger-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
                       >
-                        <span className="text-sm font-medium uppercase tracking-wider">{item.label}</span>
+                        <span className="text-xs font-medium uppercase tracking-wider">{item.label}</span>
                         <svg
                           className={`w-4 h-4 shrink-0 transition-transform duration-200 ${mobileExpanded === item.label ? "rotate-180" : ""}`}
                           fill="none"

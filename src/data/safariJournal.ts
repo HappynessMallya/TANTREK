@@ -55,7 +55,7 @@ export const JOURNAL_POSTS: JournalPost[] = [
     excerpt:
       "Where the herds are each season—Serengeti, Masai Mara, and the best camps for witnessing the world's greatest wildlife spectacle.",
     category: "safari-planning",
-    image: "https://images.unsplash.com/photo-1535338454770-1f2932e27084?w=1200&q=80",
+    image: "/wild.jpg",
     imageAlt: "Wildebeest migration",
     readTime: "10 min read",
   },

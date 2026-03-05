@@ -16,17 +16,17 @@ export default function SafariJournalPage() {
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero — image + gradient like other pages */}
       <section className="relative pt-28 pb-20 sm:pt-32 sm:pb-24 overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
           style={{
             backgroundImage:
               "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=60)",
           }}
           aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/80 via-safari-green-dark/60 to-safari-green-dark" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/75 via-safari-green-dark/55 to-safari-green-dark" aria-hidden />
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="font-body text-luxury-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4">
             Stories from the wild
@@ -104,7 +104,7 @@ export default function SafariJournalPage() {
                       className="absolute inset-0 pointer-events-none"
                       style={{
                         background:
-                          "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)",
+                          "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 55%)",
                       }}
                     />
                     <span className="absolute bottom-3 left-3 font-body text-[10px] font-semibold tracking-wider uppercase text-luxury-gold">
@@ -120,9 +120,12 @@ export default function SafariJournalPage() {
                     <h2 className="font-display text-xl sm:text-2xl text-white leading-snug group-hover:text-luxury-gold transition-colors duration-300">
                       {post.title}
                     </h2>
-                    <p className="mt-3 text-safari-sand-light/70 text-sm font-body leading-relaxed line-clamp-3">
+                    <p className="mt-4 text-safari-sand-light/90 font-body text-sm sm:text-base leading-relaxed line-clamp-3 tracking-wide">
                       {post.excerpt}
                     </p>
+                    <span className="mt-4 inline-block font-body text-[10px] font-semibold tracking-[0.2em] uppercase text-luxury-gold/90">
+                      Read story
+                    </span>
                   </div>
                 </Link>
               </motion.article>
