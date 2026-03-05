@@ -1,131 +1,105 @@
 import Link from "next/link";
 import Image from "next/image";
-import { circuits, getDestinationsByCircuit } from "@/data/destinations";
-import type { Circuit } from "@/data/destinations";
 
-const circuitOrder: Circuit[] = ["northern", "southern", "western"];
+const EXPLORE_LINKS = [
+  { label: "Destinations", href: "/destinations" },
+  { label: "Our Lodges", href: "/destinations" },
+  { label: "The Safari", href: "/experiences" },
+];
 
-const footerDestinationGroups = circuitOrder.map((key) => {
-  const circuit = circuits[key];
-  const parks = getDestinationsByCircuit(key);
-  return {
-    circuitLabel: circuit.name,
-    circuitHref: `/destinations/${circuit.slug}`,
-    parks: parks.map((p) => ({ label: p.name, href: `/destinations/${p.slug}` })),
-  };
-});
-
-const experiences = [
-  { href: "/experiences/luxury-fly-in", label: "Luxury Fly-in" },
-  { href: "/experiences/honeymoon", label: "Honeymoon" },
-  { href: "/experiences/photographic", label: "Photographic" },
-  { href: "/experiences/conservation", label: "Conservation" },
+const COMPANY_LINKS = [
+  { label: "Our Story", href: "/about" },
+  { label: "Sustainability", href: "/sustainability" },
+  { label: "Contact", href: "/plan-your-safari" },
 ];
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer
-      className="relative min-h-[380px] lg:min-h-[420px] flex flex-col lg:grid lg:grid-cols-[1fr_1.25fr] items-stretch gap-6 lg:gap-0"
-      style={{ backgroundColor: "#4c4a46" }}
-    >
-      {/* Left: logo + contact details */}
-      <div className="flex flex-col justify-center lg:justify-start items-center lg:items-start pt-10 lg:pt-0 lg:py-16 order-1 pl-4 sm:pl-6 lg:pl-8 lg:pr-4">
-        <div className="footer-logo-container w-fit max-w-[280px] lg:max-w-none ml-0 lg:ml-20 pr-0 lg:pr-10 xl:pr-12 mt-12 lg:mt-12 mb-6 lg:mb-6">
-          <Link href="/" className="block" aria-label="Tanzania Wildmakers Safaris - Home">
-            <Image
-              src="/logo-footer.png"
-              alt="Tanzania Wildmakers Safaris"
-              width={280}
-              height={80}
-              className="h-16 sm:h-20 lg:h-24 w-auto object-contain object-left"
-            />
-          </Link>
-        </div>
-        <div className="text-safari-sand-light/90 text-sm space-y-2 ml-0 lg:ml-20 max-w-[280px] lg:max-w-none text-center lg:text-left">
-          <p>
-            <span className="text-safari-sand-muted/90 font-medium">Email:</span>{" "}
-            <a href="mailto:info@tanzaniawildmakersafari.com" className="hover:text-safari-gold-light underline">
-              info@tanzaniawildmakersafari.com
-            </a>
-          </p>
-          <p>
-            <span className="text-safari-sand-muted/90 font-medium">Phone:</span>{" "}
-            <a href="tel:+255762111315" className="hover:text-safari-gold-light underline">
-              +255 762 111 315
-            </a>
-          </p>
-          <p>
-            <span className="text-safari-sand-muted/90 font-medium">Location:</span> Tanzania
-          </p>
-        </div>
-      </div>
-
-      {/* Right: footer image — larger */}
-      <div className="relative w-full min-h-[180px] lg:min-h-0 shrink-0 order-3 flex items-center justify-end self-stretch pr-0">
-        <div className="relative w-full h-full min-h-[160px] lg:min-h-0 self-stretch">
-          <Image
-            src="/footer-image.png"
-            alt=""
-            fill
-            className="object-contain object-right"
-            sizes="(max-width: 1023px) 100vw, 38vw"
-            priority={false}
-          />
-        </div>
-      </div>
-
-      {/* Center: content — exactly in the middle of the footer on desktop */}
-      <div className="flex flex-col justify-center items-center text-center px-4 sm:px-6 py-8 lg:py-10 order-2 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:z-10 lg:px-0">
-        <div className="max-w-3xl w-full">
-          <p className="font-display text-lg sm:text-xl text-safari-gold-light">
-            Crafting wild experiences. Redefining safari frontiers.
-          </p>
-          <p className="mt-2 text-safari-sand-light/80 text-sm max-w-lg mx-auto">
-            We organise safaris by circuit; each circuit includes several national parks.
-          </p>
-
-          {/* Destinations by circuit — 3 columns on desktop */}
-          <nav className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-left" aria-label="Destinations by circuit">
-            {footerDestinationGroups.map((group) => (
-              <div key={group.circuitHref}>
-                <Link
-                  href={group.circuitHref}
-                  className="font-medium text-safari-gold-light hover:underline block mb-2"
-                >
-                  {group.circuitLabel}
-                </Link>
-                <ul className="list-disc list-inside text-safari-sand-light/90 text-sm space-y-1 ml-1">
-                  {group.parks.map((park) => (
-                    <li key={park.href}>
-                      <Link href={park.href} className="hover:text-safari-gold-light hover:underline transition-colors">
-                        {park.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
-
-          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
-            <span className="text-safari-sand-muted/90">Experiences:</span>
-            {experiences.slice(0, 3).map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-safari-sand-light/90 hover:text-safari-gold-light transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
-            <Link href="/plan-your-safari" className="text-safari-gold hover:underline">
-              Plan Your Safari
+    <footer className="relative bg-safari-green-dark border-t border-white/5 pt-16 sm:pt-20 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Top: logo + tagline + socials | Explore + Company */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12 lg:gap-16 mb-16 sm:mb-20">
+          <div className="space-y-6 max-w-sm">
+            <Link href="/" className="block" aria-label="Tanzania Wildmakers Safaris - Home">
+              <Image
+                src="/logo.png"
+                alt="Tanzania Wildmakers Safaris"
+                width={220}
+                height={64}
+                className="h-14 sm:h-16 w-auto object-contain object-left"
+              />
             </Link>
+            <p className="text-safari-sand-light/70 text-xs font-body font-light leading-relaxed tracking-wide uppercase">
+              Redefining the boundaries of luxury and exploration. Conservation-driven safari in Southern & Western Tanzania.
+            </p>
+            <div className="flex gap-5 text-safari-sand-light/50">
+              <a
+                href="https://wa.me/255762111315"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-safari-gold transition-colors"
+                aria-label="WhatsApp"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </a>
+              <a
+                href="mailto:info@tanzaniawildmakersafari.com"
+                className="hover:text-safari-gold transition-colors"
+                aria-label="Email"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </a>
+            </div>
           </div>
+          <nav className="grid grid-cols-2 sm:grid-cols-3 gap-10 sm:gap-16" aria-label="Footer navigation">
+            <div className="space-y-4">
+              <h3 className="font-body text-white text-[10px] font-semibold uppercase tracking-[0.25em]">
+                Explore
+              </h3>
+              <ul className="space-y-3 text-safari-sand-light/70 text-[11px] font-body uppercase tracking-widest">
+                {EXPLORE_LINKS.map(({ label, href }) => (
+                  <li key={href}>
+                    <Link href={href} className="hover:text-safari-gold transition-colors">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h3 className="font-body text-white text-[10px] font-semibold uppercase tracking-[0.25em]">
+                Company
+              </h3>
+              <ul className="space-y-3 text-safari-sand-light/70 text-[11px] font-body uppercase tracking-widest">
+                {COMPANY_LINKS.map(({ label, href }) => (
+                  <li key={href}>
+                    <Link href={href} className="hover:text-safari-gold transition-colors">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </nav>
+        </div>
 
-          <p className="mt-8 text-safari-sand-light/80 text-sm">
-            © {new Date().getFullYear()} Tanzania Wildmakers Safaris. Conservation-driven luxury safari.
+        {/* Bottom: copyright | stats */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-white/5 pt-8">
+          <p className="text-[10px] font-body uppercase tracking-widest text-safari-sand-light/50 order-2 sm:order-1">
+            © {year} Tanzania Wildmakers Safaris. All rights reserved.
           </p>
+          <div className="flex gap-10 sm:gap-12 order-1 sm:order-2">
+            <div className="text-center sm:text-right">
+              <p className="font-display text-xl text-white">25+</p>
+              <p className="text-safari-sand-light/50 text-[9px] font-body uppercase tracking-widest">Years</p>
+            </div>
+            <div className="text-center sm:text-right">
+              <p className="font-display text-xl text-white">100%</p>
+              <p className="text-safari-sand-light/50 text-[9px] font-body uppercase tracking-widest">Private</p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

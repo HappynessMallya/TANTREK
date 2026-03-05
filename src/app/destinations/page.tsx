@@ -61,7 +61,7 @@ export default function DestinationsListingPage() {
                   Our Sanctuaries
                 </h1>
                 <p className="max-w-2xl font-body text-lg font-light leading-relaxed text-safari-sand-light/95">
-                  Venture into the heart of Tanzania's most pristine wilderness.
+                  Venture into the heart of Tanzania&apos;s most pristine wilderness.
                   Each of our selected sanctuaries represents the pinnacle of
                   luxury conservation and raw, natural beauty.
                 </p>

@@ -132,7 +132,7 @@ export function SustainabilityContent() {
             className="mx-auto max-w-2xl font-body text-lg font-light leading-relaxed text-safari-sand-light/95 md:text-xl"
           >
             Pioneering high-end ecological impact and low-density tourism in the
-            heart of Tanzania's wild ecosystems.
+            heart of Tanzania&apos;s wild ecosystems.
           </motion.p>
           <motion.div
             initial={{ opacity: 0 }}

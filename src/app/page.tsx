@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -65,48 +66,199 @@ export default function HomePage() {
             className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/60 via-transparent to-safari-green-dark/80"
             aria-hidden
           />
-          {/* Dust overlay */}
           <div className="absolute inset-0 dust-layer pointer-events-none" aria-hidden />
         </div>
 
-        {/* Glass morph card overlay */}
+        {/* Hero content — eyebrow, headline, tagline, journey bar */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="relative z-10 mx-4"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 px-4 sm:px-6 text-center max-w-5xl mx-auto pb-24"
         >
-          <GlassCard className="p-8 sm:p-10 lg:p-12 max-w-2xl text-center">
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-safari-cream leading-tight">
-              Tanzania Wildmakers Safaris
-            </h1>
-            <p className="mt-4 text-lg sm:text-xl text-safari-sand-light/95">
-              Crafting Wild Experiences. Redefining Safari Frontiers.
-            </p>
-            <p className="mt-2 text-safari-sand-light text-base sm:text-lg font-medium">
-              Explore Southern & Western Tanzania in Luxury
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4 justify-center">
-              <Button href="/plan-your-safari" variant="primary">
-                Plan Your Safari
-              </Button>
-              <Button href="/destinations" variant="outline">
-                Explore Destinations
-              </Button>
+          <p className="font-body text-safari-gold text-[10px] sm:text-xs font-semibold tracking-[0.35em] uppercase mb-6">
+            Est. 2010 • Private & Exclusive
+          </p>
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.08] font-normal tracking-tight">
+            Where Untamed Wild
+            <br />
+            <span className="italic font-light">Meets Refined Luxury</span>
+          </h1>
+          <p className="mt-6 text-sm sm:text-base text-white/70 max-w-xl mx-auto font-body font-light leading-relaxed tracking-wide">
+            Curating Tanzania’s most exclusive safari experiences. Tailored for those who seek the profound beauty of the Serengeti, Ruaha, and Katavi without compromise.
+          </p>
+
+          {/* Journey CTA bar — Preferred Season, Email, Begin Journey */}
+          <div className="hero-journey-bar mt-12 sm:mt-14 p-1.5 rounded-lg max-w-3xl mx-auto w-full flex flex-col md:flex-row items-stretch gap-0">
+            <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
+              <svg className="w-5 h-5 shrink-0 text-safari-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Preferred season"
+                className="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/40 w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none"
+                aria-label="Preferred season"
+              />
             </div>
-          </GlassCard>
+            <div className="h-px w-full md:h-8 md:w-px md:min-h-[1px] bg-white/10 shrink-0" aria-hidden />
+            <div className="flex-1 flex items-center px-4 sm:px-6 py-3.5 gap-3 w-full">
+              <svg className="w-5 h-5 shrink-0 text-safari-gold/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <input
+                type="email"
+                placeholder="Your email"
+                className="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/40 w-full font-body text-[11px] sm:text-xs uppercase tracking-widest outline-none"
+                aria-label="Your email"
+              />
+            </div>
+            <Link
+              href="/plan-your-safari"
+              className="inline-flex items-center justify-center bg-safari-gold text-safari-green-dark font-body text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase px-8 py-4 hover:bg-safari-gold-light transition-colors duration-300 w-full md:w-auto shrink-0 rounded-md"
+            >
+              Begin Journey
+            </Link>
+          </div>
         </motion.div>
 
         {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          transition={{ delay: 1.4 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
         >
           <span className="block w-6 h-10 border-2 border-safari-sand/50 rounded-full mx-auto" />
           <span className="block text-xs text-safari-sand/60 mt-2">Scroll</span>
         </motion.div>
+      </section>
+
+      {/* Media mentions — prestige strip */}
+      <section className="relative z-20 px-4 sm:px-6 lg:px-8 py-8 border-t border-white/5 bg-safari-green-dark/60 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-10 sm:gap-16 md:gap-24 opacity-40 grayscale contrast-125">
+          <span className="font-display text-lg sm:text-xl tracking-tight text-white/90">Condé Nast <span className="font-bold">Traveler</span></span>
+          <span className="font-display text-xl font-bold tracking-widest uppercase text-white/90">Vogue</span>
+          <span className="font-display text-lg tracking-tight text-white/90">Financial Times</span>
+          <span className="font-display text-xl italic tracking-tight text-white/90">Departures</span>
+          <span className="font-body font-bold text-sm tracking-[0.25em] uppercase text-white/90">Tatler</span>
+        </div>
+      </section>
+
+      {/* Sanctuaries of the Savanna — Private Collection with overlapping images */}
+      <section className="relative py-20 lg:py-32 bg-safari-green-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
+              <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.3em] uppercase">
+                The Private Collection
+              </p>
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight">
+                Sanctuaries of
+                <br />
+                <span className="italic font-light">The Savanna</span>
+              </h2>
+              <p className="text-safari-sand-light/70 font-body font-light leading-relaxed text-sm max-w-md">
+                Hand-selected camps and lodges that redefine remote living. Each property offers a unique vantage point of the Great Migration and Tanzania’s wilderness, combined with world-class guiding and refined bush hospitality.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/destinations"
+                  className="inline-block font-body text-safari-gold text-[10px] font-bold tracking-[0.25em] uppercase border-b border-safari-gold/30 pb-1.5 hover:border-safari-gold transition-colors"
+                >
+                  Explore the portfolio
+                </Link>
+              </div>
+            </div>
+            <div className="lg:col-span-7 relative flex justify-end order-1 lg:order-2 min-h-[320px] lg:min-h-[480px]">
+              {/* Main image — luxury tent/lodge */}
+              <div className="relative w-[85%] lg:w-4/5 aspect-[3/4] z-10 overflow-hidden rounded-sm shadow-2xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&q=85"
+                  alt="Luxury safari camp"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 85vw, 55vw"
+                />
+              </div>
+              {/* Overlapping image — savanna landscape */}
+              <div className="absolute -bottom-12 -left-4 lg:-bottom-20 lg:-left-10 w-[60%] lg:w-3/5 aspect-[4/5] z-20 overflow-hidden rounded-sm shadow-2xl border-4 border-safari-green-dark">
+                <Image
+                  src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=85"
+                  alt="Savanna landscape"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 50vw, 35vw"
+                />
+              </div>
+              {/* Faded background image — wildlife */}
+              <div className="absolute -top-6 -right-4 lg:-top-12 lg:-right-8 w-[45%] lg:w-2/5 aspect-square z-0 overflow-hidden rounded-sm opacity-50 grayscale">
+                <Image
+                  src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500&q=80"
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 40vw, 25vw"
+                  aria-hidden
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Distinction — The Tanzania Wildmakers Standard */}
+      <section className="relative py-20 lg:py-32 bg-safari-green-dark border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 lg:mb-24 space-y-4">
+            <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase">
+              Distinction
+            </p>
+            <h2 className="font-display text-4xl sm:text-5xl text-white italic font-light">
+              The Tanzania Wildmakers Standard
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+            {[
+              { icon: "diamond", title: "Bespoke Curation", copy: "Every itinerary is a unique masterpiece, shaped around your dates, interests, and the wilderness you want to experience." },
+              { icon: "guide", title: "Elite Guidance", copy: "Our guides hold the highest level of certification, offering deep insight into wildlife, ecosystems, and local culture." },
+              { icon: "heart", title: "Ethical Impact", copy: "We dedicate a meaningful part of our practice to conservation and community partnerships in the regions we travel." },
+              { icon: "care", title: "Infinite Care", copy: "From touchdown to departure, your journey is managed with precision—logistics, camps, and moments that matter." },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="space-y-6 text-center px-2"
+              >
+                <div className="flex justify-center">
+                  {item.icon === "diamond" && (
+                    <svg className="w-8 h-8 text-safari-gold" fill="currentColor" viewBox="0 0 24 24" aria-hidden><path d="M12 2L2 7l10 15 10-15-10-5z" /></svg>
+                  )}
+                  {item.icon === "guide" && (
+                    <svg className="w-8 h-8 text-safari-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                  )}
+                  {item.icon === "heart" && (
+                    <svg className="w-8 h-8 text-safari-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                  )}
+                  {item.icon === "care" && (
+                    <svg className="w-8 h-8 text-safari-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                  )}
+                </div>
+                <div className="space-y-3">
+                  <h3 className="font-body text-white text-[11px] font-semibold uppercase tracking-widest">
+                    {item.title}
+                  </h3>
+                  <p className="text-safari-sand-light/60 text-[13px] font-light leading-relaxed tracking-wide">
+                    {item.copy}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* About — authority & positioning: premium statement block */}
@@ -268,118 +420,218 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Destinations teaser — SEO internal links */}
-      <section className="py-20 lg:py-28 bg-safari-green">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-display text-3xl lg:text-4xl text-safari-gold-light text-center mb-12"
-          >
-            Where We Go
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Where We Go — premium circuits */}
+      <section className="relative py-24 lg:py-32 bg-safari-green-dark border-t border-white/5 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 30% 20%, rgba(196,169,103,0.3) 0%, transparent 50%)" }} aria-hidden />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4"
+            >
+              Explore
+            </motion.p>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-px w-12 bg-safari-gold/40" aria-hidden />
+              <motion.h2
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-light tracking-tight"
+              >
+                Where We Go
+              </motion.h2>
+              <div className="h-px w-12 bg-safari-gold/40" aria-hidden />
+            </div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.05 }}
+              className="text-safari-sand-light/60 font-body text-sm max-w-md mx-auto"
+            >
+              Three circuits. One standard of excellence.
+            </motion.p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {[
-              {
-                title: "Northern Circuit",
-                desc: "Serengeti, Ngorongoro, Tarangire, Lake Manyara.",
-                href: "/destinations/northern",
-              },
-              {
-                title: "Southern Circuit",
-                desc: "Julius Nyerere, Ruaha — the soul of wilderness.",
-                href: "/destinations/southern",
-              },
-              {
-                title: "Western Circuit",
-                desc: "Katavi — Africa’s last true frontier.",
-                href: "/destinations/western",
-              },
+              { title: "Northern Circuit", desc: "Serengeti, Ngorongoro, Tarangire, Lake Manyara.", href: "/destinations/northern" },
+              { title: "Southern Circuit", desc: "Julius Nyerere, Ruaha — the soul of wilderness.", href: "/destinations/southern" },
+              { title: "Western Circuit", desc: "Katavi — Africa&apos;s last true frontier.", href: "/destinations/western" },
             ].map((item, i) => (
               <motion.div
                 key={item.href}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.08 }}
               >
-                <Link href={item.href} className="block group">
-                  <GlassCard className="p-6 h-full transition-transform duration-300 group-hover:scale-[1.02]">
-                    <h3 className="font-display text-xl text-safari-gold-light group-hover:underline">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-safari-sand-light/80 text-sm">
-                      {item.desc}
-                    </p>
-                  </GlassCard>
+                <Link
+                  href={item.href}
+                  className="group block rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-8 lg:p-10 h-full transition-all duration-500 hover:border-safari-gold/40 hover:bg-white/[0.06] hover:shadow-[0_0_40px_rgba(196,169,103,0.08)]"
+                >
+                  <div className="h-px w-10 bg-safari-gold/50 mb-6 group-hover:w-14 transition-all duration-300" aria-hidden />
+                  <h3 className="font-display text-xl lg:text-2xl text-white font-medium tracking-tight group-hover:text-safari-gold-light transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-safari-sand-light/70 text-sm font-body leading-relaxed">
+                    {item.desc}
+                  </p>
+                  <span className="inline-block mt-6 font-body text-safari-gold text-[10px] font-semibold tracking-[0.2em] uppercase group-hover:tracking-[0.3em] transition-all">
+                    Discover →
+                  </span>
                 </Link>
               </motion.div>
             ))}
           </div>
-          <div className="mt-10 text-center">
-            <Button href="/destinations" variant="primary">
-              Explore All Destinations
-            </Button>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-14 text-center"
+          >
+            <Link
+              href="/destinations"
+              className="inline-flex items-center gap-2 font-body text-safari-gold text-xs font-bold tracking-[0.25em] uppercase hover:text-safari-gold-light transition-colors"
+            >
+              Explore all sanctuaries
+              <span aria-hidden>→</span>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* Experiences strip */}
-      <section className="py-20 border-t border-glass-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-display text-3xl lg:text-4xl text-safari-gold-light text-center mb-12"
-          >
-            Safari Experiences
-          </motion.h2>
-          <div className="flex flex-wrap justify-center gap-4">
+      {/* Safari Experiences — refined links */}
+      <section className="relative py-24 lg:py-32 border-t border-white/5 bg-safari-green-dark/80">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase mb-4"
+            >
+              Curated journeys
+            </motion.p>
+            <div className="h-px w-12 mx-auto bg-safari-gold/40 mb-6" aria-hidden />
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-light tracking-tight italic"
+            >
+              Safari Experiences
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.05 }}
+              className="mt-4 text-safari-sand-light/60 font-body text-sm max-w-lg mx-auto"
+            >
+              From fly-in luxury to honeymoons and conservation journeys.
+            </motion.p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {[
-              { label: "Luxury Fly-in Safaris", href: "/experiences/luxury-fly-in" },
-              { label: "Honeymoon Safaris", href: "/experiences/honeymoon" },
-              { label: "Photographic Expeditions", href: "/experiences/photographic" },
-              { label: "Conservation Safaris", href: "/experiences/conservation" },
-              { label: "Corporate Incentives", href: "/experiences/corporate" },
-            ].map((item) => (
-              <Button key={item.href} href={item.href} variant="outline">
-                {item.label}
-              </Button>
+              { label: "Luxury Fly-in", href: "/experiences/luxury-fly-in" },
+              { label: "Honeymoon", href: "/experiences/honeymoon" },
+              { label: "Photographic", href: "/experiences/photographic" },
+              { label: "Conservation", href: "/experiences/conservation" },
+              { label: "Corporate", href: "/experiences/corporate" },
+            ].map((item, i) => (
+              <motion.div
+                key={item.href}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <Link
+                  href={item.href}
+                  className="inline-block px-6 py-3.5 rounded-lg border border-safari-gold/25 bg-white/[0.02] font-body text-[11px] font-medium tracking-[0.2em] uppercase text-safari-sand-light/95 hover:border-safari-gold/50 hover:bg-safari-gold/10 hover:text-safari-gold-light transition-all duration-300"
+                >
+                  {item.label}
+                </Link>
+              </motion.div>
             ))}
           </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-10 text-center"
+          >
+            <Link
+              href="/experiences"
+              className="font-body text-safari-gold/90 text-xs tracking-widest uppercase hover:text-safari-gold-light transition-colors"
+            >
+              All curated journeys →
+            </Link>
+          </motion.p>
         </div>
       </section>
 
-      {/* CTA — Plan Your Safari + WhatsApp */}
-      <section className="py-20 lg:py-28 bg-gradient-sunrise">
-        <div className="max-w-3xl mx-auto px-4 text-center">
+      {/* Begin Your Frontier — premium CTA */}
+      <section className="relative py-28 lg:py-36 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=70)" }}
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/85 via-safari-green-dark/90 to-safari-green-dark" aria-hidden />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-body text-safari-gold text-[10px] font-bold tracking-[0.4em] uppercase mb-6"
+          >
+            Your journey
+          </motion.p>
+          <div className="h-px w-16 mx-auto bg-safari-gold/50 mb-8" aria-hidden />
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-display text-3xl lg:text-4xl text-safari-cream"
+            className="font-display text-4xl sm:text-5xl lg:text-6xl text-white font-light tracking-tight leading-[1.1]"
           >
             Begin Your Frontier
           </motion.h2>
-          <p className="mt-4 text-safari-sand-light/90">
-            Tell us your dates, budget, and dreams. We’ll craft an itinerary that
-            belongs only to you.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4 justify-center">
-            <Button href="/plan-your-safari" variant="primary">
-              Plan Your Safari
-            </Button>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.08 }}
+            className="mt-8 text-safari-sand-light/85 font-body text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
+          >
+            Tell us your dates, budget, and dreams. We&apos;ll craft an itinerary that belongs only to you.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.12 }}
+            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <Link
+              href="/plan-your-safari"
+              className="inline-flex items-center justify-center bg-safari-gold text-safari-green-dark font-body text-xs font-bold tracking-[0.25em] uppercase px-10 py-4 rounded-lg hover:bg-safari-gold-light transition-colors duration-300 w-full sm:w-auto"
+            >
+              Plan your safari
+            </Link>
             <a
               href="https://wa.me/255762111315"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg border-2 border-green-500 text-green-400 hover:bg-green-500/10 transition-all"
+              className="inline-flex items-center gap-2 font-body text-safari-sand-light/80 text-sm tracking-wide hover:text-safari-gold-light transition-colors"
             >
-              WhatsApp quick contact
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Or reach us on WhatsApp
             </a>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>
