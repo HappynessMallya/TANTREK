@@ -32,26 +32,31 @@ const ABOUT_TESTIMONIALS = [
   },
 ];
 
+// Expert team — placeholder URLs (initials + brand colors) so images always load
 const TEAM = [
   {
     name: "Emmanuel K.",
     role: "Head Field Guide",
-    imageUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop",
+    imageUrl: "https://ui-avatars.com/api/?name=Emmanuel+K&size=400&background=1e4030&color=c4a967&bold=true",
+    alt: "Emmanuel K., Head Field Guide",
   },
   {
     name: "Sarah M.",
     role: "Experience Director",
-    imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654086?w=400&h=400&fit=crop",
+    imageUrl: "https://ui-avatars.com/api/?name=Sarah+M&size=400&background=1e4030&color=c4a967&bold=true",
+    alt: "Sarah M., Experience Director",
   },
   {
     name: "Dr. Lucas J.",
     role: "Chief Ecologist",
-    imageUrl: "https://images.unsplash.com/photo-1568602471122-7832951cc140?w=400&h=400&fit=crop",
+    imageUrl: "https://ui-avatars.com/api/?name=Lucas+J&size=400&background=1e4030&color=c4a967&bold=true",
+    alt: "Dr. Lucas J., Chief Ecologist",
   },
   {
     name: "Nia W.",
     role: "Private Concierge",
-    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+    imageUrl: "https://ui-avatars.com/api/?name=Nia+W&size=400&background=1e4030&color=c4a967&bold=true",
+    alt: "Nia W., Private Concierge",
   },
 ];
 
@@ -244,7 +249,7 @@ export function AboutContent() {
               <div className="relative size-36 overflow-hidden rounded-full border-2 border-safari-gold p-1.5 mb-5 md:size-44">
                 <Image
                   src={member.imageUrl}
-                  alt={member.name}
+                  alt={member.alt}
                   fill
                   className="object-cover rounded-full"
                   sizes="176px"
