@@ -392,6 +392,15 @@ body {
   background-size: 24px 24px;
 }
 
+/* Animated Tanzania map — gold dot pulse */
+.map-dot-glow {
+  animation: mapDotPulse 2s ease-in-out infinite;
+}
+@keyframes mapDotPulse {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.9)); }
+  50% { opacity: 0.9; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.95)); }
+}
+
 /* Selection color */
 ::selection {
   @apply bg-safari-gold/30 text-safari-green;

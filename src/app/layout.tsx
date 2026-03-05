@@ -4,6 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { ContactUsBanner } from "@/components/ContactUsBanner";
 import { TravelAgencySchema } from "@/components/seo/TravelAgencySchema";
 
 const playfair = Playfair_Display({
@@ -62,6 +63,7 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ContactUsBanner />
         <WhatsAppFloat />
       </body>
     </html>

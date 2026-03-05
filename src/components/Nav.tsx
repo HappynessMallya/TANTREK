@@ -44,6 +44,7 @@ const navLinks: NavLinkItem[] = [
     ],
   },
   { href: "/sustainability", label: "Sustainability" },
+  { href: "/safari-journal", label: "Safari Journal" },
   { href: "/plan-your-safari", label: "Plan Your Safari" },
 ];
 

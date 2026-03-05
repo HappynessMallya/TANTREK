@@ -6,6 +6,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import Link from "next/link";
+import { AnimatedTanzaniaMap } from "@/components/AnimatedTanzaniaMap";
+
+const HERO_SLIDES = [
+  { src: "/wild.jpg", alt: "The Wild — elephants in savannah", label: "The Wild" },
+  { src: "/safari.jpg", alt: "Safari experience — vehicle in golden grass", label: "Safari Experience" },
+  { src: "/land.jpg", alt: "Remote wilderness — buffalo and river", label: "Remote Wilderness" },
+  {
+    src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=75",
+    alt: "Beach escape — Zanzibar",
+    label: "Beach Paradise",
+  },
+] as const;
+
+const SLIDE_DURATION_MS = 7000;
+// Performance: For video hero slides, use 1080p WebM, max 6–8MB; lazy-load non-initial slides.
 
 const TESTIMONIALS = [
   {
@@ -31,11 +46,13 @@ const TESTIMONIALS = [
   },
 ];
 
-type SanctuaryFrame = 0 | 1 | 2; // 0 = lodge (main), 1 = wild (overlap), 2 = safari (back)
+type SanctuaryFrame = 0 | 1 | 2 | 3; // 0 = default (wild+safari on top), 1 = lodge, 2 = wild, 3 = safari
 
 export default function HomePage() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [sanctuaryFrameOnTop, setSanctuaryFrameOnTop] = useState<SanctuaryFrame>(0);
+  const [heroPhase, setHeroPhase] = useState<"slideshow" | "map">("slideshow");
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
 
   const goTo = useCallback((index: number) => {
     setTestimonialIndex((prev) => {
@@ -49,75 +66,115 @@ export default function HomePage() {
     const t = setInterval(() => goTo(testimonialIndex + 1), 6000);
     return () => clearInterval(t);
   }, [testimonialIndex, goTo]);
+
+  // Hero: 4 slides (7s each), then map (20s), then loop
+  useEffect(() => {
+    if (heroPhase === "map") return;
+    const t = setInterval(() => {
+      setHeroSlideIndex((prev) => {
+        if (prev >= HERO_SLIDES.length - 1) {
+          setHeroPhase("map");
+          return 0;
+        }
+        return prev + 1;
+      });
+    }, SLIDE_DURATION_MS);
+    return () => clearInterval(t);
+  }, [heroPhase, heroSlideIndex]);
+
+  const onMapComplete = useCallback(() => {
+    setHeroPhase("slideshow");
+    setHeroSlideIndex(0);
+  }, []);
+
   return (
     <>
-      {/* Hero — full viewport, cinematic (pt-20 = below fixed nav) */}
+      {/* Hero — cinematic slideshow → Tanzania map → loop (pt-20 = below fixed nav) */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        {/* Video background */}
+        {/* Slideshow background — 4 slow cinematic slides */}
         <div className="absolute inset-0 bg-safari-green-dark">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
-            aria-hidden
-          >
-            <source src="/bg-video.mp4" type="video/mp4" />
-          </video>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={heroSlideIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.4, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={HERO_SLIDES[heroSlideIndex].src}
+                alt={HERO_SLIDES[heroSlideIndex].alt}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority={heroSlideIndex === 0}
+              />
+            </motion.div>
+          </AnimatePresence>
+          {/* Cinematic overlay — keeps text readable */}
           <div
-            className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/60 via-transparent to-safari-green-dark/80"
+            className="absolute inset-0 pointer-events-none z-[2]"
+            style={{
+              background: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.65))",
+            }}
             aria-hidden
           />
-          <div className="absolute inset-0 dust-layer pointer-events-none" aria-hidden />
+          <div className="absolute inset-0 dust-layer pointer-events-none z-[3]" aria-hidden />
         </div>
 
-        {/* Hero content — eyebrow, headline, tagline, journey bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 px-4 sm:px-6 text-center max-w-5xl mx-auto pb-24"
-        >
-          <p className="font-body text-safari-gold text-[10px] sm:text-xs font-semibold tracking-[0.35em] uppercase mb-6">
-            Est. 2010 • Private & Exclusive
-          </p>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.08] font-normal tracking-tight">
-            Where Untamed Wild
-            <br />
-            <span className="italic font-light">Meets Refined Luxury</span>
-          </h1>
-          <p className="mt-6 text-sm sm:text-base text-white/70 max-w-xl mx-auto font-body font-light leading-relaxed tracking-wide">
-            Private safaris across Serengeti, Ruaha, and Katavi—crafted for travelers who seek profound wilderness without compromise.
-          </p>
+        {/* Animated Tanzania map — appears after 4 slides, ~20s then restart */}
+        <AnimatedTanzaniaMap isActive={heroPhase === "map"} onComplete={onMapComplete} />
 
-          {/* Hero glass CTA bar — Begin Your Journey + Explore Our Sanctuaries */}
-          <div className="hero-journey-bar mt-10 sm:mt-12 px-4 py-4 rounded-lg max-w-2xl mx-auto w-full flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/plan-your-safari"
-              className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
-            >
-              Begin Your Journey
-            </Link>
-            <Link
-              href="/destinations"
-              className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase w-full sm:w-auto"
-            >
-              Explore Our Sanctuaries
-            </Link>
-          </div>
-        </motion.div>
+        {/* Hero content — visible during slideshow only */}
+        {heroPhase === "slideshow" && (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative z-10 px-4 sm:px-6 text-center max-w-5xl mx-auto pb-24"
+          >
+            <p className="font-body text-safari-gold text-[10px] sm:text-xs font-semibold tracking-[0.35em] uppercase mb-6">
+              Est. 2010 • Private & Exclusive
+            </p>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.08] font-normal tracking-tight">
+              Where Untamed Wild
+              <br />
+              <span className="italic font-light">Meets Refined Luxury</span>
+            </h1>
+            <p className="mt-6 text-sm sm:text-base text-white/70 max-w-xl mx-auto font-body font-light leading-relaxed tracking-wide">
+              Private safaris across Serengeti, Ruaha, and Katavi—crafted for travelers who seek profound wilderness without compromise.
+            </p>
 
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-        >
-          <span className="block w-6 h-10 border-2 border-safari-sand/50 rounded-full mx-auto" />
-          <span className="block text-xs text-safari-sand/60 mt-2">Scroll</span>
-        </motion.div>
+            <div className="hero-journey-bar mt-10 sm:mt-12 px-4 py-4 rounded-lg max-w-2xl mx-auto w-full flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/plan-your-safari"
+                className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
+              >
+                Begin Your Journey
+              </Link>
+              <Link
+                href="/destinations"
+                className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase w-full sm:w-auto"
+              >
+                Explore Our Sanctuaries
+              </Link>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Scroll cue — slideshow only */}
+        {heroPhase === "slideshow" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+          >
+            <span className="block w-6 h-10 border-2 border-safari-sand/50 rounded-full mx-auto" />
+            <span className="block text-xs text-safari-sand/60 mt-2">Scroll</span>
+          </motion.div>
+        )}
       </section>
 
       {/* Media mentions — prestige strip: champagne, minimal luxury */}
@@ -133,7 +190,7 @@ export default function HomePage() {
       </section>
 
       {/* Sanctuaries of the Wild — immersive nature, jungle gradient + dust */}
-      <section className="section-bg-sanctuaries relative luxury-section-padding overflow-hidden">
+      <section className="section-bg-sanctuaries relative overflow-hidden pt-14 pb-14 sm:pt-16 sm:pb-16 lg:luxury-section-padding">
         <div className="absolute inset-0 sanctuaries-dust pointer-events-none" aria-hidden />
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.12]"
@@ -142,20 +199,21 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-safari-green-dark/50 via-safari-green-dark/30 to-transparent" aria-hidden />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-8 items-center">
+            {/* Text — on small screens: order-2 so it appears below images; improved typography */}
+            <div className="lg:col-span-5 space-y-4 sm:space-y-6 order-2 lg:order-1">
               <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.3em] uppercase">
                 Our destinations
               </p>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-white leading-tight">
                 Sanctuaries of
                 <br />
                 <span className="italic font-light">The Wild</span>
               </h2>
-              <p className="text-safari-sand-light/70 font-body font-light leading-relaxed text-sm max-w-md">
+              <p className="text-safari-sand-light/70 font-body font-light leading-relaxed text-sm sm:text-base max-w-md">
                 From the Serengeti and Ngorongoro to Ruaha, Julius Nyerere, and Katavi—each sanctuary is a place we know intimately. We craft journeys into Tanzania&apos;s most pristine wilderness, with world-class guiding and the camps that belong there.
               </p>
-              <div className="pt-2">
+              <div className="pt-1 sm:pt-2">
                 <Link
                   href="/destinations"
                   className="inline-block font-body text-safari-gold text-[10px] font-bold tracking-[0.25em] uppercase border-b border-safari-gold/30 pb-1.5 hover:border-safari-gold transition-colors"
@@ -164,36 +222,37 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className="lg:col-span-7 relative flex justify-end order-1 lg:order-2 min-h-[320px] lg:min-h-[480px]">
-              {/* Spacer so container keeps size when all frames are absolute */}
-              <div className="w-[85%] lg:w-4/5 aspect-[3/4] shrink-0 pointer-events-none invisible" aria-hidden />
-              {/* Main image — lodge: show more left of image; click brings to front */}
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={() => setSanctuaryFrameOnTop(0)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(0); } }}
-                className={`absolute right-0 top-0 w-[85%] lg:w-4/5 aspect-[3/4] cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 0 ? "z-30 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-10"}`}
-                aria-label="Focus lodge image"
-              >
-                <div className="relative w-full h-full overflow-hidden rounded-[18px]">
-                  <Image
-                    src="/lodge.jpg"
-                    alt="Luxury safari lodge"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 85vw, 55vw"
-                    style={{ objectPosition: "left center" }}
-                  />
-                </div>
-              </div>
-              {/* Overlapping image — the wild; click brings to front */}
+            {/* Images — on small screens: compact stack, no overflow; on lg: original overlap */}
+            <div className="lg:col-span-7 relative flex justify-center lg:justify-end order-1 lg:order-2 min-h-[260px] sm:min-h-[300px] lg:min-h-[480px]">
+              {/* Spacer: defines height on mobile */}
+              <div className="w-[88%] sm:w-[85%] lg:w-4/5 aspect-[3/4] max-h-[260px] sm:max-h-[300px] lg:max-h-none shrink-0 pointer-events-none invisible" aria-hidden />
+              {/* Main image — lodge; default at back, click to bring to front */}
               <div
                 role="button"
                 tabIndex={0}
                 onClick={() => setSanctuaryFrameOnTop(1)}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(1); } }}
-                className={`absolute -bottom-12 -left-4 lg:-bottom-20 lg:-left-10 w-[60%] lg:w-3/5 aspect-[4/5] overflow-hidden rounded-[18px] border-4 border-safari-green-dark cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 1 ? "z-30 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-20"}`}
+                className={`absolute left-1/2 top-0 -translate-x-1/2 lg:left-auto lg:right-0 lg:translate-x-0 w-[88%] sm:w-[85%] lg:w-4/5 h-full max-h-[260px] sm:max-h-[300px] lg:max-h-none cursor-pointer select-none transition-all duration-300 sanctuary-frame rounded-xl sm:rounded-[18px] overflow-hidden ${sanctuaryFrameOnTop === 1 ? "z-30 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-10"}`}
+                aria-label="Focus lodge image"
+              >
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/lodge.jpg"
+                    alt="Luxury safari lodge"
+                    fill
+                    className="object-cover rounded-xl sm:rounded-[18px]"
+                    sizes="(max-width: 640px) 88vw, (max-width: 1024px) 85vw, 55vw"
+                    style={{ objectPosition: "left center" }}
+                  />
+                </div>
+              </div>
+              {/* Overlapping image — the wild; default on top of lodge */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setSanctuaryFrameOnTop(2)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(2); } }}
+                className={`absolute bottom-4 left-2 sm:bottom-6 sm:left-4 lg:-bottom-20 lg:-left-10 w-[50%] sm:w-[55%] lg:w-3/5 aspect-[4/5] max-h-[200px] sm:max-h-[240px] lg:max-h-none overflow-hidden rounded-xl sm:rounded-[18px] border-2 sm:border-4 border-safari-green-dark cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 2 ? "z-30 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-20"}`}
                 aria-label="Focus wilderness image"
               >
                 <Image
@@ -201,16 +260,16 @@ export default function HomePage() {
                   alt="Tanzania wilderness"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 50vw, 35vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 55vw, 35vw"
                 />
               </div>
-              {/* Faded background image — safari; click brings to front and shows full color */}
+              {/* Safari image — default on top of lodge; click to focus */}
               <div
                 role="button"
                 tabIndex={0}
-                onClick={() => setSanctuaryFrameOnTop(2)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(2); } }}
-                className={`absolute -top-6 -right-4 lg:-top-12 lg:-right-8 w-[45%] lg:w-2/5 aspect-square overflow-hidden rounded-[18px] cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 2 ? "z-30 opacity-100 grayscale-0 ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : "z-0 opacity-50 grayscale"}`}
+                onClick={() => setSanctuaryFrameOnTop(3)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(3); } }}
+                className={`absolute top-2 right-2 sm:top-4 sm:right-4 lg:-top-12 lg:-right-8 w-[36%] sm:w-[40%] lg:w-2/5 aspect-square max-h-[120px] sm:max-h-[140px] lg:max-h-none overflow-hidden rounded-xl sm:rounded-[18px] cursor-pointer select-none transition-all duration-300 sanctuary-frame ${sanctuaryFrameOnTop === 0 || sanctuaryFrameOnTop === 3 ? "z-30 opacity-100 grayscale-0" : "z-20 opacity-50 grayscale"} ${sanctuaryFrameOnTop === 3 ? "ring-2 ring-luxury-gold/50 ring-offset-2 ring-offset-safari-green-dark sanctuary-frame-active" : ""}`}
                 aria-label="Focus safari image"
               >
                 <Image
@@ -218,7 +277,7 @@ export default function HomePage() {
                   alt="Safari experience"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 40vw, 25vw"
+                  sizes="(max-width: 640px) 36vw, (max-width: 1024px) 40vw, 25vw"
                 />
               </div>
             </div>

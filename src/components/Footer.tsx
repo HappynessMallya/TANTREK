@@ -39,7 +39,7 @@ const COMPANY_LINKS = [
   { label: "Our Story", href: "/about" },
   { label: "Sustainability", href: "/sustainability" },
   { label: "Travel Advisors", href: "/plan-your-safari" },
-  { label: "Safari Journal", href: "/about" },
+  { label: "Safari Journal", href: "/safari-journal" },
 ];
 
 export function Footer() {
