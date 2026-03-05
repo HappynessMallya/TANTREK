@@ -7,7 +7,7 @@ import { JOURNAL_POSTS, JOURNAL_CATEGORIES } from "@/data/safariJournal";
 
 export default function JournalPostPage() {
   const params = useParams();
-  const slug = typeof params.slug === "string" ? params.slug : "";
+  const slug = params && typeof params.slug === "string" ? params.slug : "";
   const post = JOURNAL_POSTS.find((p) => p.slug === slug);
 
   if (!post) {

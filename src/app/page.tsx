@@ -9,14 +9,10 @@ import Link from "next/link";
 import { AnimatedTanzaniaMap } from "@/components/AnimatedTanzaniaMap";
 
 const HERO_SLIDES = [
-  { src: "/wild.jpg", alt: "The Wild — elephants in savannah", label: "The Wild" },
-  { src: "/safari.jpg", alt: "Safari experience — vehicle in golden grass", label: "Safari Experience" },
-  { src: "/land.jpg", alt: "Remote wilderness — buffalo and river", label: "Remote Wilderness" },
-  {
-    src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=75",
-    alt: "Beach escape — Zanzibar",
-    label: "Beach Paradise",
-  },
+  { src: "/tembo.mp4", alt: "Tembo — elephants in the wild", label: "The Wild" },
+  { src: "/beach.mp4", alt: "Beach escape — Zanzibar", label: "Beach Paradise" },
+  { src: "/safari.mp4", alt: "Safari experience", label: "Safari Experience" },
+  { src: "/wanyama.mp4", alt: "Wanyama — wildlife", label: "Wildlife" },
 ] as const;
 
 const SLIDE_DURATION_MS = 7000;
@@ -99,16 +95,17 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1.4, ease: "easeInOut" }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute inset-0"
             >
-              <Image
+              <video
                 src={HERO_SLIDES[heroSlideIndex].src}
-                alt={HERO_SLIDES[heroSlideIndex].alt}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority={heroSlideIndex === 0}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+                aria-label={HERO_SLIDES[heroSlideIndex].alt}
               />
             </motion.div>
           </AnimatePresence>
