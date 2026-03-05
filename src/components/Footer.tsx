@@ -66,6 +66,7 @@ export function Footer() {
                 width={220}
                 height={64}
                 className="h-14 sm:h-16 w-auto object-contain object-left"
+                style={{ width: "auto", height: "auto" }}
               />
             </Link>
             <div className="space-y-3">

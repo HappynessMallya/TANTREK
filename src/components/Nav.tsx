@@ -178,7 +178,10 @@ export function Nav() {
           <button
             type="button"
             className="lg:hidden p-2 text-safari-sand-light"
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => {
+              setMobileOpen(!mobileOpen);
+              if (mobileOpen) setMobileExpanded(null);
+            }}
             aria-label="Toggle menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,62 +215,92 @@ export function Nav() {
                       {item.label}
                     </Link>
                   ) : (
-                    <div key={item.label}>
-                      <span className="flex items-center gap-2 px-4 py-2 text-luxury-gold/90 text-sm font-medium uppercase tracking-wider">
-                        {item.label}
-                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <div key={item.label} className="border-b border-white/5 last:border-0">
+                      <button
+                        type="button"
+                        onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
+                        className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-[#e8ddc8] hover:bg-luxury-gold/10 rounded-lg transition-colors"
+                        aria-expanded={mobileExpanded === item.label}
+                        aria-controls={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                        id={`mobile-nav-trigger-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                      >
+                        <span className="text-sm font-medium uppercase tracking-wider">{item.label}</span>
+                        <svg
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${mobileExpanded === item.label ? "rotate-180" : ""}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden
+                        >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
-                      </span>
-                      {"isDestinations" in item && item.isDestinations
-                        ? (
-                            <>
-                              <Link
-                                href="/destinations"
-                                onClick={() => setMobileOpen(false)}
-                                className="nav-dropdown-heading mt-2 inline-block py-2.5 px-4 my-1 rounded-lg font-medium transition-colors"
-                              >
-                                Our Sanctuaries
-                              </Link>
-                              {destinationNavGroups.map((group) => (
-                            <div key={group.circuitHref} className="mt-2 pl-6">
-                              <Link
-                                href={group.circuitHref}
-                                onClick={() => setMobileOpen(false)}
-                                className="nav-dropdown-heading inline-block py-2 px-3 my-1 rounded-lg font-medium transition-colors"
-                              >
-                                {group.circuitLabel}
-                              </Link>
-                              <p className="text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider py-1">
-                                Parks in this circuit
-                              </p>
-                              <ul className="list-disc list-outside pl-5 space-y-1 text-sm">
-                                {group.parks.map((park) => (
-                                  <li key={park.href} className="leading-snug">
+                      </button>
+                      <AnimatePresence>
+                        {mobileExpanded === item.label && (
+                          <motion.div
+                            id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                            role="region"
+                            aria-labelledby={`mobile-nav-trigger-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="pl-4 pb-3 pt-1 space-y-1">
+                              {"isDestinations" in item && item.isDestinations
+                                ? (
+                                    <>
+                                      <Link
+                                        href="/destinations"
+                                        onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
+                                        className="nav-dropdown-heading block py-2.5 px-3 my-1 rounded-lg font-medium transition-colors"
+                                      >
+                                        Our Sanctuaries
+                                      </Link>
+                                      {destinationNavGroups.map((group) => (
+                                        <div key={group.circuitHref} className="mt-2 pl-2">
+                                          <Link
+                                            href={group.circuitHref}
+                                            onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
+                                            className="nav-dropdown-heading inline-block py-2 px-3 my-1 rounded-lg font-medium transition-colors"
+                                          >
+                                            {group.circuitLabel}
+                                          </Link>
+                                          <p className="text-[10px] font-bold text-luxury-gold/90 uppercase tracking-wider py-1">
+                                            Parks in this circuit
+                                          </p>
+                                          <ul className="list-disc list-outside pl-5 space-y-1 text-sm">
+                                            {group.parks.map((park) => (
+                                              <li key={park.href} className="leading-snug">
+                                                <Link
+                                                  href={park.href}
+                                                  onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
+                                                  className="nav-dropdown-link inline py-0.5 rounded hover:underline"
+                                                >
+                                                  {park.label}
+                                                </Link>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      ))}
+                                    </>
+                                  )
+                                : "children" in item && item.children?.map((child: { href: string; label: string }) => (
                                     <Link
-                                      href={park.href}
-                                      onClick={() => setMobileOpen(false)}
-                                      className="nav-dropdown-link inline py-0.5 rounded hover:underline"
+                                      key={child.href}
+                                      href={child.href}
+                                      onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
+                                      className="nav-dropdown-link block py-2.5 pl-2 rounded-lg"
                                     >
-                                      {park.label}
+                                      {child.label}
                                     </Link>
-                                  </li>
-                                ))}
-                              </ul>
+                                  ))}
                             </div>
-                          ))}
-                            </>
-                          )
-                        : "children" in item && item.children?.map((child: { href: string; label: string }) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              onClick={() => setMobileOpen(false)}
-                              className="nav-dropdown-link block pl-8 py-2.5 rounded-lg"
-                            >
-                              {child.label}
-                            </Link>
-                          ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   )
                 )}
