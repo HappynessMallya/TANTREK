@@ -106,6 +106,47 @@ body {
   border: 1px solid rgba(196, 169, 103, 0.2);
 }
 
+/* Homepage section backgrounds — distinct, luxurious */
+.section-bg-press {
+  background: linear-gradient(90deg, rgba(30, 64, 48, 0.97) 0%, rgba(44, 92, 68, 0.25) 50%, rgba(30, 64, 48, 0.97) 100%);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.03);
+}
+.section-bg-sanctuaries {
+  background-color: #1a3828;
+  background-image: radial-gradient(ellipse 80% 60% at 85% 100%, rgba(196, 169, 103, 0.08) 0%, transparent 55%);
+}
+.section-bg-distinction {
+  background-color: #1e4030;
+  background-image: radial-gradient(circle at 2px 2px, rgba(196, 169, 103, 0.04) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+.section-bg-our-story {
+  background-color: #1e4030;
+  background-image: linear-gradient(180deg, rgba(196, 169, 103, 0.03) 0%, transparent 30%, transparent 70%, rgba(30, 64, 48, 0.4) 100%);
+}
+.section-bg-testimonials {
+  background-color: #182e24;
+  background-image: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(196, 169, 103, 0.07) 0%, transparent 65%);
+}
+.section-bg-where-we-go {
+  background-color: #1e4030;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 80% 10%, rgba(196, 169, 103, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 10% 95%, rgba(196, 169, 103, 0.05) 0%, transparent 45%);
+}
+.section-bg-experiences {
+  background-color: #1a3528;
+  background-image:
+    radial-gradient(ellipse 120% 40% at 50% 100%, rgba(196, 169, 103, 0.06) 0%, transparent 55%),
+    linear-gradient(180deg, #1a3528 0%, #1e4030 50%, #1e4030 100%);
+}
+.section-bg-frontier {
+  background-color: #1e4030;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(196, 169, 103, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+}
+
 /* About page — glass panel and gold texture */
 .about-glass {
   background: rgba(255, 255, 255, 0.03);

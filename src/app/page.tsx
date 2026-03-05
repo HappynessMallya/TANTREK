@@ -31,8 +31,11 @@ const TESTIMONIALS = [
   },
 ];
 
+type SanctuaryFrame = 0 | 1 | 2; // 0 = lodge (main), 1 = wild (overlap), 2 = safari (back)
+
 export default function HomePage() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [sanctuaryFrameOnTop, setSanctuaryFrameOnTop] = useState<SanctuaryFrame>(0);
 
   const goTo = useCallback((index: number) => {
     setTestimonialIndex((prev) => {
@@ -135,7 +138,7 @@ export default function HomePage() {
       </section>
 
       {/* Media mentions — prestige strip */}
-      <section className="relative z-20 px-4 sm:px-6 lg:px-8 py-8 border-t border-white/5 bg-safari-green-dark/60 backdrop-blur-sm">
+      <section className="section-bg-press relative z-20 px-4 sm:px-6 lg:px-8 py-10 backdrop-blur-sm border-t border-white/5">
         <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-10 sm:gap-16 md:gap-24 opacity-40 grayscale contrast-125">
           <span className="font-display text-lg sm:text-xl tracking-tight text-white/90">Condé Nast <span className="font-bold">Traveler</span></span>
           <span className="font-display text-xl font-bold tracking-widest uppercase text-white/90">Vogue</span>
@@ -146,60 +149,92 @@ export default function HomePage() {
       </section>
 
       {/* Sanctuaries of the Savanna — Private Collection with overlapping images */}
-      <section className="relative py-20 lg:py-32 bg-safari-green-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="section-bg-sanctuaries relative py-20 lg:py-32 overflow-hidden">
+        {/* Subtle background image for atmosphere */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.11]"
+          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=60)" }}
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-safari-green-dark/70 via-safari-green-dark/40 to-transparent" aria-hidden />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
               <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.3em] uppercase">
-                The Private Collection
+                Our destinations
               </p>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight">
                 Sanctuaries of
                 <br />
-                <span className="italic font-light">The Savanna</span>
+                <span className="italic font-light">The Wild</span>
               </h2>
               <p className="text-safari-sand-light/70 font-body font-light leading-relaxed text-sm max-w-md">
-                Hand-selected camps and lodges that redefine remote living. Each property offers a unique vantage point of the Great Migration and Tanzania’s wilderness, combined with world-class guiding and refined bush hospitality.
+                From the Serengeti and Ngorongoro to Ruaha, Julius Nyerere, and Katavi—each sanctuary is a place we know intimately. We craft journeys into Tanzania&apos;s most pristine wilderness, with world-class guiding and the camps that belong there.
               </p>
               <div className="pt-2">
                 <Link
                   href="/destinations"
                   className="inline-block font-body text-safari-gold text-[10px] font-bold tracking-[0.25em] uppercase border-b border-safari-gold/30 pb-1.5 hover:border-safari-gold transition-colors"
                 >
-                  Explore the portfolio
+                  Explore our sanctuaries
                 </Link>
               </div>
             </div>
             <div className="lg:col-span-7 relative flex justify-end order-1 lg:order-2 min-h-[320px] lg:min-h-[480px]">
-              {/* Main image — luxury tent/lodge */}
-              <div className="relative w-[85%] lg:w-4/5 aspect-[3/4] z-10 overflow-hidden rounded-sm shadow-2xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&q=85"
-                  alt="Luxury safari camp"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 85vw, 55vw"
-                />
+              {/* Spacer so container keeps size when all frames are absolute */}
+              <div className="w-[85%] lg:w-4/5 aspect-[3/4] shrink-0 pointer-events-none invisible" aria-hidden />
+              {/* Main image — lodge: show more left of image; click brings to front */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setSanctuaryFrameOnTop(0)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(0); } }}
+                className={`absolute right-0 top-0 w-[85%] lg:w-4/5 aspect-[3/4] cursor-pointer select-none transition-all duration-300 ${sanctuaryFrameOnTop === 0 ? "z-30 ring-2 ring-safari-gold/50 ring-offset-2 ring-offset-safari-green-dark rounded-sm" : "z-10"}`}
+                aria-label="Focus lodge image"
+              >
+                <div className="relative w-full h-full overflow-hidden rounded-sm shadow-2xl">
+                  <Image
+                    src="/lodgejpg"
+                    alt="Luxury safari lodge"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 85vw, 55vw"
+                    style={{ objectPosition: "left center" }}
+                  />
+                </div>
               </div>
-              {/* Overlapping image — savanna landscape */}
-              <div className="absolute -bottom-12 -left-4 lg:-bottom-20 lg:-left-10 w-[60%] lg:w-3/5 aspect-[4/5] z-20 overflow-hidden rounded-sm shadow-2xl border-4 border-safari-green-dark">
+              {/* Overlapping image — the wild; click brings to front */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setSanctuaryFrameOnTop(1)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(1); } }}
+                className={`absolute -bottom-12 -left-4 lg:-bottom-20 lg:-left-10 w-[60%] lg:w-3/5 aspect-[4/5] overflow-hidden rounded-sm shadow-2xl border-4 border-safari-green-dark cursor-pointer select-none transition-all duration-300 ${sanctuaryFrameOnTop === 1 ? "z-30 ring-2 ring-safari-gold/50 ring-offset-2 ring-offset-safari-green-dark" : "z-20"}`}
+                aria-label="Focus wilderness image"
+              >
                 <Image
-                  src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=85"
-                  alt="Savanna landscape"
+                  src="/wild.jpg"
+                  alt="Tanzania wilderness"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 50vw, 35vw"
                 />
               </div>
-              {/* Faded background image — wildlife */}
-              <div className="absolute -top-6 -right-4 lg:-top-12 lg:-right-8 w-[45%] lg:w-2/5 aspect-square z-0 overflow-hidden rounded-sm opacity-50 grayscale">
+              {/* Faded background image — safari; click brings to front and shows full color */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setSanctuaryFrameOnTop(2)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSanctuaryFrameOnTop(2); } }}
+                className={`absolute -top-6 -right-4 lg:-top-12 lg:-right-8 w-[45%] lg:w-2/5 aspect-square overflow-hidden rounded-sm cursor-pointer select-none transition-all duration-300 ${sanctuaryFrameOnTop === 2 ? "z-30 opacity-100 grayscale-0 ring-2 ring-safari-gold/50 ring-offset-2 ring-offset-safari-green-dark" : "z-0 opacity-50 grayscale"}`}
+                aria-label="Focus safari image"
+              >
                 <Image
-                  src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=500&q=80"
-                  alt=""
+                  src="/safari.jpg"
+                  alt="Safari experience"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 40vw, 25vw"
-                  aria-hidden
                 />
               </div>
             </div>
@@ -208,7 +243,7 @@ export default function HomePage() {
       </section>
 
       {/* Distinction — The Tanzania Wildmakers Standard */}
-      <section className="relative py-20 lg:py-32 bg-safari-green-dark border-t border-white/5">
+      <section className="section-bg-distinction relative py-20 lg:py-32 border-t border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 lg:mb-24 space-y-4">
             <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.35em] uppercase">
@@ -262,16 +297,18 @@ export default function HomePage() {
       </section>
 
       {/* About — authority & positioning: premium statement block */}
-      <section className="relative py-28 lg:py-36 overflow-hidden">
+      <section className="section-bg-our-story relative py-28 lg:py-36 overflow-hidden">
         {/* Parallax-style background */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.12]"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.14]"
           style={{
             backgroundImage:
               "url(https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80)",
           }}
+          aria-hidden
         />
-        <div className="absolute inset-0 bg-safari-green-dark/92" />
+        <div className="absolute inset-0 bg-safari-green-dark/88" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-safari-green-dark/60" aria-hidden />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -325,8 +362,7 @@ export default function HomePage() {
       </section>
 
       {/* Traveler testimonials — carousel */}
-      <section className="relative py-20 lg:py-28 bg-safari-green-dark border-t border-white/5 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 50% 50%, rgba(196,169,103,0.4) 0%, transparent 60%)" }} aria-hidden />
+      <section className="section-bg-testimonials relative py-20 lg:py-28 border-t border-white/5 overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -421,8 +457,7 @@ export default function HomePage() {
       </section>
 
       {/* Where We Go — premium circuits */}
-      <section className="relative py-24 lg:py-32 bg-safari-green-dark border-t border-white/5 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 30% 20%, rgba(196,169,103,0.3) 0%, transparent 50%)" }} aria-hidden />
+      <section className="section-bg-where-we-go relative py-24 lg:py-32 border-t border-white/5 overflow-hidden">
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <motion.p
@@ -504,7 +539,7 @@ export default function HomePage() {
       </section>
 
       {/* Safari Experiences — refined links */}
-      <section className="relative py-24 lg:py-32 border-t border-white/5 bg-safari-green-dark/80">
+      <section className="section-bg-experiences relative py-24 lg:py-32 border-t border-white/5 overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <motion.p
@@ -575,13 +610,13 @@ export default function HomePage() {
       </section>
 
       {/* Begin Your Frontier — premium CTA */}
-      <section className="relative py-28 lg:py-36 overflow-hidden">
+      <section className="section-bg-frontier relative py-28 lg:py-36 overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.42]"
           style={{ backgroundImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=70)" }}
           aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/85 via-safari-green-dark/90 to-safari-green-dark" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/70 via-safari-green-dark/82 to-safari-green-dark" aria-hidden />
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <motion.p
             initial={{ opacity: 0, y: 12 }}
