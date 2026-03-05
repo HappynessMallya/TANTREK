@@ -50,9 +50,11 @@ body {
   }
 }
 
-/* Glass card base */
+/* Glass card base — strong tint for readability */
 .glass-card {
-  @apply bg-glass-light border border-glass-border backdrop-blur-md;
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  @apply backdrop-blur-xl;
 }
 
 /* Selection color */

@@ -109,9 +109,9 @@ export function Nav() {
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        className="absolute top-full left-0 pt-2 min-w-[520px]"
+                        className={`absolute top-full left-0 pt-2 ${"isDestinations" in item && item.isDestinations ? "min-w-[520px]" : "w-max min-w-[200px]"}`}
                       >
-                        <div className="glass-card rounded-lg py-3 px-3 shadow-xl max-h-[70vh] overflow-y-auto">
+                        <div className="rounded-lg py-3 px-3 shadow-xl max-h-[70vh] overflow-y-auto bg-safari-green-dark/98 border border-white/20 backdrop-blur-md">
                           {"isDestinations" in item && item.isDestinations
                             ? (
                                 <div className="grid grid-cols-2 gap-x-6 gap-y-4">
@@ -119,11 +119,11 @@ export function Nav() {
                                     <div key={group.circuitHref} className="min-w-0">
                                       <Link
                                         href={group.circuitHref}
-                                        className="block px-2 pt-1 pb-0.5 text-sm font-medium text-safari-gold-light hover:bg-white/5 rounded"
+                                        className="inline-block px-3 py-2 text-sm font-medium text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 transition-colors"
                                       >
                                         {group.circuitLabel}
                                       </Link>
-                                      <p className="px-2 pb-1 text-xs text-safari-sand-muted/90 uppercase tracking-wider">
+                                      <p className="px-2 pb-1 text-xs font-bold text-safari-gold-light uppercase tracking-wider">
                                         Parks in this circuit
                                       </p>
                                       <ul className="list-disc list-inside px-2 pb-2 space-y-0.5 text-safari-sand-light/90 text-sm">
@@ -184,7 +184,7 @@ export function Nav() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden glass-card rounded-b-lg overflow-hidden"
+              className="lg:hidden rounded-b-lg overflow-hidden bg-safari-green-dark/98 border border-t-0 border-x border-b border-white/20 backdrop-blur-md"
             >
               <div className="py-4 space-y-1">
                 {navLinks.map((item) =>
@@ -211,11 +211,11 @@ export function Nav() {
                               <Link
                                 href={group.circuitHref}
                                 onClick={() => setMobileOpen(false)}
-                                className="block py-1.5 text-safari-gold-light hover:bg-white/5 font-medium"
+                                className="inline-block py-2 px-3 my-1 text-safari-gold-light bg-safari-green/90 hover:bg-safari-green rounded-md border border-white/15 font-medium transition-colors"
                               >
                                 {group.circuitLabel}
                               </Link>
-                              <p className="text-xs text-safari-sand-muted/90 uppercase tracking-wider py-0.5">
+                              <p className="text-xs font-bold text-safari-gold-light uppercase tracking-wider py-0.5">
                                 Parks in this circuit
                               </p>
                               <ul className="list-disc list-inside space-y-0.5 text-safari-sand-light text-sm">

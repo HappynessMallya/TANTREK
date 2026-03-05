@@ -10,7 +10,7 @@ export function AboutContent() {
     <>
       <section className="relative pt-28 pb-20 lg:pt-36 lg:pb-28 overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-150"
           style={{
             backgroundImage:
               "url(https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80)",

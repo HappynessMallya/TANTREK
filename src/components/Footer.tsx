@@ -30,7 +30,7 @@ export function Footer() {
     >
       {/* Left: logo + contact details */}
       <div className="flex flex-col justify-center lg:justify-start items-center lg:items-start pt-10 lg:pt-0 lg:py-16 order-1 pl-4 sm:pl-6 lg:pl-8 lg:pr-4">
-        <div className="footer-logo-container w-fit max-w-[280px] lg:max-w-none ml-0 lg:ml-20 pr-0 lg:pr-10 xl:pr-12 mb-6 lg:mb-6">
+        <div className="footer-logo-container w-fit max-w-[280px] lg:max-w-none ml-0 lg:ml-20 pr-0 lg:pr-10 xl:pr-12 mt-12 lg:mt-12 mb-6 lg:mb-6">
           <Link href="/" className="block" aria-label="Tanzania Wildmakers Safaris - Home">
             <Image
               src="/logo-footer.png"
@@ -61,7 +61,7 @@ export function Footer() {
       </div>
 
       {/* Right: footer image — larger */}
-      <div className="relative w-full min-h-[180px] lg:min-h-0 shrink-0 order-3 flex items-center justify-end self-stretch">
+      <div className="relative w-full min-h-[180px] lg:min-h-0 shrink-0 order-3 flex items-center justify-end self-stretch pr-0">
         <div className="relative w-full h-full min-h-[160px] lg:min-h-0 self-stretch">
           <Image
             src="/footer-image.png"
