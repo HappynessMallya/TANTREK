@@ -17,8 +17,15 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-safari-green-dark border-t border-white/5 pt-16 sm:pt-20 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <footer className="footer-luxury relative overflow-hidden pt-20 sm:pt-24 pb-12 sm:pb-14 px-4 sm:px-6 lg:px-8">
+      {/* Subtle background image for depth — lodge */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] pointer-events-none"
+        style={{ backgroundImage: "url(/lodgejpg)" }}
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" aria-hidden />
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Top: logo + tagline + socials | Explore + Company */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 lg:gap-16 mb-16 sm:mb-20">
           <div className="space-y-6 max-w-sm">
@@ -86,7 +93,7 @@ export function Footer() {
         </div>
 
         {/* Bottom: copyright | stats */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-white/5 pt-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-safari-gold/10 pt-10">
           <p className="text-[10px] font-body uppercase tracking-widest text-safari-sand-light/50 order-2 sm:order-1">
             © {year} Tanzania Wildmakers Safaris. All rights reserved.
           </p>
