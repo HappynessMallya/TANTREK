@@ -44,7 +44,7 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
               </motion.h2>
             )}
           </AnimatePresence>
-          {/* Map video fills the rest */}
+          {/* Map video — no overlay, clean display */}
           <div className="relative flex-1 min-h-0">
             <video
               src="/map.mp4"
@@ -54,15 +54,6 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
               onEnded={onComplete}
               className="absolute inset-0 w-full h-full object-cover"
               aria-label="Tanzania safari map"
-            />
-            {/* Overlay in primary colors */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "linear-gradient(to bottom, rgba(8, 31, 26, 0.5) 0%, rgba(30, 64, 48, 0.4) 40%, rgba(8, 31, 26, 0.7) 100%)",
-                boxShadow: "inset 0 0 120px rgba(212, 175, 55, 0.06)",
-              }}
-              aria-hidden
             />
           </div>
         </motion.div>
