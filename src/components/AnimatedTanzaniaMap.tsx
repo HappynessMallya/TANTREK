@@ -56,7 +56,7 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
                 exit={{ opacity: 0 }}
                 className="relative z-10 font-display text-center text-xl sm:text-2xl text-[#D4AF37] pb-12 sm:pb-16 tracking-wide"
               >
-                Discover Tanzania&apos;s Untamed Frontiers
+              
               </motion.p>
             )}
           </AnimatePresence>
