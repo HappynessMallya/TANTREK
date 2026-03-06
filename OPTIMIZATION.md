@@ -6,19 +6,47 @@ Best practices and recommendations for production.
 
 ## Video (hero & map)
 
+### Why production felt “stuck”
+**Large video files** (e.g. a 31 MB map) cause longer buffering and can make the map or hero feel stuck. The app now shows a **“Loading map”** state until the map video is ready. You can **keep full 1080p quality** and still reduce file size using WebM or better encoding (see below); if you prefer to keep a larger file for quality, the loading state handles the wait.
+
 ### Current setup
 - **Hero:** First slide (`tembo.mp4`) uses `preload="auto"`; other slides use `preload="metadata"` so only the visible video loads fully.
-- **Map:** `preload="metadata"` so the map video loads when the map phase is shown.
+- **Map:** `preload="auto"` with a loading spinner until the video can play (helps when the file is still large).
 - **All videos:** `muted` + `playsInline` for reliable autoplay on mobile; `disablePictureInPicture` and `disableRemotePlayback` to reduce overhead.
 
-### Recommendations for video files
-1. **Resolution:** Export at **1080p** for web; avoid 4K in the browser.
-2. **Format:** Prefer **WebM** (with MP4 fallback) for smaller size and better compression.
-3. **Size:** Aim for **&lt; 6–8 MB per file** so hero and map load quickly.
-4. **Hosting:** Serve videos from a CDN (e.g. Vercel, Cloudflare) for faster delivery.
+### Size vs quality
+- **Target:** **&lt; 6–8 MB per file** keeps load times short. If you keep a larger map (e.g. 15–20 MB) to preserve quality, the **“Loading map”** state covers the wait — no need to sacrifice clarity for a number.
+- **You can keep quality and still shrink size:** Use the same **1080p resolution** and reduce file size with better encoding, not by lowering resolution.
+
+### Reducing size without compromising quality
+1. **Keep 1080p** — don’t drop to 720p; keep the same resolution for a sharp map and hero.
+2. **Use WebM (VP9)** — often **30–50% smaller** than H.264 at similar visual quality. Offer `<source src="map.webm">` with `<source type="video/mp4" src="map.mp4">` as fallback.
+3. **Re-encode, don’t just re-save** — use a quality-based encode (e.g. FFmpeg with `-crf 23` for H.264 or `-crf 30` for VP9) so the encoder finds savings without obvious loss.
+4. **Trim duration only if needed** — shorten the clip only if you’re okay with less runtime; otherwise focus on codec and bitrate.
+5. **Tools:** FFmpeg (two-pass VP9 or H.264 CRF) or HandBrake with “Quality” preset instead of a fixed low bitrate.
+
+### If you keep a larger map
+Keeping **map.mp4** at 15–30 MB for full quality is fine. The loading spinner will show until enough has buffered to play. For the best of both worlds, add a **WebM version** of the same 1080p map — same look, smaller file — and reference it first in the `<video>` element.
+
+### Hosting
+Serve videos from a **CDN** (e.g. Vercel, Cloudflare) so they’re cached at the edge and don’t hit your app server for every request.
 
 ### Optional: WebM + MP4
 In the hero you can add a `<source>` for WebM and keep `<source type="video/mp4">` as fallback; use the same `preload` and other attributes on the `<video>` element.
+
+---
+
+## Scalability & concurrent requests
+
+- **Many requests at once:** The app is built for **Next.js on a platform like Vercel**: each request is handled by serverless functions (or static pages), and **static assets (JS, CSS, images, videos) are served from a global CDN**. So the system can accommodate many concurrent users; limits are set by your hosting plan, not by a single server process.
+- **Recommendation:** Keep **large videos on the CDN** (e.g. in `public/` on Vercel so they’re edge-cached). Avoid serving big files through custom API routes so the app server stays fast for HTML and API only.
+
+---
+
+## Stability (won’t crash or get stuck)
+
+- **Map video:** If the map video fails to load (network, 404, etc.), the app shows a message with **Retry** and **Continue** so the user is never stuck on a blank or frozen map. **Continue** returns to the hero and the rest of the site works.
+- **React errors:** A root **error boundary** wraps the main content. If any component throws, the app shows “Something went wrong” and a **Reload page** button instead of a white crash screen.
 
 ---
 
@@ -43,7 +71,7 @@ In the hero you can add a `<source>` for WebM and keep `<source type="video/mp4"
 ## Production checklist
 
 - [ ] Run `npm run build` and `npm run start` locally before deploy.
-- [ ] Compress video assets (1080p, WebM or optimized MP4, &lt; 8 MB each).
+- [ ] **Optimize videos:** Prefer WebM (same 1080p quality, smaller size). If you keep a larger map for quality, the loading state handles the wait; no need to compromise resolution.
 - [ ] Ensure env vars (if any) are set in the hosting dashboard.
 - [ ] Enable gzip/Brotli on the host (often default on Vercel/Netlify).
 - [ ] Test on slow 3G and mobile to confirm hero and map videos behave well.

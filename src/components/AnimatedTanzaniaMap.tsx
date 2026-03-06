@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AnimatedTanzaniaMapProps {
@@ -10,16 +10,40 @@ interface AnimatedTanzaniaMapProps {
 
 export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMapProps) {
   const [messageVisible, setMessageVisible] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const [videoKey, setVideoKey] = useState(0);
 
   useEffect(() => {
     if (!isActive) {
       setMessageVisible(false);
+      setVideoReady(false);
+      setVideoError(false);
       return;
     }
     setMessageVisible(false);
+    setVideoReady(false);
+    setVideoError(false);
+    setVideoKey((k) => k + 1); // fresh video element each time map phase is shown
     const t = setTimeout(() => setMessageVisible(true), 800);
     return () => clearTimeout(t);
   }, [isActive]);
+
+  const onCanPlay = useCallback(() => {
+    setVideoReady(true);
+    setVideoError(false);
+  }, []);
+
+  const onVideoError = useCallback(() => {
+    setVideoReady(false);
+    setVideoError(true);
+  }, []);
+
+  const handleRetry = useCallback(() => {
+    setVideoError(false);
+    setVideoReady(false);
+    setVideoKey((k) => k + 1);
+  }, []);
 
   return (
     <AnimatePresence>
@@ -44,16 +68,50 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
               </motion.h2>
             )}
           </AnimatePresence>
-          {/* Map video — no overlay, clean display */}
+          {/* Map video — loading, error, or playing */}
           <div className="relative flex-1 min-h-0">
+            {videoError && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#081F1A]">
+                <div className="flex flex-col items-center gap-6 text-center px-6">
+                  <p className="font-body text-sm text-safari-sand-light/90">Map video couldn&apos;t load. You can continue to the rest of the site.</p>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    <button
+                      type="button"
+                      onClick={handleRetry}
+                      className="px-4 py-2 font-body text-sm uppercase tracking-wider border border-luxury-gold text-luxury-gold hover:bg-luxury-gold/10 transition-colors rounded"
+                    >
+                      Retry
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onComplete}
+                      className="px-4 py-2 font-body text-sm uppercase tracking-wider bg-luxury-gold text-safari-green-dark hover:opacity-90 transition-opacity rounded"
+                    >
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {!videoReady && !videoError && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#081F1A]">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-10 h-10 border-2 border-luxury-gold/40 border-t-luxury-gold rounded-full animate-spin" aria-hidden />
+                  <p className="font-body text-xs tracking-wider uppercase text-safari-sand-light/80">Loading map</p>
+                </div>
+              </div>
+            )}
             <video
+              key={videoKey}
               src="/map.mp4"
               autoPlay
               muted
               playsInline
-              preload="metadata"
+              preload="auto"
               disablePictureInPicture
               disableRemotePlayback
+              onCanPlay={onCanPlay}
+              onError={onVideoError}
               onEnded={onComplete}
               className="absolute inset-0 w-full h-full object-cover"
               aria-label="Tanzania safari map"
