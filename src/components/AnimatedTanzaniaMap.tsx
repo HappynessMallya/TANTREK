@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const MAP_DISPLAY_DURATION_MS = 20000;
-
 interface AnimatedTanzaniaMapProps {
   onComplete: () => void;
   isActive: boolean;
@@ -19,13 +17,9 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
       return;
     }
     setMessageVisible(false);
-    const t1 = setTimeout(() => setMessageVisible(true), 800);
-    const t2 = setTimeout(() => onComplete(), MAP_DISPLAY_DURATION_MS);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [isActive, onComplete]);
+    const t = setTimeout(() => setMessageVisible(true), 800);
+    return () => clearTimeout(t);
+  }, [isActive]);
 
   return (
     <AnimatePresence>
@@ -35,31 +29,42 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="absolute inset-0 z-[5] flex flex-col items-center justify-center bg-[#081F1A]"
+          className="absolute inset-0 z-[5] flex flex-col bg-[#081F1A]"
         >
-          <div className="absolute inset-0">
+          {/* Header at top — not over the map */}
+          <AnimatePresence>
+            {messageVisible && (
+              <motion.h2
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="relative z-10 font-display text-center text-xl sm:text-2xl lg:text-3xl text-[#D4AF37] pt-24 sm:pt-28 pb-6 tracking-wide"
+              >
+                Discover Tanzania&apos;s Untamed Frontiers
+              </motion.h2>
+            )}
+          </AnimatePresence>
+          {/* Map video fills the rest */}
+          <div className="relative flex-1 min-h-0">
             <video
               src="/map.mp4"
               autoPlay
               muted
-              loop
               playsInline
+              onEnded={onComplete}
               className="absolute inset-0 w-full h-full object-cover"
               aria-label="Tanzania safari map"
             />
+            {/* Overlay in primary colors */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "linear-gradient(to bottom, rgba(8, 31, 26, 0.5) 0%, rgba(30, 64, 48, 0.4) 40%, rgba(8, 31, 26, 0.7) 100%)",
+                boxShadow: "inset 0 0 120px rgba(212, 175, 55, 0.06)",
+              }}
+              aria-hidden
+            />
           </div>
-          <AnimatePresence>
-            {messageVisible && (
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="relative z-10 font-display text-center text-xl sm:text-2xl text-[#D4AF37] pb-12 sm:pb-16 tracking-wide"
-              >
-              
-              </motion.p>
-            )}
-          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
