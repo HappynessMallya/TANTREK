@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import Link from "next/link";
-import { AnimatedTanzaniaMap } from "@/components/AnimatedTanzaniaMap";
+
+const AnimatedTanzaniaMap = dynamic(
+  () => import("@/components/AnimatedTanzaniaMap").then((m) => ({ default: m.AnimatedTanzaniaMap })),
+  { ssr: false }
+);
 
 const HERO_SLIDES = [
   { src: "/tembo.mp4", alt: "Tembo — elephants in the wild", label: "The Wild" },
@@ -104,6 +109,9 @@ export default function HomePage() {
                 muted
                 loop
                 playsInline
+                preload={heroSlideIndex === 0 ? "auto" : "metadata"}
+                disablePictureInPicture
+                disableRemotePlayback
                 className="absolute inset-0 w-full h-full object-cover"
                 aria-label={HERO_SLIDES[heroSlideIndex].alt}
               />

@@ -51,6 +51,9 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
               autoPlay
               muted
               playsInline
+              preload="metadata"
+              disablePictureInPicture
+              disableRemotePlayback
               onEnded={onComplete}
               className="absolute inset-0 w-full h-full object-cover"
               aria-label="Tanzania safari map"
