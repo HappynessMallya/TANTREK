@@ -10,8 +10,8 @@ Best practices and recommendations for production.
 **Large video files** (e.g. a 31 MB map) cause longer buffering and can make the map or hero feel stuck. The app now shows a **“Loading map”** state until the map video is ready. You can **keep full 1080p quality** and still reduce file size using WebM or better encoding (see below); if you prefer to keep a larger file for quality, the loading state handles the wait.
 
 ### Current setup
-- **Hero:** First slide (`tembo.mp4`) uses `preload="auto"`; other slides use `preload="metadata"` so only the visible video loads fully.
-- **Map:** `preload="auto"` with a loading spinner until the video can play (helps when the file is still large).
+- **Hero:** All four slides are kept in the DOM with `preload="auto"` so once a video has loaded it stays in buffer; only the active slide is visible and playing (others are paused). Revisiting a slide uses the existing buffer — no re-download.
+- **Map:** The map video element stays mounted when you leave the map phase (hidden + paused). When you return, it’s shown and played from the existing buffer so it doesn’t reload.
 - **All videos:** `muted` + `playsInline` for reliable autoplay on mobile; `disablePictureInPicture` and `disableRemotePlayback` to reduce overhead.
 
 ### Size vs quality
@@ -33,6 +33,26 @@ Serve videos from a **CDN** (e.g. Vercel, Cloudflare) so they’re cached at the
 
 ### Optional: WebM + MP4
 In the hero you can add a `<source>` for WebM and keep `<source type="video/mp4">` as fallback; use the same `preload` and other attributes on the `<video>` element.
+
+---
+
+## Buffer / memo and media best practices
+
+### Videos (buffer retention)
+- **Hero:** All hero videos are rendered once and kept in the DOM. The active slide is visible and playing; others are hidden and paused. Buffered data is retained, so when the slideshow loops or returns to a slide, playback starts from buffer instead of re-fetching.
+- **Map:** The map `<video>` is never unmounted. When the map phase ends, the component hides and pauses the video; when the user enters the map phase again, it shows and plays from the same element, so the buffer is reused.
+- **Retry:** Only the map “Retry” action creates a new video element (new `key`); normal phase changes do not remount.
+
+### Images
+- **`next/image`** is used across the app: automatic optimization, lazy loading, and correct `sizes` for responsive layout.
+- **Above-the-fold heroes:** Use `priority` so the LCP image is not lazy-loaded and decoding doesn’t block paint. Hero images on key routes (home, destinations, experiences, about, etc.) already use `priority` and `sizes="100vw"` where appropriate.
+- **Cards and grids:** Use `sizes` so the browser fetches the right width (e.g. `(max-width: 768px) 100vw, 50vw` for two-column grids). This avoids loading oversized images.
+- **External images:** For URLs (e.g. Unsplash), configure `remotePatterns` in `next.config.mjs` and use `next/image` so they are optimized and cached.
+
+### Map (video) optimization
+- **Single element, always mounted:** The map is one `<video>` that stays in the DOM; visibility and play state are toggled. This keeps the buffer and avoids re-requesting the file when the user sees the map again.
+- **Loading state:** Shown only while the video hasn’t reached a playable state (`canplay`). If the user returns to the map and the video is already buffered (`readyState >= 3`), the loading state is skipped.
+- **Preload:** `preload="auto"` so the map video can start loading as soon as the homepage (and thus the map component) is mounted, even before the first map phase.
 
 ---
 
@@ -61,7 +81,7 @@ In the hero you can add a `<source>` for WebM and keep `<source type="video/mp4"
 
 ## Performance tips
 
-1. **LCP:** The first hero slide uses `preload="auto"` so the browser starts loading it as soon as the homepage mounts. For stronger LCP on the homepage only, you can add `<link rel="preload" href="/tembo.mp4" as="video" type="video/mp4" />` in a layout that wraps only the home route.
+1. **LCP:** All hero videos use `preload="auto"` and stay in the DOM, so the first slide loads immediately and later slides reuse their buffer. Optional: `<link rel="preload" href="/tembo.mp4" as="video" type="video/mp4" />` in the home layout can hint the browser to start even earlier.
 2. **Fonts:** `next/font` (Playfair, Manrope) with `display: "swap"` is used to avoid layout shift and limit blocking.
 3. **Third-party:** Keep external scripts (analytics, chat) lazy-loaded or in a client component that mounts after first paint.
 4. **Build:** Run `next build` and fix any bundle or image size warnings; consider `@next/bundle-analyzer` to trim large dependencies.

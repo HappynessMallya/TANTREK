@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -54,6 +54,7 @@ export default function HomePage() {
   const [sanctuaryFrameOnTop, setSanctuaryFrameOnTop] = useState<SanctuaryFrame>(0);
   const [heroPhase, setHeroPhase] = useState<"slideshow" | "map">("slideshow");
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+  const heroVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const goTo = useCallback((index: number) => {
     setTestimonialIndex((prev) => {
@@ -88,35 +89,49 @@ export default function HomePage() {
     setHeroSlideIndex(0);
   }, []);
 
+  // Only play the active hero video; pause others so buffer is kept but no duplicate audio/CPU
+  useEffect(() => {
+    if (heroPhase !== "slideshow") return;
+    heroVideoRefs.current.forEach((el, i) => {
+      if (!el) return;
+      if (i === heroSlideIndex) el.play().catch(() => {});
+      else el.pause();
+    });
+  }, [heroPhase, heroSlideIndex]);
+
   return (
     <>
       {/* Hero — cinematic slideshow → Tanzania map → loop (pt-20 = below fixed nav) */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        {/* Slideshow background — 4 slow cinematic slides */}
+        {/* Slideshow background — all 4 videos kept in DOM so buffer is preserved */}
         <div className="absolute inset-0 bg-safari-green-dark">
-          <AnimatePresence mode="wait" initial={false}>
+          {HERO_SLIDES.map((slide, i) => (
             <motion.div
-              key={heroSlideIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              key={slide.src}
+              initial={false}
+              animate={{
+                opacity: heroSlideIndex === i ? 1 : 0,
+                zIndex: heroSlideIndex === i ? 1 : 0,
+                pointerEvents: heroSlideIndex === i ? "auto" : "none",
+              }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute inset-0"
             >
               <video
-                src={HERO_SLIDES[heroSlideIndex].src}
-                autoPlay
+                ref={(el) => { heroVideoRefs.current[i] = el; }}
+                src={slide.src}
                 muted
                 loop
                 playsInline
-                preload={heroSlideIndex === 0 ? "auto" : "metadata"}
+                preload="auto"
                 disablePictureInPicture
                 disableRemotePlayback
                 className="absolute inset-0 w-full h-full object-cover"
-                aria-label={HERO_SLIDES[heroSlideIndex].alt}
+                aria-label={slide.alt}
+                aria-hidden={heroSlideIndex !== i}
               />
             </motion.div>
-          </AnimatePresence>
+          ))}
           {/* Cinematic overlay — keeps text readable */}
           <div
             className="absolute inset-0 pointer-events-none z-[2]"
