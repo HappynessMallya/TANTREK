@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { clearToken } from "@/lib/cms-api";
+import { useAuthStore } from "@/store/auth-store";
 
 interface NavItem {
   href: string;
@@ -90,6 +90,7 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
   const rawPathname = usePathname();
   const pathname = rawPathname ?? "";
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const { user, clearAuth } = useAuthStore();
 
   const sidebar = (
     <div className="flex h-full flex-col bg-luxury-dark-emerald">
@@ -150,6 +151,15 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
         ))}
       </nav>
 
+      {/* Logged-in user chip */}
+      {user && (
+        <div className="mx-3 mb-1 rounded-lg bg-white/5 px-3 py-2.5">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-luxury-gold/50 mb-0.5">Signed in as</p>
+          <p className="text-xs font-medium text-safari-cream/80 truncate">{user.name}</p>
+          <p className="text-[10px] text-safari-cream/35 truncate">{user.email}</p>
+        </div>
+      )}
+
       {/* Footer actions */}
       <div className="border-t border-white/8 px-3 py-3 space-y-0.5">
         <Link
@@ -165,7 +175,7 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
         <button
           type="button"
           onClick={() => {
-            clearToken();
+            clearAuth();
             window.location.href = "/cms/login";
           }}
           className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs text-safari-cream/40 hover:text-red-400 hover:bg-red-400/5 transition-colors"

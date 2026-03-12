@@ -1,8 +1,13 @@
 /**
  * CMS API client for Tanzania Wildmakers Safari.
  * Base URL configured via NEXT_PUBLIC_CMS_API_URL.
- * All protected endpoints require a Bearer token stored in sessionStorage.
+ *
+ * Authentication: every protected request automatically includes
+ *   Authorization: Bearer <token>
+ * Token is managed by the Zustand auth store (src/store/auth-store.ts).
  */
+
+import { getAuthToken, useAuthStore } from "@/store/auth-store";
 
 /** Normalise the base URL: trim whitespace and ensure it starts with http(s):// */
 function normaliseBase(raw: string | undefined): string {
@@ -16,38 +21,53 @@ function normaliseBase(raw: string | undefined): string {
 
 const BASE = normaliseBase(process.env.NEXT_PUBLIC_CMS_API_URL);
 
-// ─── Token management ────────────────────────────────────────────────────────
+// ─── Token helpers (thin wrappers over the Zustand store) ────────────────────
 
-const TOKEN_KEY = "cms-token";
-
+/** Read the current token — works both inside and outside React components. */
 export function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.sessionStorage.getItem(TOKEN_KEY);
+  return getAuthToken();
 }
 
+/** Store a token (e.g. after login). Prefer cmsApi.login() over calling this directly. */
 export function setToken(token: string): void {
-  if (typeof window !== "undefined") window.sessionStorage.setItem(TOKEN_KEY, token);
+  useAuthStore.getState().setAuth(token, useAuthStore.getState().user ?? { id: "", name: "", email: "", role: "" });
 }
 
+/** Clear the token — used on logout and on 401 responses. */
 export function clearToken(): void {
-  if (typeof window !== "undefined") window.sessionStorage.removeItem(TOKEN_KEY);
+  useAuthStore.getState().clearAuth();
 }
 
 // ─── Fetch helpers ────────────────────────────────────────────────────────────
 
+/**
+ * Build request headers for every API call.
+ * ALWAYS includes Authorization: Bearer <token> when a token is present.
+ */
 function headers(includeJson = true): Record<string, string> {
   const h: Record<string, string> = {};
   if (includeJson) h["Content-Type"] = "application/json";
-  const token = getToken();
-  if (token) h["Authorization"] = `Bearer ${token}`;
+  const token = getAuthToken(); // reads directly from Zustand store state
+  if (token) {
+    h["Authorization"] = `Bearer ${token}`;
+  }
   return h;
 }
 
-/** Unwraps `{ success, data }` envelope; throws with the API error string. */
+/** Unwraps `{ success, data }` envelope; throws with the API error string.
+ *  On 401 the token is cleared and the browser is redirected to /cms/login. */
 async function handleRes<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const body = await res.json().catch(() => ({})) as { error?: string };
-    throw new Error(body.error ?? `${res.status} ${res.statusText}`);
+    // Token is invalid or expired — log the user out and redirect to login
+    if (res.status === 401) {
+      useAuthStore.getState().clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/cms/login?reason=session_expired";
+      }
+      throw new Error("Session expired. Please log in again.");
+    }
+    const body = await res.json().catch(() => ({})) as { error?: string; message?: string };
+    throw new Error(body.error ?? body.message ?? `${res.status} ${res.statusText}`);
   }
   const json = await res.json() as { data: T };
   return json.data;
@@ -98,7 +118,8 @@ export const cmsApi = {
       access_token: string;
       user: { id: string; name: string; email: string; role: string };
     };
-    setToken(data.access_token);
+    // Store token + user in Zustand — persisted to sessionStorage automatically
+    useAuthStore.getState().setAuth(data.access_token, data.user);
     return data;
   },
 
@@ -173,8 +194,9 @@ export const cmsApi = {
     form.append("file", file);
     if (options?.altText) form.append("altText", options.altText);
     if (options?.usage) form.append("usage", options.usage);
+    // Note: do NOT set Content-Type for multipart/form-data — browser sets it with boundary
     const h: Record<string, string> = { Accept: "application/json" };
-    const token = getToken();
+    const token = getAuthToken(); // always from Zustand store
     if (token) h["Authorization"] = `Bearer ${token}`;
     const res = await fetch(`${BASE}/media/images`, { method: "POST", body: form, headers: h });
     return handleRes<MediaItem>(res);
@@ -184,7 +206,7 @@ export const cmsApi = {
     form.append("file", file);
     form.append("usage", usage);
     const h: Record<string, string> = { Accept: "application/json" };
-    const token = getToken();
+    const token = getAuthToken(); // always from Zustand store
     if (token) h["Authorization"] = `Bearer ${token}`;
     const res = await fetch(`${BASE}/media/videos`, { method: "POST", body: form, headers: h });
     return handleRes<MediaItem>(res);

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { cmsApi } from "@/lib/cms-api";
 
@@ -9,8 +9,16 @@ export default function CmsLoginPage() {
   const [email, setEmail] = useState("admin@tanzaniawildmakerssafari.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams?.get("reason") === "session_expired") {
+      setInfo("Your session has expired. Please log in again to continue.");
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,6 +108,15 @@ export default function CmsLoginPage() {
               Sign in to manage your website content.
             </p>
           </div>
+
+          {info && (
+            <div className="mb-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-sm text-amber-800">
+              <svg className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              </svg>
+              {info}
+            </div>
+          )}
 
           <div className="rounded-2xl border border-[#EAE4D0] bg-white p-8 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-5">
