@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getExperienceBySlug, experiences } from "@/data/experiences";
+import { publicApi } from "@/lib/public-api";
 
 const DEFAULT_HERO_IMAGE =
   "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
@@ -15,21 +16,33 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const exp = getExperienceBySlug(slug);
-  if (!exp) return { title: "Experience" };
-  return {
-    title: exp.name,
-    description: exp.metaDescription,
-  };
+  const [apiExp, staticExp] = await Promise.all([
+    publicApi.getExperience(slug),
+    Promise.resolve(getExperienceBySlug(slug)),
+  ]);
+  const name = apiExp?.title ?? apiExp?.name ?? staticExp?.name ?? "Experience";
+  const description = apiExp?.description ?? staticExp?.metaDescription ?? "";
+  return { title: name, description };
 }
 
 export default async function ExperiencePage({ params }: Props) {
   const { slug } = await params;
-  const exp = getExperienceBySlug(slug);
-  if (!exp) notFound();
+  const [apiExp, staticExp] = await Promise.all([
+    publicApi.getExperience(slug),
+    Promise.resolve(getExperienceBySlug(slug)),
+  ]);
 
-  const heroImage = exp.imageUrl ?? DEFAULT_HERO_IMAGE;
-  const eyebrow = exp.eyebrow ?? "Curated Journey";
+  if (!apiExp && !staticExp) notFound();
+
+  // Merge: API data takes priority, static fills gaps
+  const expName = apiExp?.title ?? apiExp?.name ?? staticExp?.name ?? "";
+  const heroImage = apiExp?.heroImage?.url ?? apiExp?.imageUrl ?? staticExp?.imageUrl ?? DEFAULT_HERO_IMAGE;
+  const eyebrow = staticExp?.eyebrow ?? "Curated Journey";
+  const tagline = apiExp?.tagline ?? staticExp?.tagline ?? "";
+  const body = apiExp?.body ?? staticExp?.body ?? "";
+  const highlights = apiExp?.highlights ?? staticExp?.highlights ?? [];
+  const cta = staticExp?.cta ?? "Plan your safari";
+  const internalLinks = staticExp?.internalLinks ?? [];
 
   return (
     <>
@@ -51,11 +64,13 @@ export default async function ExperiencePage({ params }: Props) {
             {eyebrow}
           </p>
           <h1 className="font-display text-4xl font-black leading-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            {exp.name}
+            {expName}
           </h1>
-          <p className="mx-auto max-w-2xl font-body text-lg font-light leading-relaxed text-safari-sand-light/95">
-            {exp.tagline}
-          </p>
+          {tagline && (
+            <p className="mx-auto max-w-2xl font-body text-lg font-light leading-relaxed text-safari-sand-light/95">
+              {tagline}
+            </p>
+          )}
         </div>
       </section>
 
@@ -68,11 +83,13 @@ export default async function ExperiencePage({ params }: Props) {
                 <h2 className="font-display text-2xl font-bold text-white sm:text-3xl mb-6">
                   The experience
                 </h2>
-                <p className="max-w-2xl font-body text-lg leading-relaxed text-safari-sand-light/95">
-                  {exp.body}
-                </p>
+                {body && (
+                  <p className="max-w-2xl font-body text-lg leading-relaxed text-safari-sand-light/95">
+                    {body}
+                  </p>
+                )}
                 <ul className="mt-8 space-y-4">
-                  {exp.highlights.map((h) => (
+                  {highlights.map((h) => (
                     <li
                       key={h}
                       className="flex items-start gap-3 font-body text-safari-sand-light/90"
@@ -95,7 +112,7 @@ export default async function ExperiencePage({ params }: Props) {
                     href="/plan-your-safari"
                     className="inline-flex items-center gap-3 rounded-full border border-safari-gold/50 bg-safari-gold/10 px-8 py-3 font-body font-bold text-safari-gold-light transition-all hover:bg-safari-gold hover:text-safari-green-dark"
                   >
-                    {exp.cta}
+                    {cta}
                     <svg
                       className="h-4 w-4"
                       fill="none"
@@ -141,7 +158,7 @@ export default async function ExperiencePage({ params }: Props) {
               Explore destinations
             </p>
             <ul className="mt-4 flex flex-wrap gap-4">
-              {exp.internalLinks.map((link) => (
+              {internalLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

@@ -1,18 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { JOURNAL_CATEGORIES, JOURNAL_POSTS, type JournalCategorySlug } from "@/data/safariJournal";
+import { publicApi, type JournalPost } from "@/lib/public-api";
+
+// Normalise API post into the shape the page template uses
+function normalisePost(p: JournalPost) {
+  return {
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt ?? "",
+    category: p.category?.slug ?? "travel-inspiration",
+    categoryLabel: p.category?.label ?? "Stories",
+    image: p.heroImage?.url ?? "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80",
+    imageAlt: p.heroImage?.altText ?? p.title,
+    readTime: p.readTime ? `${p.readTime} min read` : undefined,
+  };
+}
 
 export default function SafariJournalPage() {
   const [activeCategory, setActiveCategory] = useState<JournalCategorySlug | "all">("all");
+  const [posts, setPosts] = useState(() =>
+    JOURNAL_POSTS.map((p) => ({
+      ...p,
+      categoryLabel: JOURNAL_CATEGORIES.find((c) => c.slug === p.category)?.label ?? p.category,
+    }))
+  );
+
+  useEffect(() => {
+    publicApi.getJournalPosts({ limit: 50 }).then((apiPosts) => {
+      if (apiPosts && apiPosts.length > 0) {
+        setPosts(apiPosts.map(normalisePost) as typeof posts);
+      }
+    });
+  }, []);
 
   const filteredPosts =
     activeCategory === "all"
-      ? JOURNAL_POSTS
-      : JOURNAL_POSTS.filter((p) => p.category === activeCategory);
+      ? posts
+      : posts.filter((p) => p.category === activeCategory);
 
   return (
     <>
@@ -108,7 +137,7 @@ export default function SafariJournalPage() {
                       }}
                     />
                     <span className="absolute bottom-3 left-3 font-body text-[10px] font-semibold tracking-wider uppercase text-luxury-gold">
-                      {JOURNAL_CATEGORIES.find((c) => c.slug === post.category)?.label ?? post.category}
+                      {post.categoryLabel ?? JOURNAL_CATEGORIES.find((c) => c.slug === post.category)?.label ?? post.category}
                     </span>
                     {post.readTime && (
                       <span className="absolute bottom-3 right-3 font-body text-[10px] text-white/80">

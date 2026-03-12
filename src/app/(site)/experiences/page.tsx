@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { publicApi, type ExperienceItem } from "@/lib/public-api";
 
 export const metadata: Metadata = {
   title: "Curated Safari Experiences",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     "Experience the untamed beauty of Tanzania through our bespoke luxury expeditions. Aerial safaris, cultural immersion, and conservation journeys.",
 };
 
-const FEATURED_JOURNEYS = [
+const STATIC_JOURNEYS = [
   {
     eyebrow: "Ultra-Luxury Aviation",
     title: "Aerial Safaris by Private Jet",
@@ -17,6 +18,7 @@ const FEATURED_JOURNEYS = [
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=900&q=80",
     imageAlt: "Luxury aircraft over African savannah",
     href: "/experiences/luxury-fly-in",
+    reverse: false,
   },
   {
     eyebrow: "Heritage & Wisdom",
@@ -36,10 +38,28 @@ const FEATURED_JOURNEYS = [
     imageUrl: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=900&q=80",
     imageAlt: "Rhino in the wild",
     href: "/experiences/conservation",
+    reverse: false,
   },
 ];
 
-export default function ExperiencesOverviewPage() {
+function toJourneys(items: ExperienceItem[]) {
+  return items.map((exp, idx) => ({
+    eyebrow: exp.eyebrow ?? "",
+    title: exp.title ?? exp.name ?? "",
+    description: exp.description ?? exp.tagline ?? "",
+    imageUrl: exp.heroImage?.url ?? exp.imageUrl ?? "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=900&q=80",
+    imageAlt: exp.heroImage?.altText ?? exp.title ?? exp.name ?? "",
+    href: `/experiences/${exp.slug}`,
+    reverse: idx % 2 === 1,
+  }));
+}
+
+export default async function ExperiencesOverviewPage() {
+  const apiExperiences = await publicApi.getExperiences();
+  const journeys = apiExperiences && apiExperiences.length > 0
+    ? toJourneys(apiExperiences)
+    : STATIC_JOURNEYS;
+
   return (
     <>
       {/* Hero */}
@@ -72,7 +92,7 @@ export default function ExperiencesOverviewPage() {
       {/* Featured journey cards — alternating layout */}
       <section className="bg-safari-green-dark py-16 lg:py-24">
         <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
-          {FEATURED_JOURNEYS.map((journey, idx) => (
+          {journeys.map((journey, idx) => (
             <div
               key={journey.href}
               className="group relative overflow-hidden rounded-xl bg-safari-green shadow-xl transition-all hover:shadow-safari-gold/10"

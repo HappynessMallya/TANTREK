@@ -55,6 +55,7 @@ function headers(includeJson = true): Record<string, string> {
 }
 
 /** Unwraps `{ success, data }` envelope; throws with the API error string.
+ *  Falls back to returning the whole body if `data` key is absent.
  *  On 401 the token is cleared and the browser is redirected to /cms/login. */
 async function handleRes<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -69,8 +70,9 @@ async function handleRes<T>(res: Response): Promise<T> {
     const body = await res.json().catch(() => ({})) as { error?: string; message?: string };
     throw new Error(body.error ?? body.message ?? `${res.status} ${res.statusText}`);
   }
-  const json = await res.json() as { data: T };
-  return json.data;
+  const json = await res.json() as { data?: T } & T;
+  // Support both `{ data: { ... } }` envelope and bare responses
+  return (json.data !== undefined ? json.data : json) as T;
 }
 
 /** For 204 No Content deletes — only throws on error. */
@@ -114,13 +116,17 @@ export const cmsApi = {
 
   // ── Auth ──────────────────────────────────────────────────────────────────
   async login(email: string, password: string) {
+    // The API may return the token as `access_token` or `token` depending on version
     const data = await post("/auth/login", { email, password }) as {
-      access_token: string;
+      access_token?: string;
+      token?: string;
       user: { id: string; name: string; email: string; role: string };
     };
+    const jwt = data.access_token ?? data.token ?? "";
+    if (!jwt) throw new Error("Login succeeded but no token was returned. Check the API response.");
     // Store token + user in Zustand — persisted to sessionStorage automatically
-    useAuthStore.getState().setAuth(data.access_token, data.user);
-    return data;
+    useAuthStore.getState().setAuth(jwt, data.user ?? { id: "", name: email, email, role: "admin" });
+    return { ...data, access_token: jwt };
   },
 
   async register(name: string, email: string, password: string) {

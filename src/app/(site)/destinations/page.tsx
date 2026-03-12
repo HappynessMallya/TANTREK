@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { destinations, circuits } from "@/data/destinations";
+import { publicApi, type DestinationItem } from "@/lib/public-api";
 
 export const metadata: Metadata = {
   title: "Our Sanctuaries — Destinations",
@@ -16,17 +17,23 @@ const STATS = [
   { label: "Guest impact", value: "Gold Tier", accent: true },
 ];
 
-function getTags(d: (typeof destinations)[0]): [string, string] {
+function getTagsFromStatic(d: (typeof destinations)[0]): [string, string] {
   const circuitName = circuits[d.circuit].name.replace(" Circuit", "");
   const first = d.highlights[0]?.split("—")[0]?.trim() ?? d.highlights[0] ?? circuitName;
   const second = d.highlights[1]?.split("—")[0]?.trim() ?? d.highlights[1] ?? "Luxury camps";
   return [first.slice(0, 20), second.slice(0, 22)];
 }
 
+function getTagsFromApi(d: DestinationItem): [string, string] {
+  const circuit = d.circuit?.name?.replace(" Circuit", "") ?? "";
+  return [circuit.slice(0, 20) || "Sanctuary", "Luxury camps"];
+}
+
 const HERO_IMAGE =
   "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
 
-export default function DestinationsListingPage() {
+export default async function DestinationsListingPage() {
+  const apiDestinations = await publicApi.getDestinations();
   return (
     <main className="relative min-h-screen bg-safari-green-dark">
       {/* Subtle ambient background — soft gold glow for depth */}
@@ -111,44 +118,86 @@ export default function DestinationsListingPage() {
           {/* Destination grid — luxury cards with gold accent on hover */}
           <section className="mt-12 lg:mt-16">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:gap-10">
-              {destinations.map((d) => {
-                const [tag1, tag2] = getTags(d);
-                return (
-                  <Link
-                    key={d.slug}
-                    href={`/destinations/${d.slug}`}
-                    className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/5 transition-all duration-500 hover:border-safari-gold/40 hover:shadow-[0_0_40px_rgba(196,169,103,0.12)]"
-                  >
-                    <Image
-                      src={d.imageUrl}
-                      alt=""
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-safari-green-dark/90 via-safari-green-dark/30 to-transparent transition-opacity duration-500 group-hover:from-safari-green-dark/85 group-hover:via-safari-green-dark/20" />
-                    <div className="absolute inset-0 flex flex-col justify-end p-6 lg:p-8">
-                      <div className="translate-y-2 transition-all duration-500 group-hover:translate-y-0">
-                        <h2 className="font-display text-2xl font-bold tracking-tight text-white mb-2 lg:text-3xl">
-                          {d.name}
-                        </h2>
-                        <div className="h-0.5 w-14 bg-safari-gold mb-4 transition-all duration-500 group-hover:w-28 group-hover:bg-safari-gold-light" />
-                        <p className="text-safari-sand-light/95 text-sm mb-6 opacity-0 max-w-sm transition-opacity duration-500 group-hover:opacity-100 leading-relaxed">
-                          {d.tagline}
-                        </p>
-                        <div className="flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 delay-75 group-hover:opacity-100">
-                          <span className="inline-flex items-center gap-2 rounded-md border border-safari-gold/30 bg-black/50 px-3 py-1.5 font-body text-[10px] font-bold uppercase tracking-widest text-safari-gold-light/95 backdrop-blur-sm">
-                            {tag1}
-                          </span>
-                          <span className="inline-flex items-center gap-2 rounded-md border border-safari-gold/30 bg-black/50 px-3 py-1.5 font-body text-[10px] font-bold uppercase tracking-widest text-safari-gold-light/95 backdrop-blur-sm">
-                            {tag2}
-                          </span>
+              {apiDestinations && apiDestinations.length > 0
+                ? apiDestinations.map((d) => {
+                    const [tag1, tag2] = getTagsFromApi(d);
+                    const imageUrl = d.heroImage?.url ?? "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=70";
+                    return (
+                      <Link
+                        key={d.slug}
+                        href={`/destinations/${d.slug}`}
+                        className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/5 transition-all duration-500 hover:border-safari-gold/40 hover:shadow-[0_0_40px_rgba(196,169,103,0.12)]"
+                      >
+                        <Image
+                          src={imageUrl}
+                          alt={d.heroImage?.altText ?? d.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-safari-green-dark/90 via-safari-green-dark/30 to-transparent transition-opacity duration-500 group-hover:from-safari-green-dark/85 group-hover:via-safari-green-dark/20" />
+                        <div className="absolute inset-0 flex flex-col justify-end p-6 lg:p-8">
+                          <div className="translate-y-2 transition-all duration-500 group-hover:translate-y-0">
+                            <h2 className="font-display text-2xl font-bold tracking-tight text-white mb-2 lg:text-3xl">
+                              {d.name}
+                            </h2>
+                            <div className="h-0.5 w-14 bg-safari-gold mb-4 transition-all duration-500 group-hover:w-28 group-hover:bg-safari-gold-light" />
+                            {d.tagline && (
+                              <p className="text-safari-sand-light/95 text-sm mb-6 opacity-0 max-w-sm transition-opacity duration-500 group-hover:opacity-100 leading-relaxed">
+                                {d.tagline}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 delay-75 group-hover:opacity-100">
+                              <span className="inline-flex items-center gap-2 rounded-md border border-safari-gold/30 bg-black/50 px-3 py-1.5 font-body text-[10px] font-bold uppercase tracking-widest text-safari-gold-light/95 backdrop-blur-sm">
+                                {tag1}
+                              </span>
+                              <span className="inline-flex items-center gap-2 rounded-md border border-safari-gold/30 bg-black/50 px-3 py-1.5 font-body text-[10px] font-bold uppercase tracking-widest text-safari-gold-light/95 backdrop-blur-sm">
+                                {tag2}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+                      </Link>
+                    );
+                  })
+                : destinations.map((d) => {
+                    const [tag1, tag2] = getTagsFromStatic(d);
+                    return (
+                      <Link
+                        key={d.slug}
+                        href={`/destinations/${d.slug}`}
+                        className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/5 transition-all duration-500 hover:border-safari-gold/40 hover:shadow-[0_0_40px_rgba(196,169,103,0.12)]"
+                      >
+                        <Image
+                          src={d.imageUrl}
+                          alt=""
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-safari-green-dark/90 via-safari-green-dark/30 to-transparent transition-opacity duration-500 group-hover:from-safari-green-dark/85 group-hover:via-safari-green-dark/20" />
+                        <div className="absolute inset-0 flex flex-col justify-end p-6 lg:p-8">
+                          <div className="translate-y-2 transition-all duration-500 group-hover:translate-y-0">
+                            <h2 className="font-display text-2xl font-bold tracking-tight text-white mb-2 lg:text-3xl">
+                              {d.name}
+                            </h2>
+                            <div className="h-0.5 w-14 bg-safari-gold mb-4 transition-all duration-500 group-hover:w-28 group-hover:bg-safari-gold-light" />
+                            <p className="text-safari-sand-light/95 text-sm mb-6 opacity-0 max-w-sm transition-opacity duration-500 group-hover:opacity-100 leading-relaxed">
+                              {d.tagline}
+                            </p>
+                            <div className="flex flex-wrap gap-2 opacity-0 transition-opacity duration-500 delay-75 group-hover:opacity-100">
+                              <span className="inline-flex items-center gap-2 rounded-md border border-safari-gold/30 bg-black/50 px-3 py-1.5 font-body text-[10px] font-bold uppercase tracking-widest text-safari-gold-light/95 backdrop-blur-sm">
+                                {tag1}
+                              </span>
+                              <span className="inline-flex items-center gap-2 rounded-md border border-safari-gold/30 bg-black/50 px-3 py-1.5 font-body text-[10px] font-bold uppercase tracking-widest text-safari-gold-light/95 backdrop-blur-sm">
+                                {tag2}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
             </div>
           </section>
 

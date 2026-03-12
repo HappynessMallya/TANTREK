@@ -8,8 +8,10 @@ const LOGIN_PATH = "/cms/login";
 
 /**
  * Guards all CMS routes.
- * Reads auth state from the Zustand store (persisted in sessionStorage).
- * Redirects to /cms/login if no token is present.
+ *
+ * Pattern: render nothing on the first pass (avoids SSR/hydration mismatch),
+ * then after mount the Zustand persist middleware has already synchronously
+ * loaded sessionStorage so `token` is correct on the very next render.
  */
 export function CmsAuthGuard({
   children,
@@ -20,37 +22,33 @@ export function CmsAuthGuard({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-
-  // Wait for the Zustand store to rehydrate from sessionStorage before checking auth
-  const [hydrated, setHydrated] = useState(false);
   const token = useAuthStore((s) => s.token);
 
+  // Wait for the client to mount before making any auth decisions.
+  // This avoids SSR/hydration mismatches and ensures sessionStorage is readable.
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    // `onFinishHydration` fires once persist middleware has loaded sessionStorage
-    const unsub = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
-    // If already hydrated (e.g. navigating between pages), set immediately
-    if (useAuthStore.persist.hasHydrated()) setHydrated(true);
-    return unsub;
+    setMounted(true);
   }, []);
 
+  // Redirect unauthenticated users away from protected routes
   useEffect(() => {
-    if (!hydrated) return;
+    if (!mounted) return;
     if (pathname === LOGIN_PATH) return;
     if (!token) {
       router.replace(LOGIN_PATH);
     }
-  }, [hydrated, token, pathname, router]);
+  }, [mounted, token, pathname, router]);
 
-  // Show nothing until we know the hydration state
-  if (!hydrated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-luxury-champagne">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-luxury-gold border-t-transparent" />
-      </div>
-    );
-  }
+  // First pass: render nothing — avoids a flash of wrong content
+  if (!mounted) return null;
 
+  // Login page: always accessible (no Shell wrapper)
   if (pathname === LOGIN_PATH) return <>{children}</>;
+
+  // Not authenticated: show nothing while redirect fires
   if (!token) return null;
+
+  // Authenticated: wrap in the CMS shell
   return <Shell>{children}</Shell>;
 }

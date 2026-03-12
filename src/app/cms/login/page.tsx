@@ -23,10 +23,12 @@ export default function CmsLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setInfo("");
     setLoading(true);
     try {
       await cmsApi.login(email, password);
-      router.push("/cms/dashboard");
+      // Use replace instead of push so the login page is not in the browser history
+      router.replace("/cms/dashboard");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Invalid credentials. Please try again."

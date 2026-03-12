@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { publicApi } from "@/lib/public-api";
 
 const STEPS = [
   {
@@ -139,6 +140,8 @@ export function PlanYourSafariForm({
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>(() => getInitialFormState(initialEmail, initialSeason));
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const currentStep = STEPS[step];
   const isLast = step === STEPS.length - 1;
@@ -150,9 +153,33 @@ export function PlanYourSafariForm({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (isLast) {
-      setSubmitted(true);
+      setSubmitting(true);
+      setSubmitError("");
+      // Build message from all collected fields
+      const circuits = (form.circuits as string[]).join(", ");
+      const message = [
+        form.notes as string,
+        form.experience ? `Experience: ${form.experience as string}` : "",
+        circuits ? `Regions: ${circuits}` : "",
+        form.nights ? `Nights: ${form.nights as string}` : "",
+      ].filter(Boolean).join("\n");
+
+      const result = await publicApi.submitInquiry({
+        name: (form.name as string) || "Anonymous",
+        email: (form.email as string) || "",
+        phone: (form.phone as string) || undefined,
+        message: message || "No message provided.",
+        travelDates: (form.travel_month as string) || undefined,
+        budget: (form.budget as string) || undefined,
+      });
+      setSubmitting(false);
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setSubmitError(result.message ?? "Submission failed. Please try again.");
+      }
       return;
     }
     setStep((s) => s + 1);
@@ -405,27 +432,23 @@ export function PlanYourSafariForm({
             </button>
           </div>
         )}
+        {submitError && (
+          <p className="text-red-400 text-sm text-center mb-2">{submitError}</p>
+        )}
         {inline ? (
           <div className="space-y-3">
             <button
               type="button"
               onClick={handleNext}
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-safari-gold px-6 py-4 font-bold uppercase tracking-wider text-safari-green-dark transition-all hover:bg-safari-gold-light hover:scale-[1.01] active:scale-[0.99]"
+              disabled={submitting}
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-safari-gold px-6 py-4 font-bold uppercase tracking-wider text-safari-green-dark transition-all hover:bg-safari-gold-light hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isLast ? "Request your itinerary" : "Next"}
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
+              {submitting ? "Sending…" : isLast ? "Request your itinerary" : "Next"}
+              {!submitting && (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              )}
             </button>
             <p className="text-center text-[10px] uppercase tracking-widest text-safari-sand-muted">
               Our response time for private inquiries is typically within 24–48
@@ -446,9 +469,10 @@ export function PlanYourSafariForm({
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg bg-safari-gold text-safari-green hover:bg-safari-gold-light transition-colors"
+              disabled={submitting}
+              className="inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg bg-safari-gold text-safari-green hover:bg-safari-gold-light transition-colors disabled:opacity-60"
             >
-              {isLast ? "Submit" : "Next"}
+              {submitting ? "Sending…" : isLast ? "Submit" : "Next"}
             </button>
           </>
         )}

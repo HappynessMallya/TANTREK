@@ -7,18 +7,44 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import Link from "next/link";
+import { publicApi, type HomeContent } from "@/lib/public-api";
 
 const AnimatedTanzaniaMap = dynamic(
   () => import("@/components/AnimatedTanzaniaMap").then((m) => ({ default: m.AnimatedTanzaniaMap })),
   { ssr: false }
 );
 
-const HERO_SLIDES = [
-  { src: "/tembo.mp4", alt: "Tembo — elephants in the wild", label: "The Wild" },
-  { src: "/beach.mp4", alt: "Beach escape — Zanzibar", label: "Beach Paradise" },
-  { src: "/safari.mp4", alt: "Safari experience", label: "Safari Experience" },
-  { src: "/wanyama.mp4", alt: "Wanyama — wildlife", label: "Wildlife" },
-] as const;
+// Static fallback slides — shown immediately and replaced by API data when available
+const STATIC_HERO_SLIDES = [
+  { src: "/tembo.mp4", alt: "Tembo — elephants in the wild" },
+  { src: "/beach.mp4", alt: "Beach escape — Zanzibar" },
+  { src: "/safari.mp4", alt: "Safari experience" },
+  { src: "/wanyama.mp4", alt: "Wanyama — wildlife" },
+];
+
+// Static fallback homepage content — shown immediately, replaced by CMS data
+const STATIC_HOME: Required<HomeContent> = {
+  heroEyebrow: "Est. 2010 • Private & Exclusive",
+  heroHeadline: "Where Untamed Wild\nMeets Refined Luxury",
+  heroSubhead: "Private safaris across Serengeti, Ruaha, and Katavi—crafted for travelers who seek profound wilderness without compromise.",
+  heroCtaPrimary: "Begin Your Journey",
+  heroCtaPrimaryHref: "/plan-your-safari",
+  heroCtaSecondary: "Explore Our Sanctuaries",
+  heroCtaSecondaryHref: "/destinations",
+  mapHeading: "Discover Tanzania's Untamed Frontiers",
+  mapVideoUrl: "",
+  mapVideoWebM: "",
+  sanctuariesEyebrow: "Our destinations",
+  sanctuariesTitle: "Sanctuaries of The Wild",
+  sanctuariesBody: "From the Serengeti and Ngorongoro to Ruaha, Julius Nyerere, and Katavi—each sanctuary is a place we know intimately. We craft journeys into Tanzania's most pristine wilderness, with world-class guiding and the camps that belong there.",
+  ourStoryQuote: "We are wilderness architects.",
+  ourStoryBody: "We are not the northern circuit. We are the frontier—Southern and Western Tanzania, where low-density tourism meets raw wilderness: Ruaha, Julius Nyerere, Katavi. Ultra-exclusive. Cinematic. Silent.\n\nOur safaris are crafted for those who seek the road less traveled: remote luxury camps, conservation-driven itineraries, and moments where the only sound is the breath of the wild.",
+  ourStoryBgImage: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80",
+  finalCtaHeadline: "Begin Your Frontier",
+  finalCtaSubcopy: "Tell us your dates, budget, and dreams. We'll craft an itinerary that belongs only to you.",
+  finalCtaButtonLabel: "Plan your safari",
+  finalCtaButtonHref: "/plan-your-safari",
+};
 
 const SLIDE_DURATION_MS = 7000;
 // Performance: For video hero slides, use 1080p WebM, max 6–8MB; lazy-load non-initial slides.
@@ -56,6 +82,30 @@ export default function HomePage() {
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const heroVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
+  // CMS-driven content — starts from static fallback, updated by API
+  const [home, setHome] = useState<Required<HomeContent>>(STATIC_HOME);
+  const [heroSlides, setHeroSlides] = useState(STATIC_HERO_SLIDES);
+
+  // Fetch dynamic content from CMS API (runs in background, no loading state)
+  useEffect(() => {
+    Promise.allSettled([
+      publicApi.getHomeContent(),
+      publicApi.getHeroSlides(),
+    ]).then(([homeRes, slidesRes]) => {
+      if (homeRes.status === "fulfilled" && homeRes.value) {
+        setHome({ ...STATIC_HOME, ...homeRes.value });
+      }
+      if (slidesRes.status === "fulfilled" && slidesRes.value?.length) {
+        const active = slidesRes.value
+          .filter((s) => s.isActive !== false)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        if (active.length > 0) {
+          setHeroSlides(active.map((s) => ({ src: s.src, alt: s.alt ?? "" })));
+        }
+      }
+    });
+  }, []);
+
   const goTo = useCallback((index: number) => {
     setTestimonialIndex((prev) => {
       if (index < 0) return TESTIMONIALS.length - 1;
@@ -69,12 +119,12 @@ export default function HomePage() {
     return () => clearInterval(t);
   }, [testimonialIndex, goTo]);
 
-  // Hero: 4 slides (7s each), then map (20s), then loop
+  // Hero: slides (7s each), then map (20s), then loop
   useEffect(() => {
     if (heroPhase === "map") return;
     const t = setInterval(() => {
       setHeroSlideIndex((prev) => {
-        if (prev >= HERO_SLIDES.length - 1) {
+        if (prev >= heroSlides.length - 1) {
           setHeroPhase("map");
           return 0;
         }
@@ -82,7 +132,7 @@ export default function HomePage() {
       });
     }, SLIDE_DURATION_MS);
     return () => clearInterval(t);
-  }, [heroPhase, heroSlideIndex]);
+  }, [heroPhase, heroSlideIndex, heroSlides.length]);
 
   const onMapComplete = useCallback(() => {
     setHeroPhase("slideshow");
@@ -103,9 +153,9 @@ export default function HomePage() {
     <>
       {/* Hero — cinematic slideshow → Tanzania map → loop (pt-20 = below fixed nav) */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        {/* Slideshow background — all 4 videos kept in DOM so buffer is preserved */}
+        {/* Slideshow background — all videos kept in DOM so buffer is preserved */}
         <div className="absolute inset-0 bg-safari-green-dark">
-          {HERO_SLIDES.map((slide, i) => (
+          {heroSlides.map((slide, i) => (
             <motion.div
               key={slide.src}
               initial={false}
@@ -154,31 +204,43 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="relative z-10 px-4 sm:px-6 text-center max-w-5xl mx-auto pb-24"
           >
-            <p className="font-body text-safari-gold text-[10px] sm:text-xs font-semibold tracking-[0.35em] uppercase mb-6">
-              Est. 2010 • Private & Exclusive
-            </p>
+            {home.heroEyebrow && (
+              <p className="font-body text-safari-gold text-[10px] sm:text-xs font-semibold tracking-[0.35em] uppercase mb-6">
+                {home.heroEyebrow}
+              </p>
+            )}
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.08] font-normal tracking-tight">
-              Where Untamed Wild
-              <br />
-              <span className="italic font-light">Meets Refined Luxury</span>
+              {home.heroHeadline.includes("\n") ? (
+                <>
+                  {home.heroHeadline.split("\n")[0]}
+                  <br />
+                  <span className="italic font-light">{home.heroHeadline.split("\n")[1]}</span>
+                </>
+              ) : home.heroHeadline}
             </h1>
-            <p className="mt-6 text-sm sm:text-base text-white/70 max-w-xl mx-auto font-body font-light leading-relaxed tracking-wide">
-              Private safaris across Serengeti, Ruaha, and Katavi—crafted for travelers who seek profound wilderness without compromise.
-            </p>
+            {home.heroSubhead && (
+              <p className="mt-6 text-sm sm:text-base text-white/70 max-w-xl mx-auto font-body font-light leading-relaxed tracking-wide">
+                {home.heroSubhead}
+              </p>
+            )}
 
             <div className="hero-journey-bar mt-10 sm:mt-12 px-4 py-4 rounded-lg max-w-2xl mx-auto w-full flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="/plan-your-safari"
-                className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
-              >
-                Begin Your Journey
-              </Link>
-              <Link
-                href="/destinations"
-                className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase w-full sm:w-auto"
-              >
-                Explore Our Sanctuaries
-              </Link>
+              {home.heroCtaPrimary && (
+                <Link
+                  href={home.heroCtaPrimaryHref || "/plan-your-safari"}
+                  className="luxury-cta-primary luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
+                >
+                  {home.heroCtaPrimary}
+                </Link>
+              )}
+              {home.heroCtaSecondary && (
+                <Link
+                  href={home.heroCtaSecondaryHref || "/destinations"}
+                  className="luxury-cta-secondary inline-flex items-center justify-center font-body text-xs font-semibold tracking-[0.22em] uppercase w-full sm:w-auto"
+                >
+                  {home.heroCtaSecondary}
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
@@ -223,16 +285,22 @@ export default function HomePage() {
             {/* Text — on small screens: order-2 so it appears below images; improved typography */}
             <div className="lg:col-span-5 space-y-4 sm:space-y-6 order-2 lg:order-1">
               <p className="font-body text-safari-gold text-[10px] font-bold tracking-[0.3em] uppercase">
-                Our destinations
+                {home.sanctuariesEyebrow}
               </p>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-white leading-tight">
-                Sanctuaries of
-                <br />
-                <span className="italic font-light">The Wild</span>
+                {home.sanctuariesTitle.includes(" of ") ? (
+                  <>
+                    {home.sanctuariesTitle.split(" of ")[0]} of
+                    <br />
+                    <span className="italic font-light">{home.sanctuariesTitle.split(" of ").slice(1).join(" of ")}</span>
+                  </>
+                ) : home.sanctuariesTitle}
               </h2>
-              <p className="text-safari-sand-light/70 font-body font-light leading-relaxed text-sm sm:text-base max-w-md">
-                From the Serengeti and Ngorongoro to Ruaha, Julius Nyerere, and Katavi—each sanctuary is a place we know intimately. We craft journeys into Tanzania&apos;s most pristine wilderness, with world-class guiding and the camps that belong there.
-              </p>
+              {home.sanctuariesBody && (
+                <p className="text-safari-sand-light/70 font-body font-light leading-relaxed text-sm sm:text-base max-w-md">
+                  {home.sanctuariesBody}
+                </p>
+              )}
               <div className="pt-1 sm:pt-2">
                 <Link
                   href="/destinations"
@@ -366,8 +434,7 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80)",
+            backgroundImage: `url(${home.ourStoryBgImage || "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1920&q=80"})`,
           }}
           aria-hidden
         />
@@ -382,12 +449,14 @@ export default function HomePage() {
             <p className="font-body text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-luxury-gold">
               Our Story
             </p>
-            <p
-              className="font-display mt-8 text-2xl sm:text-3xl lg:text-4xl text-safari-gold-light leading-snug"
-              style={{ fontFeatureSettings: '"kern" 1' }}
-            >
-              &quot;We are wilderness architects.&quot;
-            </p>
+            {home.ourStoryQuote && (
+              <p
+                className="font-display mt-8 text-2xl sm:text-3xl lg:text-4xl text-safari-gold-light leading-snug"
+                style={{ fontFeatureSettings: '"kern" 1' }}
+              >
+                &quot;{home.ourStoryQuote}&quot;
+              </p>
+            )}
             <div className="luxury-gold-line-wide mx-auto mt-6" aria-hidden />
           </motion.div>
           <motion.div
@@ -398,16 +467,14 @@ export default function HomePage() {
             className="mt-10 lg:mt-12 px-0 sm:px-4"
           >
             <div className="border-l-2 border-luxury-gold/50 pl-6 sm:pl-8 py-1 text-safari-sand-light/95 text-base sm:text-lg leading-relaxed space-y-5">
-              <p>
-                We are not the northern circuit. We are the frontier—Southern and
-                Western Tanzania, where low-density tourism meets raw wilderness:
-                Ruaha, Julius Nyerere, Katavi. Ultra-exclusive. Cinematic. Silent.
-              </p>
-              <p>
-                Our safaris are crafted for those who seek the road less traveled:
-                remote luxury camps, conservation-driven itineraries, and moments
-                where the only sound is the breath of the wild.
-              </p>
+              {home.ourStoryBody
+                ? home.ourStoryBody.split("\n\n").map((para, i) => <p key={i}>{para}</p>)
+                : (
+                  <>
+                    <p>We are not the northern circuit. We are the frontier—Southern and Western Tanzania, where low-density tourism meets raw wilderness: Ruaha, Julius Nyerere, Katavi. Ultra-exclusive. Cinematic. Silent.</p>
+                    <p>Our safaris are crafted for those who seek the road less traveled: remote luxury camps, conservation-driven itineraries, and moments where the only sound is the breath of the wild.</p>
+                  </>
+                )}
             </div>
           </motion.div>
           <motion.div
@@ -701,17 +768,19 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="font-display text-4xl sm:text-5xl lg:text-6xl text-white font-light tracking-tight leading-[1.1]"
           >
-            Begin Your Frontier
+            {home.finalCtaHeadline}
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.08 }}
-            className="mt-8 text-safari-sand-light/90 font-body text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
-          >
-            Tell us your dates, budget, and dreams. We&apos;ll craft an itinerary that belongs only to you.
-          </motion.p>
+          {home.finalCtaSubcopy && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.08 }}
+              className="mt-8 text-safari-sand-light/90 font-body text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
+            >
+              {home.finalCtaSubcopy}
+            </motion.p>
+          )}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -719,12 +788,14 @@ export default function HomePage() {
             transition={{ delay: 0.12 }}
             className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link
-              href="/plan-your-safari"
-              className="luxury-cta-frontier luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
-            >
-              Plan your safari
-            </Link>
+            {home.finalCtaButtonLabel && (
+              <Link
+                href={home.finalCtaButtonHref || "/plan-your-safari"}
+                className="luxury-cta-frontier luxury-cta-glow inline-flex items-center justify-center font-body text-xs font-bold tracking-[0.25em] uppercase w-full sm:w-auto"
+              >
+                {home.finalCtaButtonLabel}
+              </Link>
+            )}
             <a
               href="https://wa.me/255762111315"
               target="_blank"
