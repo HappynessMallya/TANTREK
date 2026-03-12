@@ -4,10 +4,17 @@
  * All protected endpoints require a Bearer token stored in sessionStorage.
  */
 
-const BASE =
-  typeof window !== "undefined"
-    ? (process.env.NEXT_PUBLIC_CMS_API_URL ?? "")
-    : (process.env.NEXT_PUBLIC_CMS_API_URL ?? "");
+/** Normalise the base URL: trim whitespace and ensure it starts with http(s):// */
+function normaliseBase(raw: string | undefined): string {
+  if (!raw) return "";
+  const trimmed = raw.trim();
+  // Auto-fix common copy-paste mistake: "ttps://" → "https://"
+  if (trimmed.startsWith("ttps://")) return "h" + trimmed;
+  if (trimmed.startsWith("ttp://")) return "h" + trimmed;
+  return trimmed;
+}
+
+const BASE = normaliseBase(process.env.NEXT_PUBLIC_CMS_API_URL);
 
 // ─── Token management ────────────────────────────────────────────────────────
 
