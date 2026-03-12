@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
-import { ContactUsBanner } from "@/components/ContactUsBanner";
 import { TravelAgencySchema } from "@/components/seo/TravelAgencySchema";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -61,13 +56,7 @@ export default function RootLayout({
         <TravelAgencySchema />
       </head>
       <body className="min-h-screen flex flex-col">
-        <Nav />
-        <main className="flex-1">
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
-        <Footer />
-        <ContactUsBanner />
-        <WhatsAppFloat />
+        {children}
       </body>
     </html>
   );
