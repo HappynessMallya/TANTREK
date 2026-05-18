@@ -3,34 +3,41 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy policy for Tanzania Wildmakers Safaris. How we collect, use, and protect your information.",
+  description: "Privacy policy for TANTREK 360 Safaris. How we collect, use, and protect your information.",
 };
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen bg-safari-green-dark pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <Link href="/" className="inline-block font-body text-luxury-gold text-xs tracking-wider uppercase mb-8 hover:underline">
-          ← Home
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 font-body text-tantrek-orange text-xs font-semibold tracking-wider uppercase mb-8 hover:underline"
+        >
+          <span aria-hidden>←</span> Home
         </Link>
-        <h1 className="font-display text-3xl sm:text-4xl text-white mb-8">Privacy Policy</h1>
-        <div className="prose prose-invert prose-sm max-w-none text-safari-sand-light/90 font-body space-y-6">
-          <p className="text-sm leading-relaxed">
-            Tanzania Wildmakers Safaris (&quot;we&quot;) respects your privacy. This policy describes how we collect, use, and protect your personal information when you use our website or contact us.
+        <h1 className="font-display text-3xl sm:text-4xl text-tantrek-navy font-bold mb-8">Privacy Policy</h1>
+        <div className="max-w-none text-tantrek-text font-body space-y-6">
+          <p className="text-base leading-relaxed text-tantrek-text-muted">
+            TANTREK 360 Safaris (&quot;we&quot;) respects your privacy. This policy describes how we
+            collect, use, and protect your personal information when you use our website, request a
+            consultation, or engage our travel and investment services.
           </p>
-          <h2 className="font-display text-xl text-white mt-8 mb-4">Information we collect</h2>
-          <p className="text-sm leading-relaxed">
-            We may collect your name, email address, phone number, and travel preferences when you submit an enquiry, plan your safari, or subscribe to our communications.
+          <h2 className="font-display text-xl text-tantrek-navy font-semibold mt-8 mb-3">Information we collect</h2>
+          <p className="text-base leading-relaxed text-tantrek-text-muted">
+            We may collect your name, email address, phone number, travel preferences, business goals, and
+            investment interests when you submit an enquiry, plan a trip, or subscribe to our communications.
           </p>
-          <h2 className="font-display text-xl text-white mt-8 mb-4">How we use it</h2>
-          <p className="text-sm leading-relaxed">
-            We use this information to respond to your enquiries, tailor safari proposals, and send relevant updates. We do not sell your data to third parties.
+          <h2 className="font-display text-xl text-tantrek-navy font-semibold mt-8 mb-3">How we use it</h2>
+          <p className="text-base leading-relaxed text-tantrek-text-muted">
+            We use this information to respond to your enquiries, design tailored 360° proposals (travel +
+            opportunity), and send relevant updates. We do not sell your data to third parties.
           </p>
-          <h2 className="font-display text-xl text-white mt-8 mb-4">Contact</h2>
-          <p className="text-sm leading-relaxed">
+          <h2 className="font-display text-xl text-tantrek-navy font-semibold mt-8 mb-3">Contact</h2>
+          <p className="text-base leading-relaxed text-tantrek-text-muted">
             For questions about this policy or your data, contact us at{" "}
-            <a href="mailto:info@tanzaniawildmakersafari.com" className="text-luxury-gold hover:underline">
-              info@tanzaniawildmakersafari.com
+            <a href="mailto:info@tantreksafari.com" className="text-tantrek-orange font-semibold hover:underline">
+              info@tantreksafari.com
             </a>
             .
           </p>

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { cmsApi } from "@/lib/cms-api";
 
 export default function CmsLoginPage() {
-  const [email, setEmail] = useState("admin@tanzaniawildmakerssafari.com");
+  const [email, setEmail] = useState("admin@tantreksafari.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
@@ -59,7 +59,7 @@ export default function CmsLoginPage() {
           <div className="mx-auto mb-8">
             <Image
               src="/logo.png"
-              alt="Tanzania Wildmakers Safaris"
+              alt="TANTREK 360 Safaris"
               width={260}
               height={72}
               className="h-16 w-auto object-contain mx-auto"
@@ -68,11 +68,11 @@ export default function CmsLoginPage() {
           </div>
 
           <h2 className="font-display text-3xl font-bold text-safari-cream leading-tight">
-            Tanzania Wildmakers
+            TANTREK 360
           </h2>
           <div className="mx-auto mt-3 h-[2px] w-12 rounded-full bg-luxury-gold" />
           <p className="mt-4 text-sm text-safari-cream/50 font-body leading-relaxed">
-            Content management portal for the Tanzania Wildmakers Safari website.
+            Content management portal for the TANTREK 360 Safaris website.
           </p>
 
           {/* Decorative quote */}
@@ -91,7 +91,7 @@ export default function CmsLoginPage() {
           <div className="mb-2 rounded-xl bg-luxury-dark-emerald px-4 py-3">
             <Image
               src="/logo.png"
-              alt="Tanzania Wildmakers Safaris"
+              alt="TANTREK 360 Safaris"
               width={200}
               height={56}
               className="h-10 w-auto object-contain"
@@ -135,7 +135,7 @@ export default function CmsLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full rounded-xl border border-[#D5CAAD] bg-white px-4 py-2.5 text-sm text-[#0D2218] placeholder-[#B0A88C] transition-all focus:border-luxury-gold focus:outline-none focus:ring-2 focus:ring-luxury-gold/15"
-                  placeholder="admin@tanzaniawildmakerssafari.com"
+                  placeholder="admin@tantreksafari.com"
                   autoComplete="email"
                   required
                 />
@@ -197,7 +197,7 @@ export default function CmsLoginPage() {
           </div>
 
           <p className="mt-6 text-center text-xs text-[#A9A090]">
-            Tanzania Wildmakers Safari &mdash; Admin Portal
+            TANTREK 360 Safaris &mdash; Admin Portal
           </p>
         </div>
       </div>

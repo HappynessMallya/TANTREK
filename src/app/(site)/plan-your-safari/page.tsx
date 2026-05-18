@@ -4,13 +4,10 @@ import { PlanYourSafariForm } from "./PlanYourSafariForm";
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "Plan Your Safari — Bespoke Itinerary Builder",
+  title: "Plan Your Trip — TANTREK 360 Bespoke Itinerary",
   description:
-    "Tell us your dates, budget, and dreams. We'll craft a luxury safari itinerary for Southern and Western Tanzania. Smart form and WhatsApp quick contact.",
+    "Tell us your goals — travel, investment, or both. TANTREK 360 will design a 360° experience combining safari, culture, and Tanzania opportunity exposure.",
 };
-
-const PLAN_PAGE_BG =
-  "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
 
 type PlanPageProps = {
   searchParams?: Promise<{ season?: string; email?: string }> | { season?: string; email?: string };
@@ -25,118 +22,112 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
   const initialSeason = typeof resolved.season === "string" ? resolved.season : "";
 
   return (
-    <main className="relative flex min-h-screen flex-col pt-20">
-      {/* Full-bleed background image */}
-      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden>
-        <Image
-          src={PLAN_PAGE_BG}
-          alt=""
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
+    <main className="relative flex min-h-screen flex-col bg-white pt-20">
+      {/* Top navy banner */}
+      <section className="relative overflow-hidden bg-tantrek-navy-deep">
+        <div className="absolute inset-0 opacity-25">
+          <Image src="/tour6.webp" alt="" fill className="object-cover" sizes="100vw" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-hero-overlay" aria-hidden />
         <div
-          className="absolute inset-0 bg-safari-green-dark/92"
+          className="absolute inset-0"
+          style={{ background: "radial-gradient(ellipse 50% 40% at 80% 25%, rgba(255,122,0,0.18), transparent 70%)" }}
           aria-hidden
         />
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-safari-green-dark/50 via-safari-green-dark/30 to-safari-green-dark/70"
-          aria-hidden
-        />
-      </div>
-      <div className="relative z-10 flex-1 py-12 px-4 sm:px-6 lg:px-8 lg:py-16">
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 lg:items-start">
-          {/* Left column: intro + profile card */}
-          <div className="flex flex-col gap-8 pt-4 lg:pt-8">
-            <div className="space-y-4">
-              <p className="font-body text-xs font-bold uppercase tracking-[0.3em] text-safari-gold-light">
-                Bespoke Excellence
-              </p>
-              <h1 className="font-display text-4xl font-bold leading-tight text-safari-cream sm:text-5xl lg:text-6xl">
-                Plan Your Private Safari
-              </h1>
-              <p className="max-w-lg text-base leading-relaxed text-safari-sand-light/90 sm:text-lg">
-                Every Wildmakers journey is a blank canvas. We curate every detail
-                to align with your personal vision of the wild.
-              </p>
-            </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <p className="font-body text-tantrek-orange text-[11px] font-bold tracking-[0.36em] uppercase mb-4">
+            Bespoke 360° Planning
+          </p>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white font-bold leading-tight max-w-3xl">
+            Plan Your <span className="text-tantrek-orange">TANTREK Journey</span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-white/85 text-base sm:text-lg leading-relaxed">
+            Every TANTREK 360 journey is a blank canvas. Tell us your goals — travel, investment, or
+            both — and we&apos;ll curate a programme that blends wilderness, culture, and real
+            opportunity.
+          </p>
+        </div>
+      </section>
 
-            {/* Profile / concierge card — classic, our palette */}
-            <div className="rounded-xl border border-safari-gold/20 bg-safari-green/40 p-6 sm:p-8 backdrop-blur-sm">
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-6">
-                <div className="shrink-0">
-                  <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-safari-gold/50 sm:h-24 sm:w-24">
-                    <Image
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&q=80"
-                      alt="Your safari architect"
-                      fill
-                      className="object-cover"
-                      sizes="96px"
-                    />
+      <div className="relative z-10 -mt-12 flex-1 py-6 px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-12 lg:items-start">
+          {/* Left column: profile card + how-it-works */}
+          <div className="flex flex-col gap-8 lg:col-span-2">
+            <div className="rounded-2xl border border-tantrek-border bg-white p-6 sm:p-8 shadow-card">
+              <div className="flex flex-col gap-5">
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0">
+                    <div className="relative h-16 w-16 overflow-hidden rounded-full ring-2 ring-tantrek-orange/20">
+                      <Image
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&q=80"
+                        alt="TANTREK 360 trip architect"
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                      />
+                    </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="font-display text-lg font-semibold text-tantrek-navy">
+                      Your TANTREK Architect
+                    </h2>
+                    <p className="mt-0.5 font-body text-[10px] font-bold uppercase tracking-[0.22em] text-tantrek-orange">
+                      360° Itinerary &amp; Opportunity Design
+                    </p>
                   </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-xl font-bold text-safari-cream sm:text-2xl">
-                    Your Safari Architect
-                  </h2>
-                  <p className="mt-0.5 font-body text-xs font-semibold uppercase tracking-widest text-safari-gold-light">
-                    Bespoke Itinerary Design
-                  </p>
-                  <p className="mt-4 font-body text-sm italic leading-relaxed text-safari-sand-light/95 sm:text-base">
-                    With years of experience across Southern and Western Tanzania,
-                    we connect you with the heartbeat of the wild—from private
-                    bush dinners to secluded migration crossings. Your journey is
-                    handled with absolute discretion.
-                  </p>
-                  <ul className="mt-4 space-y-2">
-                    <li className="flex items-center gap-3 text-sm text-safari-sand-light/90">
-                      <span
-                        className="text-safari-gold"
-                        aria-hidden
-                      >
-                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
+                <p className="font-body text-sm leading-relaxed text-tantrek-text-muted">
+                  Years of experience across Tanzania&apos;s parks, coast, and emerging sectors. We connect
+                  you to the wilderness, the markets, and the partners that matter — with absolute
+                  discretion and end-to-end care.
+                </p>
+                <ul className="space-y-2.5">
+                  {[
+                    "Tanzania-wide: Northern, Southern & Western circuits",
+                    "Investment, real estate, tourism & SME exposure",
+                    "English, Swahili & Spanish speaking",
+                  ].map((line) => (
+                    <li key={line} className="flex items-start gap-3 text-sm text-tantrek-text">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-tantrek-orange/15 text-tantrek-orange">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                       </span>
-                      Expert knowledge: Ruaha, Julius Nyerere & Katavi
+                      <span>{line}</span>
                     </li>
-                    <li className="flex items-center gap-3 text-sm text-safari-sand-light/90">
-                      <span
-                        className="text-safari-gold"
-                        aria-hidden
-                      >
-                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                      English & Swahili speaking
-                    </li>
-                  </ul>
-                </div>
+                  ))}
+                </ul>
               </div>
+            </div>
+
+            <div className="rounded-2xl border border-tantrek-border bg-tantrek-surface p-6 sm:p-8">
+              <p className="font-body text-tantrek-orange text-[10px] font-bold tracking-[0.28em] uppercase mb-3">
+                Response time
+              </p>
+              <p className="font-display text-tantrek-navy text-2xl font-semibold mb-2">24–48 hours</p>
+              <p className="font-body text-tantrek-text-muted text-sm leading-relaxed">
+                Our private inquiry response window. For anything more urgent, message us directly on{" "}
+                <a href="https://wa.me/34637048615" target="_blank" rel="noopener noreferrer" className="text-tantrek-orange font-semibold hover:underline">
+                  WhatsApp
+                </a>
+                {" "}or email{" "}
+                <a href="mailto:info@tantreksafari.com" className="text-tantrek-orange font-semibold hover:underline break-all">
+                  info@tantreksafari.com
+                </a>
+                .
+              </p>
             </div>
 
             <div className="hidden lg:block">
               <Button href="/" variant="outline">
-                Return Home
+                ← Return Home
               </Button>
             </div>
           </div>
 
-          {/* Right column: glassmorphism form */}
-          <div className="glassmorphism-panel rounded-xl p-6 shadow-2xl sm:p-8 lg:p-10">
+          {/* Right column: form */}
+          <div className="lg:col-span-3 glassmorphism-panel rounded-2xl p-6 sm:p-8 lg:p-10">
             {initialSeason && (
-              <p className="mb-4 font-body text-xs uppercase tracking-widest text-safari-gold-light/90">
-                Preferred season from homepage:{" "}
+              <p className="mb-4 font-body text-[10px] font-bold uppercase tracking-[0.22em] text-tantrek-orange">
+                Preferred season:{" "}
                 {initialSeason === "dry-jun-oct" && "Dry (Jun – Oct)"}
                 {initialSeason === "green-dec-mar" && "Green (Dec – Mar)"}
                 {initialSeason === "shoulder" && "Shoulder (Apr – May, Nov)"}
@@ -149,7 +140,7 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
 
         <div className="mt-8 flex justify-center lg:hidden">
           <Button href="/" variant="outline">
-            Return Home
+            ← Return Home
           </Button>
         </div>
       </div>

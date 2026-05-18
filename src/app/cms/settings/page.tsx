@@ -79,7 +79,7 @@ export default function CmsSettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <Field label="Site title">
-                <Input value={form.siteTitle} onChange={(e) => set("siteTitle", e.target.value)} placeholder="Tanzania Wildmakers Safaris" />
+                <Input value={form.siteTitle} onChange={(e) => set("siteTitle", e.target.value)} placeholder="TANTREK 360 Safaris" />
               </Field>
             </div>
             <div className="md:col-span-2">
@@ -91,7 +91,7 @@ export default function CmsSettingsPage() {
               <Input type="url" value={form.logo} onChange={(e) => set("logo", e.target.value)} placeholder="https://cdn…/logo.png" />
             </Field>
             <Field label="Logo alt text">
-              <Input value={form.logoAlt} onChange={(e) => set("logoAlt", e.target.value)} placeholder="Tanzania Wildmakers Safaris" />
+              <Input value={form.logoAlt} onChange={(e) => set("logoAlt", e.target.value)} placeholder="TANTREK 360 Safaris" />
             </Field>
             <div className="md:col-span-2">
               <Field label="Social share image (OG image)" hint={<MediaLibraryHint />}>
@@ -118,13 +118,13 @@ export default function CmsSettingsPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Email address">
-              <Input type="email" value={form.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} placeholder="info@tanzaniawildmakersafari.com" />
+              <Input type="email" value={form.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} placeholder="info@tantreksafari.com" />
             </Field>
             <Field label="Phone number">
               <Input type="tel" value={form.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+255 762 111 315" />
             </Field>
-            <Field label="WhatsApp number" hint="Digits only, include country code (e.g. 255762111315).">
-              <Input value={form.whatsappNumber} onChange={(e) => set("whatsappNumber", e.target.value)} placeholder="255762111315" />
+            <Field label="WhatsApp number" hint="Digits only, include country code (e.g. 34637048615).">
+              <Input value={form.whatsappNumber} onChange={(e) => set("whatsappNumber", e.target.value)} placeholder="34637048615" />
             </Field>
             <div className="md:col-span-2">
               <Field label="Office / mailing address">
@@ -153,7 +153,7 @@ export default function CmsSettingsPage() {
               <Input value={form.footerLocation} onChange={(e) => set("footerLocation", e.target.value)} placeholder="Serengeti • Ruaha • Katavi" />
             </Field>
             <Field label="Copyright text">
-              <Input value={form.copyrightText} onChange={(e) => set("copyrightText", e.target.value)} placeholder={`© ${new Date().getFullYear()} Tanzania Wildmakers Safaris. All rights reserved.`} />
+              <Input value={form.copyrightText} onChange={(e) => set("copyrightText", e.target.value)} placeholder={`© ${new Date().getFullYear()} TANTREK 360 Safaris. All rights reserved.`} />
             </Field>
           </div>
         </SectionSaveCard>
@@ -168,16 +168,16 @@ export default function CmsSettingsPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Instagram">
-              <Input type="url" value={form.instagramUrl} onChange={(e) => set("instagramUrl", e.target.value)} placeholder="https://instagram.com/tanzaniawildmakers" />
+              <Input type="url" value={form.instagramUrl} onChange={(e) => set("instagramUrl", e.target.value)} placeholder="https://instagram.com/tantreksafari" />
             </Field>
             <Field label="Facebook">
-              <Input type="url" value={form.facebookUrl} onChange={(e) => set("facebookUrl", e.target.value)} placeholder="https://facebook.com/tanzaniawildmakers" />
+              <Input type="url" value={form.facebookUrl} onChange={(e) => set("facebookUrl", e.target.value)} placeholder="https://facebook.com/tantreksafari" />
             </Field>
             <Field label="Twitter / X">
-              <Input type="url" value={form.twitterUrl} onChange={(e) => set("twitterUrl", e.target.value)} placeholder="https://twitter.com/wildmakers" />
+              <Input type="url" value={form.twitterUrl} onChange={(e) => set("twitterUrl", e.target.value)} placeholder="https://twitter.com/tantreksafari" />
             </Field>
             <Field label="YouTube">
-              <Input type="url" value={form.youtubeUrl} onChange={(e) => set("youtubeUrl", e.target.value)} placeholder="https://youtube.com/@tanzaniawildmakers" />
+              <Input type="url" value={form.youtubeUrl} onChange={(e) => set("youtubeUrl", e.target.value)} placeholder="https://youtube.com/@tantreksafari" />
             </Field>
           </div>
         </SectionSaveCard>

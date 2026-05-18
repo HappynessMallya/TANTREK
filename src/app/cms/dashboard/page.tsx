@@ -96,7 +96,7 @@ export default function CmsDashboardPage() {
         </h1>
         <div className="mt-2 h-[2px] w-10 rounded-full bg-luxury-gold" />
         <p className="mt-3 text-sm text-[#8A9990]">
-          Welcome to the Tanzania Wildmakers content manager.
+          Welcome to the TANTREK 360 content manager.
         </p>
       </div>
 

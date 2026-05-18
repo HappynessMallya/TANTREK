@@ -151,7 +151,7 @@ export default function CmsPlanYourSafariPage() {
         >
           <div className="space-y-3">
             <Field label="Meta title" hint="Ideal length 50–60 characters.">
-              <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} placeholder="Plan Your Safari — Tanzania Wildmakers Safaris" />
+              <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} placeholder="Plan Your Safari — TANTREK 360 Safaris" />
             </Field>
             <Field label="Meta description" hint="Max 160 characters.">
               <Textarea value={form.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} rows={2} maxLength={160} />

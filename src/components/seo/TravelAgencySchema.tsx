@@ -2,16 +2,23 @@ export function TravelAgencySchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
-    name: "Tanzania Wildmakers Safaris",
+    name: "TANTREK 360 Safaris",
     description:
-      "Luxury safari specialist crafting wild experiences in Southern and Western Tanzania. Frontier wilderness, exclusive camps, conservation-driven journeys.",
-    url: "https://tanzaniawildmakers.com",
+      "TANTREK 360 Safaris unites curated safari journeys with business consultancy and investment facilitation across Tanzania. Built for investors, diaspora, entrepreneurs, and discerning travelers.",
+    url: "https://tantreksafari.com",
+    email: "info@tantreksafari.com",
+    telephone: "+34 637 04 86 15",
     areaServed: [
+      { "@type": "Place", name: "Tanzania" },
+      { "@type": "Place", name: "Northern Tanzania" },
       { "@type": "Place", name: "Southern Tanzania" },
       { "@type": "Place", name: "Western Tanzania" },
+      { "@type": "Place", name: "Serengeti National Park" },
+      { "@type": "Place", name: "Ngorongoro Conservation Area" },
       { "@type": "Place", name: "Ruaha National Park" },
       { "@type": "Place", name: "Julius Nyerere National Park" },
       { "@type": "Place", name: "Katavi National Park" },
+      { "@type": "Place", name: "Zanzibar" },
     ],
     priceRange: "$$$$",
   };

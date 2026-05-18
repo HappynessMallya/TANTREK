@@ -4,7 +4,7 @@ import { SustainabilityContent } from "./SustainabilityContent";
 export const metadata: Metadata = {
   title: "Sustainability — Conservation & Community",
   description:
-    "Tanzania Wildmakers Safaris: low-density tourism, conservation partnerships, and community collaboration. Luxury safari with a positive footprint.",
+    "TANTREK 360 impact: low-density tourism, conservation partnerships, and community collaboration. Travel and investment with a positive footprint.",
 };
 
 export default function SustainabilityPage() {

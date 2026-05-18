@@ -1,22 +1,21 @@
 "use client";
 
-const CONTACT_EMAIL = "info@tanzaniawildmakersafari.com";
+const CONTACT_EMAIL = "info@tantreksafari.com";
 
 export function ContactUsBanner() {
   return (
     <a
       href={`mailto:${CONTACT_EMAIL}`}
-      className="group contact-us-banner fixed right-0 top-[45%] z-30 flex items-center gap-1 sm:gap-1.5 py-2.5 pl-1 pr-1.5 sm:py-3 sm:pl-2 sm:pr-3 rounded-l-lg transition-all duration-300 ease-out hover:translate-x-[-5px] focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-[#0B2D26]"
+      className="group fixed right-0 top-[45%] z-30 flex items-center gap-1 py-2.5 pl-1 pr-1.5 sm:py-3 sm:pl-2 sm:pr-3 rounded-l-lg transition-all duration-300 ease-out hover:translate-x-[-4px] focus:outline-none focus:ring-2 focus:ring-tantrek-orange focus:ring-offset-2"
       style={{
-        backgroundColor: "#0B2D26",
-        color: "#D4AF37",
-        borderLeft: "2px solid #D4AF37",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
+        backgroundColor: "#FF7A00",
+        color: "#FFFFFF",
+        boxShadow: "0 6px 18px rgba(255, 122, 0, 0.35)",
       }}
-      aria-label="Contact us by email"
+      aria-label="Contact TANTREK 360 by email"
     >
       <span
-        className="font-body text-[8px] sm:text-[9px] font-semibold tracking-[0.18em] sm:tracking-[0.2em] uppercase whitespace-nowrap origin-center"
+        className="font-body text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase whitespace-nowrap"
         style={{ writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)" }}
       >
         Contact Us

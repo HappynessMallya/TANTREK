@@ -71,7 +71,7 @@ export default async function DestinationPage({ params }: Props) {
   const faqItems = [
     { question: `What is the best time to visit ${dest.name}?`, answer: dest.bestTime },
     ...(dest.highlights.length > 0 ? [{ question: `What wildlife can I see in ${dest.name}?`, answer: dest.highlights.join(". ") + "." }] : []),
-    ...(dest.luxuryCamps.length > 0 ? [{ question: `Which luxury camps does Tanzania Wildmakers recommend in ${dest.name}?`, answer: dest.luxuryCamps.join(", ") + "." }] : []),
+    ...(dest.luxuryCamps.length > 0 ? [{ question: `Which luxury camps does TANTREK 360 recommend in ${dest.name}?`, answer: dest.luxuryCamps.join(", ") + "." }] : []),
   ];
 
   return (

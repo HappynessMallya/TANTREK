@@ -1,5 +1,5 @@
 /**
- * Public API client for the Tanzania Wildmakers Safari public website.
+ * Public API client for the TANTREK 360 Safaris public website.
  *
  * - No authentication required (read-only public endpoints).
  * - Works in both server components (ISR revalidation) and client components (useEffect).

@@ -4,7 +4,7 @@ import { CircuitPageContent } from "../CircuitPageContent";
 export const metadata: Metadata = {
   title: "Southern Circuit — Julius Nyerere & Ruaha Luxury Safari",
   description:
-    "Southern Tanzania luxury safari: Julius Nyerere (ex-Selous) and Ruaha. Low-density wilderness, walking safaris, fly-in exclusivity. Tanzania Wildmakers.",
+    "Southern Tanzania with TANTREK 360: Julius Nyerere (ex-Selous) and Ruaha. Low-density wilderness, walking safaris, fly-in exclusivity, and Tanzania opportunity exposure.",
 };
 
 export default function SouthernCircuitPage() {

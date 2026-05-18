@@ -4,40 +4,60 @@ import Link from "next/link";
 import { publicApi, type ExperienceItem } from "@/lib/public-api";
 
 export const metadata: Metadata = {
-  title: "Curated Safari Experiences",
+  title: "TANTREK 360 Services — Safari & Opportunity Tours",
   description:
-    "Experience the untamed beauty of Tanzania through our bespoke luxury expeditions. Aerial safaris, cultural immersion, and conservation journeys.",
+    "Curated journeys for investors, entrepreneurs, diaspora, and global professionals — combining Tanzania's wilderness with real access to its markets and opportunities.",
 };
 
 const STATIC_JOURNEYS = [
   {
-    eyebrow: "Ultra-Luxury Aviation",
-    title: "Aerial Safaris by Private Jet",
+    eyebrow: "Investment Safari Tours",
+    title: "Wilderness Meets Opportunity",
     description:
-      "Soar above the Great Migration in unparalleled luxury. Witness the scale of nature's greatest spectacle from the comfort of a custom-fitted private jet, with direct transfers to the most remote luxury camps.",
-    imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=900&q=80",
-    imageAlt: "Luxury aircraft over African savannah",
+      "Travel the iconic parks and see Tanzania's real economy alongside. Verified business sites, vetted partners, and structured exposure to tourism, real estate, and SME sectors — paired with the country's most considered safari experiences.",
+    imageUrl: "/tour1.webp",
+    imageAlt: "Investment Safari Tour",
     href: "/experiences/luxury-fly-in",
     reverse: false,
   },
   {
-    eyebrow: "Heritage & Wisdom",
-    title: "Walking with the Maasai",
+    eyebrow: "Cultural Immersion",
+    title: "Beyond the Tourist Trail",
     description:
-      "A profound cultural immersion. Traverse the ancient lands guided by the wisdom of Maasai warriors. Learn the art of tracking and the deep spiritual connection between the tribe and the wild.",
-    imageUrl: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=900&q=80",
-    imageAlt: "Maasai warrior in the savannah",
+      "Live, learn, and listen. Spend time with communities, craftspeople, and elders — building genuine understanding of Tanzania's heritage. Each itinerary is curated with care, never staged, always meaningful.",
+    imageUrl: "/tour2.webp",
+    imageAlt: "Cultural immersion in Tanzania",
     href: "/experiences/honeymoon",
     reverse: true,
   },
   {
-    eyebrow: "Legacy & Impact",
-    title: "Conservation Expeditions",
+    eyebrow: "Bush & Beach Luxury",
+    title: "Wild Tanzania to Zanzibar Sands",
     description:
-      "Join our field biologists on the front lines of wildlife protection. Participate in rhino tracking and elephant monitoring while staying in eco-exclusive camps dedicated to preserving the ecosystem.",
-    imageUrl: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=900&q=80",
-    imageAlt: "Rhino in the wild",
+      "The classic two-act journey, refined. Iconic parks paired with the calm of the Zanzibar coastline — premium camps, private lodges, and seamless logistics from first dusty airstrip to final sunset on the shore.",
+    imageUrl: "/tour3.webp",
+    imageAlt: "Bush and beach luxury safari",
+    href: "/experiences/photographic",
+    reverse: false,
+  },
+  {
+    eyebrow: "Diaspora Opportunity Tours",
+    title: "Reconnect. Reinvest. Build Roots.",
+    description:
+      "Designed for Tanzanians abroad and African diaspora ready to engage at home. Curated sector exposure, meaningful introductions, and ongoing facilitation — turning a homecoming into a long-term venture.",
+    imageUrl: "/tour4.webp",
+    imageAlt: "Diaspora opportunity tour",
     href: "/experiences/conservation",
+    reverse: true,
+  },
+  {
+    eyebrow: "Corporate Tours",
+    title: "Team, Strategy, and Country",
+    description:
+      "Off-site leadership retreats and corporate familiarisation visits with a difference — wilderness, market briefings, and partner introductions in one tightly produced programme.",
+    imageUrl: "/tour5.webp",
+    imageAlt: "Corporate tours in Tanzania",
+    href: "/experiences/corporate",
     reverse: false,
   },
 ];
@@ -47,7 +67,7 @@ function toJourneys(items: ExperienceItem[]) {
     eyebrow: exp.eyebrow ?? "",
     title: exp.title ?? exp.name ?? "",
     description: exp.description ?? exp.tagline ?? "",
-    imageUrl: exp.heroImage?.url ?? exp.imageUrl ?? "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=900&q=80",
+    imageUrl: exp.heroImage?.url ?? exp.imageUrl ?? "/tour1.webp",
     imageAlt: exp.heroImage?.altText ?? exp.title ?? exp.name ?? "",
     href: `/experiences/${exp.slug}`,
     reverse: idx % 2 === 1,
@@ -62,81 +82,72 @@ export default async function ExperiencesOverviewPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative flex h-[60vh] min-h-[420px] w-full flex-col items-center justify-center overflow-hidden px-4 pt-24 text-center">
+      {/* Hero — navy overlay */}
+      <section className="relative flex h-[55vh] min-h-[400px] w-full flex-col items-center justify-center overflow-hidden px-4 pt-24 text-center">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80"
+            src="/tour8.webp"
             alt=""
             fill
             className="object-cover"
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 z-10 bg-black/50" aria-hidden />
+          <div className="absolute inset-0 z-10 bg-gradient-hero-overlay" aria-hidden />
+          <div
+            className="absolute inset-0 z-10"
+            style={{ background: "radial-gradient(ellipse 50% 40% at 80% 25%, rgba(255,122,0,0.18), transparent 70%)" }}
+            aria-hidden
+          />
         </div>
         <div className="relative z-20 max-w-4xl space-y-5">
-          <p className="font-body text-xs font-bold uppercase tracking-[0.3em] text-safari-gold-light">
-            The Pinnacle of Exploration
+          <p className="font-body text-[11px] font-bold uppercase tracking-[0.36em] text-tantrek-orange">
+            Safari &amp; Opportunity Tours
           </p>
-          <h1 className="font-display text-4xl font-black leading-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            Curated Journeys
+          <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            Our <span className="text-tantrek-orange">360° Services</span>
           </h1>
-          <p className="mx-auto max-w-2xl font-body text-lg font-light leading-relaxed text-safari-sand-light/95">
-            Experience the untamed beauty of Tanzania through our bespoke luxury
-            expeditions, where cinematic landscapes meet unparalleled comfort.
+          <p className="mx-auto max-w-2xl font-body text-base sm:text-lg leading-relaxed text-white/90">
+            Five curated paths into Tanzania — uniting wilderness, culture, business exposure, and
+            long-term support under one trusted platform.
           </p>
         </div>
       </section>
 
-      {/* Featured journey cards — alternating layout */}
-      <section className="bg-safari-green-dark py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
-          {journeys.map((journey, idx) => (
+      {/* Service rows */}
+      <section className="bg-white py-16 lg:py-24">
+        <div className="mx-auto max-w-7xl space-y-10 lg:space-y-14 px-4 sm:px-6 lg:px-8">
+          {journeys.map((journey) => (
             <div
               key={journey.href}
-              className="group relative overflow-hidden rounded-xl bg-safari-green shadow-xl transition-all hover:shadow-safari-gold/10"
+              className="group relative overflow-hidden rounded-2xl bg-white border border-tantrek-border shadow-card transition-all hover:shadow-elevated hover:border-tantrek-orange/35"
             >
               <div
-                className={`flex min-h-[420px] flex-col md:flex-row ${
+                className={`flex min-h-[400px] flex-col md:flex-row ${
                   journey.reverse ? "md:flex-row-reverse" : ""
                 }`}
               >
-                <div
-                  className={`relative z-10 flex flex-1 flex-col justify-center p-8 lg:p-16 ${
-                    journey.reverse ? "gold-gradient-overlay-reverse" : "gold-gradient-overlay"
-                  }`}
-                >
-                  <p className="mb-4 font-body text-xs font-bold uppercase tracking-widest text-safari-gold-light">
+                <div className="relative z-10 flex flex-1 flex-col justify-center p-8 lg:p-14">
+                  <p className="mb-3 font-body text-[11px] font-bold uppercase tracking-[0.28em] text-tantrek-orange">
                     {journey.eyebrow}
                   </p>
-                  <h2 className="font-display text-2xl font-bold text-white sm:text-3xl lg:text-4xl xl:text-5xl mb-6">
+                  <h2 className="font-display text-2xl font-bold text-tantrek-navy sm:text-3xl lg:text-4xl mb-5 leading-tight">
                     {journey.title}
                   </h2>
-                  <p className="mb-8 max-w-md font-body text-safari-sand-light/90 leading-relaxed">
+                  <p className="mb-7 max-w-md font-body text-tantrek-text-muted leading-relaxed">
                     {journey.description}
                   </p>
                   <Link
                     href={journey.href}
-                    className="group/btn inline-flex w-fit items-center gap-3 rounded-full border border-safari-gold/50 bg-safari-gold/10 px-8 py-3 font-body font-bold text-safari-gold-light transition-all hover:bg-safari-gold hover:text-safari-green-dark"
+                    className="group/btn inline-flex w-fit items-center gap-2 rounded-full bg-tantrek-orange px-7 py-3 font-body font-semibold text-white text-sm shadow-[0_8px_20px_rgba(255,122,0,0.28)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5"
                   >
-                    Explore journey
-                    <svg
-                      className="h-4 w-4 transition-transform group-hover/btn:translate-x-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
+                    Explore service
+                    <svg className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </Link>
                 </div>
-                <div className="relative h-64 w-full md:h-auto md:min-h-[420px] md:w-1/2">
+                <div className="relative h-64 w-full md:h-auto md:min-h-[400px] md:w-1/2">
                   <Image
                     src={journey.imageUrl}
                     alt={journey.imageAlt}
@@ -151,54 +162,50 @@ export default async function ExperiencesOverviewPage() {
         </div>
       </section>
 
-      {/* Why Tanzanian Wildmakers */}
-      <section className="bg-safari-green/30 py-16 lg:py-24">
+      {/* Why TANTREK 360 */}
+      <section className="bg-tantrek-surface py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold text-white mb-12 sm:text-4xl">
-            Why Tanzania Wildmakers?
+          <p className="text-tantrek-orange font-body font-bold tracking-[0.32em] text-[11px] uppercase mb-4">
+            Why TANTREK 360
+          </p>
+          <div className="luxury-gold-line mx-auto mb-6" aria-hidden />
+          <h2 className="font-display text-3xl font-bold text-tantrek-navy mb-12 sm:text-4xl">
+            Three reasons clients <span className="text-tantrek-orange">stay with us</span>
           </h2>
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
-            <div className="space-y-4">
-              <span className="inline-flex h-12 w-12 items-center justify-center text-safari-gold" aria-hidden>
-                <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
-              </span>
-              <h3 className="font-display text-xl font-bold text-white">Unrivaled Access</h3>
-              <p className="font-body text-safari-sand-light/80 leading-relaxed">
-                Exclusive entry to private concessions and remote migration crossings away from the crowds.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <span className="inline-flex h-12 w-12 items-center justify-center text-safari-gold" aria-hidden>
-                <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path
-                    fillRule="evenodd"
-                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
-              <h3 className="font-display text-xl font-bold text-white">Expert Guides</h3>
-              <p className="font-body text-safari-sand-light/80 leading-relaxed">
-                Led by silver and gold-level KPSGA certified guides with decades of wilderness experience.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <span className="inline-flex h-12 w-12 items-center justify-center text-safari-gold" aria-hidden>
-                <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path
-                    fillRule="evenodd"
-                    d="M5.636 2.636a.75.75 0 010 1.06L3.464 5.879 5.636 8.05a.75.75 0 11-1.06 1.06L2.404 5.879 4.576 3.697a.75.75 0 011.06 0zM12 3a.75.75 0 01.75-.75h7.5a.75.75 0 01.75.75v7.5a.75.75 0 01-1.5 0V4.81l-6.97 6.97a.75.75 0 01-1.06 0l-2.5-2.5a.75.75 0 011.06-1.06l1.97 1.97 6.44-6.44H12.75A.75.75 0 0112 3zm-8.818 8.818a.75.75 0 010 1.06l-2.121 2.121a.75.75 0 01-1.06 0l-1.5-1.5a.75.75 0 111.06-1.06l.97.97 1.591-1.59a.75.75 0 011.06 0zm10.364 0a.75.75 0 010 1.06l-1.59 1.591-.97.97a.75.75 0 11-1.06-1.06l1.59-1.591 2.121-2.121a.75.75 0 011.06 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
-              <h3 className="font-display text-xl font-bold text-white">Sustainable Luxury</h3>
-              <p className="font-body text-safari-sand-light/80 leading-relaxed">
-                Every journey contributes directly to conservation and community partnerships across Tanzania.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 gap-6 lg:gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "Safari + Opportunity",
+                body: "Wilderness and real-world business exposure in one tightly curated programme — never bolted on.",
+                icon: (
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.7} d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5M3 17l9 5 9-5" /></svg>
+                ),
+              },
+              {
+                title: "Local Depth, Global Standards",
+                body: "Tanzanian expertise on the ground; international standards in delivery, reporting, and follow-through.",
+                icon: (
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" strokeWidth={1.7} /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.7} d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" /></svg>
+                ),
+              },
+              {
+                title: "End-to-End Support",
+                body: "From the first conversation to entity setup, compliance, and ongoing partnership — we stay engaged.",
+                icon: (
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.7} d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.7} d="M9 12l2 2 4-4" /></svg>
+                ),
+              },
+            ].map((item) => (
+              <div key={item.title} className="tantrek-card p-8 lg:p-10 text-left">
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-tantrek-orange/10 text-tantrek-orange mb-5">
+                  {item.icon}
+                </div>
+                <h3 className="font-display text-lg font-semibold text-tantrek-navy mb-2.5">{item.title}</h3>
+                <p className="font-body text-tantrek-text-muted leading-relaxed text-sm">
+                  {item.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

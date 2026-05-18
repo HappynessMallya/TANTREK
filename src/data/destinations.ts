@@ -55,7 +55,7 @@ export const destinations: Destination[] = [
     circuit: "northern",
     tagline: "The world’s largest intact volcanic caldera and a wildlife ark.",
     metaDescription:
-      "Ngorongoro Crater safari: black rhino, Big Five, and the iconic crater floor. Luxury lodges and best time to visit. Tanzania Wildmakers Safaris.",
+      "Ngorongoro Crater safari: black rhino, Big Five, and the iconic crater floor. Luxury lodges and best time to visit. TANTREK 360 Safaris.",
     highlights: [
       "Ngorongoro Crater — UNESCO World Heritage",
       "Black rhino and high density of predators",
@@ -140,7 +140,7 @@ export const destinations: Destination[] = [
     circuit: "southern",
     tagline: "The soul of Southern Tanzania—baobabs, lions, and the Great Ruaha River.",
     metaDescription:
-      "Ruaha luxury safari: Tanzania’s largest park, lion prides, baobabs, fly-in exclusivity. Best time to visit and luxury camps. Tanzania Wildmakers.",
+      "Ruaha luxury safari: Tanzania’s largest park, lion prides, baobabs, fly-in exclusivity. Best time to visit and luxury camps. TANTREK 360.",
     highlights: [
       "Tanzania’s largest national park",
       "Large lion and predator populations",
@@ -162,7 +162,7 @@ export const destinations: Destination[] = [
     circuit: "western",
     tagline: "Africa’s last true frontier—buffalo herds and remote luxury.",
     metaDescription:
-      "Katavi luxury safari: Western Tanzania’s remote wilderness. Buffalo herds, hippo pools, fly-in camps. Exclusive safari with Tanzania Wildmakers.",
+      "Katavi luxury safari: Western Tanzania’s remote wilderness. Buffalo herds, hippo pools, fly-in camps. Exclusive safari with TANTREK 360.",
     highlights: [
       "Extremely remote — fly-in only",
       "Massive buffalo herds and hippo concentrations",

@@ -219,7 +219,7 @@ export default function CmsDestinationEditPage() {
           <CardSection title="SEO">
             <div className="space-y-4">
               <Field label="Meta title" hint="Leave blank to use the page name.">
-                <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} placeholder="Serengeti National Park Safari | Tanzania Wildmakers" />
+                <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} placeholder="Serengeti National Park Safari | TANTREK 360" />
               </Field>
               <Field label="Meta description" hint="Max 160 characters.">
                 <Textarea value={form.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} rows={2} placeholder="Luxury safari in Serengeti…" maxLength={160} />

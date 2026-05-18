@@ -4,7 +4,7 @@ import { CircuitPageContent } from "../CircuitPageContent";
 export const metadata: Metadata = {
   title: "Western Circuit — Katavi Luxury Safari",
   description:
-    "Western Tanzania luxury safari: Katavi National Park. Africa's last true frontier, buffalo herds, remote fly-in camps. Tanzania Wildmakers Safaris.",
+    "Western Tanzania with TANTREK 360: Katavi National Park — Africa's last true frontier. Buffalo herds, remote fly-in camps, and curated business exposure beyond the bush.",
 };
 
 export default function WesternCircuitPage() {

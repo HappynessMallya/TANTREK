@@ -1,42 +1,50 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Manrope } from "next/font/google";
+import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { TravelAgencySchema } from "@/components/seo/TravelAgencySchema";
 
-const playfair = Playfair_Display({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-manrope",
+  variable: "--font-inter",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
     default:
-      "Tanzania Wildmakers Safaris | Luxury Safari Southern & Western Tanzania",
-    template: "%s | Tanzania Wildmakers Safaris",
+      "TANTREK 360 Safaris | Beyond Routes. Beyond Maps.",
+    template: "%s | TANTREK 360 Safaris",
   },
   icons: {
     icon: "/favicon.ico",
+    apple: "/logo.png",
   },
   description:
-    "Crafting wild experiences in Southern and Western Tanzania. Ultra-exclusive luxury safaris in Ruaha, Julius Nyerere, and Katavi. Frontier wilderness redefined.",
+    "TANTREK 360 unites curated safari experiences with business and investment facilitation across Tanzania. End-to-end support for investors, diaspora, entrepreneurs, and global professionals.",
   keywords: [
+    "TANTREK 360",
+    "Tanzania safari",
+    "investment safari Tanzania",
+    "business tours Tanzania",
+    "diaspora opportunity tours",
+    "bush and beach Tanzania",
     "luxury safari Tanzania",
-    "Southern Tanzania safari",
-    "Ruaha safari",
-    "Katavi luxury safari",
-    "exclusive safari Tanzania",
-    "Julius Nyerere National Park",
+    "Tanzania investment facilitation",
   ],
   openGraph: {
     type: "website",
     locale: "en_US",
+    title: "TANTREK 360 Safaris",
+    description:
+      "Curated safari experiences for investors, entrepreneurs, and global professionals — combining tourism with real access to Tanzania's opportunities.",
+    images: [{ url: "/logo.png", width: 1200, height: 630, alt: "TANTREK 360 Safaris" }],
   },
   robots: { index: true, follow: true },
 };
@@ -49,13 +57,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${manrope.variable}`}
+      className={`${poppins.variable} ${inter.variable}`}
     >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <TravelAgencySchema />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-white text-tantrek-text">
         {children}
       </body>
     </html>

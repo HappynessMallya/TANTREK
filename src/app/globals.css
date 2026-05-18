@@ -3,26 +3,42 @@
 @tailwind utilities;
 
 :root {
-  --safari-green: #2c5c44;
-  --safari-green-dark: #1e4030;
-  --safari-gold: #c4a967;
-  --safari-gold-light: #e1d3b4;
-  --safari-sand: #66532c;
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  /* Luxury palette */
-  --luxury-gold: #D4AF37;
-  --luxury-gold-hover: #E6C96A;
-  --champagne: #F6F3EB;
-  --safari-sand-warm: #F4EFE6;
-  --dark-emerald: #081f1a;
-  --jungle-from: #0c2f28;
-  --jungle-to: #0f3f33;
-  --map-from: #0f3a31;
-  --map-to: #0b2923;
-  --experiences-from: #0b2d26;
-  --experiences-to: #051a16;
-  --overlay-dark: rgba(5, 20, 15, 0.75);
+  /* TANTREK 360 — Premium Tourism Brand System */
+  --tantrek-navy: #003B8E;
+  --tantrek-navy-deep: #002B5B;
+  --tantrek-navy-soft: #0a4ba6;
+  --tantrek-orange: #FF7A00;
+  --tantrek-orange-deep: #FF4D00;
+  --tantrek-orange-soft: #FF9333;
+  --tantrek-sky: #00AEEF;
+  --tantrek-gold: #D4A64A;
+  --tantrek-white: #FFFFFF;
+  --tantrek-surface: #F5F7FA;
+  --tantrek-surface-2: #EEF1F6;
+  --tantrek-border: #E4E8EE;
+  --tantrek-text: #111827;
+  --tantrek-text-muted: #6B7280;
+
+  /* Legacy aliases mapped to new palette so older class names render coherently */
+  --safari-green: #003B8E;
+  --safari-green-dark: #002B5B;
+  --safari-gold: #FF7A00;
+  --safari-gold-light: #FF9333;
+  --safari-sand: #FF7A00;
+  --glass-bg: rgba(0, 59, 142, 0.04);
+  --glass-border: rgba(0, 59, 142, 0.12);
+  --luxury-gold: #FF7A00;
+  --luxury-gold-hover: #FF4D00;
+  --champagne: #F5F7FA;
+  --safari-sand-warm: #F5F7FA;
+  --dark-emerald: #002B5B;
+  --jungle-from: #002B5B;
+  --jungle-to: #003B8E;
+  --map-from: #003B8E;
+  --map-to: #002B5B;
+  --experiences-from: #F5F7FA;
+  --experiences-to: #FFFFFF;
+  --overlay-dark: rgba(0, 43, 91, 0.72);
 }
 
 html {
@@ -30,378 +46,352 @@ html {
 }
 
 body {
-  @apply bg-safari-green-dark text-safari-cream font-body antialiased;
+  background-color: var(--tantrek-white);
+  color: var(--tantrek-text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dust particle background layer — gold #c4a967 */
-.dust-layer {
-  background-image: radial-gradient(
-      2px 2px at 20px 30px,
-      rgba(196, 169, 103, 0.35),
-      transparent
-    ),
-    radial-gradient(
-      2px 2px at 40px 70px,
-      rgba(225, 211, 180, 0.25),
-      transparent
-    ),
-    radial-gradient(
-      2px 2px at 50px 160px,
-      rgba(102, 83, 44, 0.2),
-      transparent
-    );
-  background-size: 200px 200px;
-  animation: dustFloat 25s linear infinite;
+/* ============================================================
+   PRIMARY CTA — Orange (used very sparingly: ~8% of UI)
+   ============================================================ */
+.tantrek-cta-primary,
+.luxury-cta-primary,
+.luxury-cta-frontier {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--tantrek-orange);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25);
+}
+.tantrek-cta-primary:hover,
+.luxury-cta-primary:hover,
+.luxury-cta-frontier:hover {
+  background: var(--tantrek-orange-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(255, 77, 0, 0.32);
 }
 
-@keyframes dustFloat {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(-50px, -100px);
-  }
+/* Secondary CTA — navy outline */
+.tantrek-cta-secondary,
+.luxury-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 13px 26px;
+  border-radius: 10px;
+  border: 1.5px solid var(--tantrek-navy);
+  color: var(--tantrek-navy);
+  background: transparent;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+.tantrek-cta-secondary:hover,
+.luxury-cta-secondary:hover {
+  background: var(--tantrek-navy);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
-/* Glass card base — strong tint for readability */
-.glass-card {
-  background-color: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  @apply backdrop-blur-xl;
+/* Quiet glow used on hero CTAs */
+.luxury-cta-glow {
+  box-shadow: 0 12px 32px rgba(255, 122, 0, 0.4);
 }
 
-/* Plan Your Safari — premium form panel */
-.glassmorphism-panel {
-  background: rgba(28, 64, 48, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(196, 169, 103, 0.25);
-}
-
-/* Destination detail — sticky sidebar */
-.destination-sidebar {
-  background: rgba(28, 64, 48, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Curated Experiences — card gradient overlay (our gold) */
-.gold-gradient-overlay {
-  background: linear-gradient(90deg, rgba(30, 64, 48, 0.95) 0%, rgba(196, 169, 103, 0.12) 100%);
-}
-.gold-gradient-overlay-reverse {
-  background: linear-gradient(270deg, rgba(30, 64, 48, 0.95) 0%, rgba(196, 169, 103, 0.12) 100%);
-}
-
-/* Destinations listing — sanctuary cards */
-.destinations-glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(196, 169, 103, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.destinations-glass-card:hover {
-  border-color: rgba(196, 169, 103, 0.8);
-  box-shadow: 0 0 30px rgba(196, 169, 103, 0.15);
-  transform: translateY(-4px);
-}
-.hero-gradient-bottom {
-  background: linear-gradient(180deg, rgba(30, 64, 48, 0) 0%, rgba(30, 64, 48, 0.92) 100%);
-}
-
-/* Header dropdown — visible on all pages (solid panel + shadow + gold border) */
-.nav-dropdown-panel {
-  background: #0b2520;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
-    0 0 24px rgba(212, 175, 55, 0.08);
-  border-radius: 12px;
-}
-.nav-dropdown-link {
-  color: #e8ddc8;
-}
-.nav-dropdown-link:hover {
-  background: rgba(212, 175, 55, 0.12);
-  color: #f5f0e6;
-}
-.nav-dropdown-heading {
-  color: #e8ddc8;
-  background: rgba(44, 92, 68, 0.5);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-}
-.nav-dropdown-heading:hover {
-  background: rgba(44, 92, 68, 0.8);
-  border-color: rgba(212, 175, 55, 0.4);
-}
-.nav-dropdown-panel ul {
-  list-style-type: disc;
-  list-style-position: outside;
-}
-.nav-dropdown-panel ul li {
-  padding-left: 0.25rem;
-}
-
-/* Homepage hero — journey CTA bar */
-.hero-journey-bar {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(196, 169, 103, 0.2);
-}
-
-/* Luxury texture overlays — 3–5% opacity */
-.texture-linen {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
-}
-.texture-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-  opacity: 0.03;
-  mix-blend-mode: multiply;
-}
-.luxury-dust-overlay {
-  background-image: radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.25), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(212, 175, 55, 0.2), transparent),
-    radial-gradient(2px 2px at 50px 160px, rgba(212, 175, 55, 0.15), transparent);
-  background-size: 200px 200px;
-  opacity: 0.04;
-  mix-blend-mode: overlay;
-  animation: dustFloat 25s linear infinite;
-}
-.luxury-dust-float {
-  opacity: 0.02;
-  pointer-events: none;
-}
-
-/* Gold accent line — under headings */
-.luxury-gold-line {
-  height: 2px;
-  width: 80px;
-  background: var(--luxury-gold);
-}
-.luxury-gold-line-wide {
-  height: 2px;
-  width: 120px;
-  background: var(--luxury-gold);
-}
-
-/* Homepage section backgrounds — luxury principles */
+/* ============================================================
+   SECTIONS — White-dominant with subtle alternation
+   ============================================================ */
 .section-bg-press {
-  background: var(--champagne);
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  border-bottom: 1px solid var(--tantrek-border);
 }
-.section-bg-press .press-texture {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  opacity: 0.03;
-  mix-blend-mode: multiply;
-}
+.section-bg-press .press-texture { display: none; }
 
 .section-bg-sanctuaries {
-  background: linear-gradient(180deg, var(--jungle-from) 0%, var(--jungle-to) 100%);
+  background: var(--tantrek-surface);
 }
-.section-bg-sanctuaries .sanctuaries-dust {
-  background-image: radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.3), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(212, 175, 55, 0.25), transparent);
-  background-size: 200px 200px;
-  opacity: 0.04;
-  mix-blend-mode: overlay;
-  animation: dustFloat 25s linear infinite;
-}
+.section-bg-sanctuaries .sanctuaries-dust { display: none; }
 
 .section-bg-distinction {
-  background: var(--dark-emerald);
-  background-image: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.12), transparent 60%);
+  background: #ffffff;
 }
-.section-bg-distinction .distinction-texture {
-  background-image: radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.04) 1px, transparent 0);
-  background-size: 32px 32px;
-  opacity: 0.6;
-}
-.luxury-pillar-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-.luxury-pillar-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-}
+.section-bg-distinction .distinction-texture { display: none; }
 
 .section-bg-our-story {
-  /* Background image + overlay applied in JSX */
-  background-color: var(--dark-emerald);
+  background-color: var(--tantrek-navy-deep);
 }
 .section-bg-our-story .our-story-overlay {
-  background: linear-gradient(var(--overlay-dark), var(--overlay-dark));
+  background: linear-gradient(rgba(0, 43, 91, 0.78), rgba(0, 43, 91, 0.88));
 }
 
 .section-bg-testimonials {
-  background: var(--safari-sand-warm);
+  background: var(--tantrek-surface);
 }
-.section-bg-testimonials .testimonials-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-  opacity: 0.03;
-  mix-blend-mode: multiply;
-}
-.luxury-testimonial-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.35s ease;
-}
-.luxury-testimonial-card:hover {
-  transform: scale(1.03);
-}
+.section-bg-testimonials .testimonials-grain { display: none; }
 
 .section-bg-where-we-go {
-  background: linear-gradient(180deg, var(--map-from) 0%, var(--map-to) 100%);
+  background: #ffffff;
 }
-.section-bg-where-we-go .where-we-go-texture {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 220px 220px;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
+.section-bg-where-we-go .where-we-go-texture { display: none; }
+
+.section-bg-experiences {
+  background: var(--tantrek-surface);
 }
+
+.section-bg-frontier {
+  background-color: var(--tantrek-navy-deep);
+}
+.section-bg-frontier .frontier-overlay {
+  background: linear-gradient(rgba(0, 43, 91, 0.78), rgba(0, 43, 91, 0.86));
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.tantrek-card {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.tantrek-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.1);
+  border-color: rgba(0, 59, 142, 0.18);
+}
+
+.tantrek-stat-card {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tantrek-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+}
+
+.tantrek-service-card {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.tantrek-service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 56px rgba(17, 24, 39, 0.1);
+  border-color: rgba(255, 122, 0, 0.5);
+}
+
+.luxury-pillar-card {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  border-radius: 16px;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.luxury-pillar-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(17, 24, 39, 0.1);
+  border-color: rgba(255, 122, 0, 0.45);
+}
+
+.luxury-testimonial-card {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.luxury-testimonial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(17, 24, 39, 0.1);
+}
+
+.destinations-glass-card,
 .luxury-circuit-card {
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 43, 91, 0.18);
 }
 .luxury-circuit-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+  background: linear-gradient(rgba(0, 43, 91, 0.20), rgba(0, 43, 91, 0.72));
   z-index: 0;
 }
 .luxury-circuit-card:hover {
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 24px 56px rgba(0, 43, 91, 0.32);
 }
 
-.section-bg-experiences {
-  background: linear-gradient(180deg, var(--experiences-from) 0%, var(--experiences-to) 100%);
-  background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.12), transparent 70%),
-    linear-gradient(180deg, var(--experiences-from) 0%, var(--experiences-to) 100%);
+/* ============================================================
+   NAV DROPDOWN — light theme
+   ============================================================ */
+.nav-dropdown-panel {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  box-shadow: 0 24px 48px rgba(17, 24, 39, 0.12);
+  border-radius: 14px;
 }
-.luxury-experience-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
+.nav-dropdown-link {
+  color: var(--tantrek-text);
 }
-
-.section-bg-frontier {
-  background-color: #0b1f1a;
+.nav-dropdown-link:hover {
+  background: rgba(255, 122, 0, 0.08);
+  color: var(--tantrek-orange);
 }
-.section-bg-frontier .frontier-overlay {
-  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65));
+.nav-dropdown-heading {
+  color: var(--tantrek-navy);
+  background: rgba(0, 59, 142, 0.06);
+  border: 1px solid rgba(0, 59, 142, 0.12);
 }
-.luxury-cta-primary,
-.luxury-cta-frontier {
-  background: var(--luxury-gold);
-  color: #0B1F1A;
-  border-radius: 40px;
-  padding: 16px 34px;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-.luxury-cta-primary:hover,
-.luxury-cta-frontier:hover {
-  background: var(--luxury-gold-hover);
-  transform: translateY(-2px);
-}
-.luxury-cta-glow {
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+.nav-dropdown-heading:hover {
+  background: rgba(0, 59, 142, 0.12);
+  border-color: rgba(0, 59, 142, 0.25);
+  color: var(--tantrek-navy-deep);
 }
 
-.luxury-cta-secondary {
-  border-radius: 40px;
-  padding: 16px 32px;
-  border: 1px solid var(--luxury-gold);
-  color: var(--luxury-gold);
-  background: transparent;
-  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-}
-.luxury-cta-secondary:hover {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--luxury-gold-hover);
-}
-
-/* Sanctuary overlapping images — luxury treatment */
-.sanctuary-frame {
-  border-radius: 18px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  transition: box-shadow 0.35s ease;
-}
-.sanctuary-frame:hover,
-.sanctuary-frame.sanctuary-frame-active {
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-}
-
-/* Section breathing space */
-.luxury-section-padding {
-  padding-top: 7.5rem;
-  padding-bottom: 7.5rem;
-}
-@media (min-width: 1024px) {
-  .luxury-section-padding {
-    padding-top: 8rem;
-    padding-bottom: 8rem;
-  }
-}
-
-/* Footer — luxurious depth */
-.footer-luxury {
-  background-color: #081f1a; /* deepest green */
-  background-image:
-    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(196, 169, 103, 0.07) 0%, transparent 55%),
-    radial-gradient(circle at 2px 2px, rgba(196, 169, 103, 0.03) 1px, transparent 0);
-  background-size: 100% 100%, 28px 28px;
-  border-top: 1px solid rgba(212, 175, 55, 0.3);
-  box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.3);
-}
-
-/* About page — glass panel and gold texture */
-.about-glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(196, 169, 103, 0.15);
-}
-.about-testimonial-glass {
-  background: rgba(255, 255, 255, 0.05);
+/* ============================================================
+   HERO — cinematic dark navy overlay + orange CTA
+   ============================================================ */
+.hero-journey-bar {
+  background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(196, 169, 103, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* ============================================================
+   FORMS — Plan Your Trip
+   ============================================================ */
+.glassmorphism-panel {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  box-shadow: 0 24px 64px rgba(0, 43, 91, 0.16);
+}
+
+.destination-sidebar {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+}
+
+/* ============================================================
+   FOOTER — only large dark surface (navy)
+   ============================================================ */
+.footer-luxury {
+  background-color: var(--tantrek-navy-deep);
+  background-image:
+    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(255, 122, 0, 0.12) 0%, transparent 60%);
+  border-top: 4px solid var(--tantrek-orange);
+}
+
+/* ============================================================
+   ABOUT page bits
+   ============================================================ */
+.about-glass {
+  background: #ffffff;
+  border: 1px solid var(--tantrek-border);
+  box-shadow: 0 18px 48px rgba(17, 24, 39, 0.08);
+}
+.about-testimonial-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 .about-gold-texture {
   background-image: radial-gradient(
     circle at 2px 2px,
-    rgba(196, 169, 103, 0.06) 1px,
+    rgba(0, 59, 142, 0.05) 1px,
     transparent 0
   );
   background-size: 24px 24px;
 }
 
-/* Animated Tanzania map — gold dot pulse */
+/* ============================================================
+   MISC
+   ============================================================ */
+.luxury-gold-line {
+  height: 3px;
+  width: 64px;
+  background: var(--tantrek-orange);
+  border-radius: 2px;
+}
+.luxury-gold-line-wide {
+  height: 3px;
+  width: 96px;
+  background: var(--tantrek-orange);
+  border-radius: 2px;
+}
+.luxury-experience-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tantrek-orange), transparent);
+}
+.luxury-section-padding {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+@media (min-width: 1024px) {
+  .luxury-section-padding {
+    padding-top: 7.5rem;
+    padding-bottom: 7.5rem;
+  }
+}
+
 .map-dot-glow {
   animation: mapDotPulse 2s ease-in-out infinite;
 }
 @keyframes mapDotPulse {
-  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.9)); }
-  50% { opacity: 0.9; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.95)); }
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 122, 0, 0.9)); }
+  50% { opacity: 0.9; filter: drop-shadow(0 0 14px rgba(255, 122, 0, 0.95)); }
 }
 
-/* Selection color */
+/* Disable old dust particle / texture overlays inherited from the dark theme */
+.dust-layer,
+.luxury-dust-overlay,
+.luxury-dust-float,
+.texture-linen,
+.texture-grain {
+  display: none !important;
+}
+
+.sanctuary-frame {
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+  transition: box-shadow 0.35s ease;
+}
+.sanctuary-frame:hover,
+.sanctuary-frame.sanctuary-frame-active {
+  box-shadow: 0 24px 56px rgba(255, 122, 0, 0.25);
+}
+
+/* Helper containers */
+.container-prose {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+@media (min-width: 1024px) {
+  .container-prose {
+    padding: 0 2rem;
+  }
+}
+
+/* Selection */
 ::selection {
-  @apply bg-safari-gold/30 text-safari-green;
+  background: rgba(255, 122, 0, 0.25);
+  color: var(--tantrek-navy-deep);
 }

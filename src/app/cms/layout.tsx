@@ -2,7 +2,7 @@ import { CmsShell } from "./CmsShell";
 import { CmsAuthGuard } from "./CmsAuthGuard";
 
 export const metadata = {
-  title: "CMS | Tanzania Wildmakers Safaris",
+  title: "CMS | TANTREK 360 Safaris",
   robots: "noindex, nofollow",
 };
 

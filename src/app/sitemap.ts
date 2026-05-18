@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { destinations } from "@/data/destinations";
 import { experiences } from "@/data/experiences";
 
-const BASE = "https://tanzaniawildmakers.com";
+const BASE = "https://tantreksafari.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [

@@ -2,24 +2,23 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { publicApi } from "@/lib/public-api";
 
 const STEPS = [
   {
     id: "interests",
-    title: "Trip type & interests",
+    title: "Goals & interests",
     fields: [
       {
         name: "experience",
-        label: "Primary experience",
+        label: "Primary service",
         type: "select",
         options: [
-          "Luxury fly-in",
-          "Honeymoon",
-          "Photographic",
-          "Conservation",
-          "Corporate",
+          "Investment Safari Tour",
+          "Cultural Immersion",
+          "Bush & Beach Luxury",
+          "Diaspora Opportunity Tour",
+          "Corporate Tour",
           "Mixed / Flexible",
         ],
       },
@@ -51,7 +50,7 @@ const STEPS = [
       },
       {
         name: "nights",
-        label: "Number of nights (safari)",
+        label: "Number of nights",
         type: "select",
         options: ["3–5", "6–8", "9–12", "13+"],
       },
@@ -83,11 +82,7 @@ const STEPS = [
       { name: "name", label: "Full name", type: "text" },
       { name: "email", label: "Email address", type: "email" },
       { name: "phone", label: "Phone (with country code)", type: "tel" },
-      {
-        name: "notes",
-        label: "Your vision",
-        type: "textarea",
-      },
+      { name: "notes", label: "Your vision", type: "textarea" },
     ],
   },
 ];
@@ -103,23 +98,18 @@ STEPS.forEach((step) => {
 });
 
 const inputClass =
-  "w-full h-12 px-4 rounded-md bg-safari-green-dark/50 border border-safari-gold/30 text-safari-cream placeholder:text-safari-sand-muted focus:border-safari-gold focus:ring-1 focus:ring-safari-gold outline-none transition-all";
-const inputClassLegacy =
-  "w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-safari-cream focus:border-safari-gold focus:ring-1 focus:ring-safari-gold outline-none";
+  "w-full h-12 px-4 rounded-lg bg-white border border-tantrek-border text-tantrek-text placeholder:text-tantrek-text-soft focus:border-tantrek-orange focus:ring-2 focus:ring-tantrek-orange/20 outline-none transition-all";
 const textareaClass =
-  "w-full min-h-[120px] px-4 py-3 rounded-md bg-safari-green-dark/50 border border-safari-gold/30 text-safari-cream placeholder:text-safari-sand-muted focus:border-safari-gold focus:ring-1 focus:ring-safari-gold outline-none transition-all resize-none";
-const textareaClassLegacy =
-  "w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-safari-cream focus:border-safari-gold focus:ring-1 focus:ring-safari-gold outline-none resize-none";
-const labelClassPremium =
-  "block text-xs font-bold uppercase tracking-widest text-safari-sand-light/95 mb-2";
-const labelClassLegacy = "block text-sm font-medium text-safari-sand-light mb-2";
+  "w-full min-h-[120px] px-4 py-3 rounded-lg bg-white border border-tantrek-border text-tantrek-text placeholder:text-tantrek-text-soft focus:border-tantrek-orange focus:ring-2 focus:ring-tantrek-orange/20 outline-none transition-all resize-none";
+const labelClass =
+  "block text-[11px] font-bold uppercase tracking-[0.22em] text-tantrek-navy mb-2.5";
 
 const radioCardBase =
-  "flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm transition-colors";
+  "flex cursor-pointer items-center gap-2 rounded-lg border p-3 text-sm transition-colors";
 const radioCardDefault =
-  "border-safari-gold/20 bg-safari-green-dark/30 text-safari-sand-light hover:border-safari-gold/50";
+  "border-tantrek-border bg-white text-tantrek-text hover:border-tantrek-orange/45";
 const radioCardChecked =
-  "border-safari-gold/60 bg-safari-gold/10 text-safari-gold-light";
+  "border-tantrek-orange bg-tantrek-orange/10 text-tantrek-navy font-medium";
 
 function getInitialFormState(initialEmail?: string, initialSeason?: string): FormState {
   const state = { ...defaultState } as FormState;
@@ -146,8 +136,6 @@ export function PlanYourSafariForm({
   const currentStep = STEPS[step];
   const isLast = step === STEPS.length - 1;
   const isFirst = step === 0;
-  const labelClass = inline ? labelClassPremium : labelClassLegacy;
-  const usePremiumInputs = inline;
 
   const update = (name: string, value: string | string[]) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -157,11 +145,10 @@ export function PlanYourSafariForm({
     if (isLast) {
       setSubmitting(true);
       setSubmitError("");
-      // Build message from all collected fields
       const circuits = (form.circuits as string[]).join(", ");
       const message = [
         form.notes as string,
-        form.experience ? `Experience: ${form.experience as string}` : "",
+        form.experience ? `Service: ${form.experience as string}` : "",
         circuits ? `Regions: ${circuits}` : "",
         form.nights ? `Nights: ${form.nights as string}` : "",
       ].filter(Boolean).join("\n");
@@ -190,59 +177,44 @@ export function PlanYourSafariForm({
   };
 
   if (submitted) {
-    const content = (
-      <div className="text-center py-8">
-        <h2 className="font-display text-2xl text-safari-gold-light">
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-tantrek-orange/15 text-tantrek-orange">
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2 className="font-display text-2xl text-tantrek-navy font-semibold">
           Thank you
         </h2>
-        <p className="mt-4 text-safari-sand-light/90">
-          We’ve received your details and will be in touch within 24–48 hours
-          with a tailored outline. For immediate discussion, message us on{" "}
-          <a
-            href="https://wa.me/255762111315"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-safari-gold hover:underline"
-          >
+        <p className="mt-3 text-tantrek-text-muted leading-relaxed max-w-md mx-auto">
+          We&apos;ve received your details and will be in touch within 24&ndash;48 hours with a tailored
+          360° outline. For immediate discussion, message us on{" "}
+          <a href="https://wa.me/34637048615" target="_blank" rel="noopener noreferrer" className="text-tantrek-orange font-semibold hover:underline">
             WhatsApp
+          </a>
+          {" "}or email{" "}
+          <a href="mailto:info@tantreksafari.com" className="text-tantrek-orange font-semibold hover:underline break-all">
+            info@tantreksafari.com
           </a>
           .
         </p>
-      </div>
-    );
-    if (inline) {
-      return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          {content}
-        </motion.div>
-      );
-    }
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-12"
-      >
-        <GlassCard className="p-8">{content}</GlassCard>
       </motion.div>
     );
   }
 
-  const formContent = (
-    <>
+  return (
+    <div className="flex flex-col">
       <div className="flex justify-between items-center mb-6">
-        <span className="text-safari-sand-muted text-sm">
+        <span className="text-tantrek-text-muted text-xs uppercase tracking-[0.18em] font-semibold">
           Step {step + 1} of {STEPS.length}
         </span>
-        <div className="flex gap-1">
+        <div className="flex gap-1.5">
           {STEPS.map((_, i) => (
             <div
               key={i}
               className={`h-1 w-8 rounded-full transition-colors ${
-                i <= step ? "bg-safari-gold" : "bg-white/20"
+                i <= step ? "bg-tantrek-orange" : "bg-tantrek-border"
               }`}
             />
           ))}
@@ -258,13 +230,7 @@ export function PlanYourSafariForm({
           transition={{ duration: 0.2 }}
           className="flex flex-col gap-6"
         >
-          <h2
-            className={
-              inline
-                ? "font-display text-lg font-semibold text-safari-gold-light sm:text-xl"
-                : "font-display text-xl text-safari-gold-light mb-6"
-            }
-          >
+          <h2 className="font-display text-xl sm:text-2xl font-semibold text-tantrek-navy">
             {currentStep.title}
           </h2>
           <div className="space-y-6">
@@ -277,23 +243,17 @@ export function PlanYourSafariForm({
 
               return (
                 <div key={field.name}>
-                  <label
-                    htmlFor={field.name}
-                    className={labelClass}
-                  >
+                  <label htmlFor={field.name} className={labelClass}>
                     {field.label}
                   </label>
                   {isExperienceRadio && (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                       {field.options!.map((opt) => {
-                        const selected =
-                          ((form[field.name] as string) || "") === opt;
+                        const selected = ((form[field.name] as string) || "") === opt;
                         return (
                           <label
                             key={opt}
-                            className={`${radioCardBase} ${
-                              selected ? radioCardChecked : radioCardDefault
-                            }`}
+                            className={`${radioCardBase} ${selected ? radioCardChecked : radioCardDefault}`}
                           >
                             <input
                               type="radio"
@@ -313,9 +273,7 @@ export function PlanYourSafariForm({
                       id={field.name}
                       value={(form[field.name] as string) || ""}
                       onChange={(e) => update(field.name, e.target.value)}
-                      className={
-                        usePremiumInputs ? inputClass : inputClassLegacy
-                      }
+                      className={inputClass}
                     >
                       <option value="">Select...</option>
                       {field.options!.map((opt) => (
@@ -333,7 +291,11 @@ export function PlanYourSafariForm({
                         return (
                           <label
                             key={opt}
-                            className={`cursor-pointer ${inline ? `flex items-center gap-2 rounded-md border border-safari-gold/20 bg-safari-green-dark/30 px-3 py-2.5 text-sm text-safari-sand-light hover:border-safari-gold/50 ${checked ? "border-safari-gold/50 bg-safari-gold/10" : ""}` : "flex items-center gap-2"}`}
+                            className={`cursor-pointer flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                              checked
+                                ? "border-tantrek-orange bg-tantrek-orange/10 text-tantrek-navy font-medium"
+                                : "border-tantrek-border bg-white text-tantrek-text hover:border-tantrek-orange/45"
+                            }`}
                           >
                             <input
                               type="checkbox"
@@ -344,11 +306,7 @@ export function PlanYourSafariForm({
                                   : [...arr, opt];
                                 update(field.name, next);
                               }}
-                              className={
-                                inline
-                                  ? "rounded border-safari-gold/40 bg-safari-green-dark/50 text-safari-gold focus:ring-safari-gold"
-                                  : "rounded border-white/20 bg-white/5 text-safari-gold focus:ring-safari-gold"
-                              }
+                              className="rounded border-tantrek-border text-tantrek-orange focus:ring-tantrek-orange"
                             />
                             <span className="text-sm">{opt}</span>
                           </label>
@@ -362,12 +320,8 @@ export function PlanYourSafariForm({
                       id={field.name}
                       value={(form[field.name] as string) || ""}
                       onChange={(e) => update(field.name, e.target.value)}
-                      placeholder={
-                        inline ? "e.g. Jonathan Smith" : undefined
-                      }
-                      className={
-                        usePremiumInputs ? inputClass : inputClassLegacy
-                      }
+                      placeholder="e.g. Jonathan Smith"
+                      className={inputClass}
                     />
                   )}
                   {field.type === "email" && (
@@ -376,12 +330,8 @@ export function PlanYourSafariForm({
                       id={field.name}
                       value={(form[field.name] as string) || ""}
                       onChange={(e) => update(field.name, e.target.value)}
-                      placeholder={
-                        inline ? "you@example.com" : undefined
-                      }
-                      className={
-                        usePremiumInputs ? inputClass : inputClassLegacy
-                      }
+                      placeholder="you@example.com"
+                      className={inputClass}
                     />
                   )}
                   {field.type === "tel" && (
@@ -390,9 +340,8 @@ export function PlanYourSafariForm({
                       id={field.name}
                       value={(form[field.name] as string) || ""}
                       onChange={(e) => update(field.name, e.target.value)}
-                      className={
-                        usePremiumInputs ? inputClass : inputClassLegacy
-                      }
+                      placeholder="+34 600 000 000"
+                      className={inputClass}
                     />
                   )}
                   {field.type === "textarea" && (
@@ -401,14 +350,8 @@ export function PlanYourSafariForm({
                       value={(form[field.name] as string) || ""}
                       onChange={(e) => update(field.name, e.target.value)}
                       rows={4}
-                      placeholder={
-                        inline
-                          ? "Describe your dream encounter..."
-                          : undefined
-                      }
-                      className={
-                        usePremiumInputs ? textareaClass : textareaClassLegacy
-                      }
+                      placeholder="Tell us a little about what you'd like to see, do, or achieve..."
+                      className={textareaClass}
                     />
                   )}
                 </div>
@@ -418,71 +361,40 @@ export function PlanYourSafariForm({
         </motion.div>
       </AnimatePresence>
 
-      <div className={inline ? "mt-8 flex flex-col gap-4" : "mt-10 flex justify-between"}>
-        {inline && (
-          <div className="flex justify-start">
-            <button
-              type="button"
-              onClick={handleBack}
-              className={`inline-flex items-center justify-center px-6 py-3 font-medium rounded-md text-safari-gold hover:bg-white/5 transition-colors ${
-                isFirst ? "invisible" : ""
-              }`}
-            >
-              Back
-            </button>
-          </div>
-        )}
+      <div className="mt-8 space-y-4">
+        <div className="flex justify-start">
+          <button
+            type="button"
+            onClick={handleBack}
+            className={`inline-flex items-center gap-1 px-4 py-2.5 text-sm font-semibold rounded-lg text-tantrek-navy hover:bg-tantrek-surface transition-colors ${
+              isFirst ? "invisible" : ""
+            }`}
+          >
+            <span aria-hidden>←</span> Back
+          </button>
+        </div>
         {submitError && (
-          <p className="text-red-400 text-sm text-center mb-2">{submitError}</p>
+          <p className="text-red-600 text-sm text-center bg-red-50 border border-red-200 rounded-lg py-2 px-3">
+            {submitError}
+          </p>
         )}
-        {inline ? (
-          <div className="space-y-3">
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-safari-gold px-6 py-4 font-bold uppercase tracking-wider text-safari-green-dark transition-all hover:bg-safari-gold-light hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {submitting ? "Sending…" : isLast ? "Request your itinerary" : "Next"}
-              {!submitting && (
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              )}
-            </button>
-            <p className="text-center text-[10px] uppercase tracking-widest text-safari-sand-muted">
-              Our response time for private inquiries is typically within 24–48
-              hours.
-            </p>
-          </div>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={handleBack}
-              className={`inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg text-safari-gold hover:bg-white/5 ${
-                isFirst ? "invisible" : ""
-              }`}
-            >
-              Back
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={submitting}
-              className="inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg bg-safari-gold text-safari-green hover:bg-safari-gold-light transition-colors disabled:opacity-60"
-            >
-              {submitting ? "Sending…" : isLast ? "Submit" : "Next"}
-            </button>
-          </>
-        )}
+        <button
+          type="button"
+          onClick={handleNext}
+          disabled={submitting}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-tantrek-orange px-6 py-4 font-semibold text-white shadow-[0_10px_24px_rgba(255,122,0,0.32)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+        >
+          {submitting ? "Sending..." : isLast ? "Request your itinerary" : "Continue"}
+          {!submitting && (
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          )}
+        </button>
+        <p className="text-center text-[10px] uppercase tracking-[0.22em] text-tantrek-text-muted font-semibold">
+          Response within 24–48 hours
+        </p>
       </div>
-    </>
+    </div>
   );
-
-  if (inline) {
-    return <div className="flex flex-col">{formContent}</div>;
-  }
-
-  return <GlassCard className="p-6 sm:p-8">{formContent}</GlassCard>;
 }

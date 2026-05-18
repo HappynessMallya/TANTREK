@@ -103,7 +103,7 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
         >
           <Image
             src="/logo.png"
-            alt="Tanzania Wildmakers Safaris"
+            alt="TANTREK 360 Safaris"
             width={200}
             height={56}
             className="h-10 w-auto object-contain object-left"
@@ -222,7 +222,7 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
           </button>
           <Image
             src="/logo.png"
-            alt="Tanzania Wildmakers Safaris"
+            alt="TANTREK 360 Safaris"
             width={160}
             height={44}
             className="ml-3 h-8 w-auto object-contain"

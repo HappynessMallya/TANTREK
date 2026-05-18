@@ -1,5 +1,5 @@
 /**
- * CMS API client for Tanzania Wildmakers Safari.
+ * CMS API client for TANTREK 360 Safari.
  * Base URL configured via NEXT_PUBLIC_CMS_API_URL.
  *
  * Authentication: every protected request automatically includes

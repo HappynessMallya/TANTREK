@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { AboutContent } from "./AboutContent";
 
 export const metadata: Metadata = {
-  title: "About Us — Wilderness Architects",
+  title: "About TANTREK 360 — 360° Integrated Ecosystem",
   description:
-    "Tanzania Wildmakers Safaris: frontier luxury in Southern and Western Tanzania. We are wilderness architects, not mass tourism. Ruaha, Julius Nyerere, Katavi.",
+    "TANTREK 360 Safaris unites curated travel with business consultancy and investment facilitation. Built on honesty, integrity, and end-to-end support across Tanzania.",
 };
 
 export default function AboutPage() {

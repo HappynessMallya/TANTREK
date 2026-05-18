@@ -130,7 +130,7 @@ export default async function ExperiencePage({ params }: Props) {
                   <span className="font-body text-sm text-safari-sand-muted">
                     Or{" "}
                     <a
-                      href="https://wa.me/255762111315"
+                      href="https://wa.me/34637048615"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-safari-gold hover:underline"

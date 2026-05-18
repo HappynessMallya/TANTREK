@@ -212,10 +212,11 @@ export function DestinationPageContent({
                     </h2>
                     <div className="space-y-5 font-body text-lg leading-relaxed text-safari-sand-light/90">
                       <p>
-                        {d.name} is one of Tanzania’s premier safari destinations, offering
-                        a blend of raw wilderness and exclusive luxury. Tanzania Wildmakers
-                        designs itineraries here for travelers who want the frontier, not the
-                        highway—low-density, high-impact experiences.
+                        {d.name} is one of Tanzania&rsquo;s premier safari destinations, offering
+                        a blend of raw wilderness and exclusive luxury. TANTREK 360 designs
+                        itineraries here for travelers and investors who want the frontier, not
+                        the highway&mdash;low-density, high-impact, with curated business
+                        exposure where it adds value.
                       </p>
                       <p>{d.tagline}</p>
                     </div>
@@ -387,7 +388,7 @@ export function DestinationPageContent({
               Start planning
             </Link>
             <Link
-              href="https://wa.me/255762111315"
+              href="https://wa.me/34637048615"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-xl border-2 border-safari-green-dark/40 px-10 py-4 font-bold uppercase tracking-widest text-safari-green-dark transition-all hover:bg-safari-green-dark/10"

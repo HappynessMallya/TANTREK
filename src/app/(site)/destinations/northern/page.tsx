@@ -4,7 +4,7 @@ import { CircuitPageContent } from "../CircuitPageContent";
 export const metadata: Metadata = {
   title: "Northern Circuit — Serengeti, Ngorongoro, Tarangire, Lake Manyara",
   description:
-    "Luxury Northern Circuit safari: Serengeti, Ngorongoro Crater, Tarangire, Lake Manyara. Great Migration, Big Five, and iconic lodges. Tanzania Wildmakers Safaris.",
+    "Northern Circuit with TANTREK 360: Serengeti, Ngorongoro Crater, Tarangire, Lake Manyara. Great Migration, Big Five, iconic lodges — paired with Tanzania opportunity tours.",
 };
 
 export default function NorthernCircuitPage() {

@@ -23,7 +23,7 @@ type AboutData = {
 const EMPTY: AboutData = {
   heroImage: "", heroHeadline: "", heroSubheadline: "", storyBody: "",
   founderQuote: "", founderName: "", founderTitle: "", founderImage: "",
-  valuesTitle: "Why Choose Wildmakers",
+  valuesTitle: "Why Choose TANTREK 360",
   value1Icon: "", value1Title: "", value1Body: "",
   value2Icon: "", value2Title: "", value2Body: "",
   value3Icon: "", value3Title: "", value3Body: "",
@@ -87,7 +87,7 @@ export default function CmsAboutPage() {
         {/* ── Our Story ────────────────────────────────────────────────── */}
         <SectionSaveCard
           title="Our Story — Brand narrative"
-          description="The main story text about how Tanzania Wildmakers came to be."
+          description="The main story text about how TANTREK 360 came to be."
           disabled={!cmsApi.isConfigured}
           onSave={() => save({ storyBody: form.storyBody })}
           successMessage="Our Story section saved."
@@ -138,7 +138,7 @@ export default function CmsAboutPage() {
         >
           <div className="space-y-4">
             <Field label="Section heading">
-              <Input value={form.valuesTitle} onChange={(e) => set("valuesTitle", e.target.value)} placeholder="Why Choose Wildmakers" />
+              <Input value={form.valuesTitle} onChange={(e) => set("valuesTitle", e.target.value)} placeholder="Why Choose TANTREK 360" />
             </Field>
             {([1, 2, 3] as const).map((n) => (
               <div key={n} className="rounded-xl border border-[#EAE4D0] bg-[#FDFCF9] p-4 space-y-3">
@@ -175,7 +175,7 @@ export default function CmsAboutPage() {
         >
           <div className="space-y-4">
             <Field label="Meta title" hint="Ideal length 50–60 characters.">
-              <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} placeholder="About Us — Tanzania Wildmakers Safaris" />
+              <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} placeholder="About Us — TANTREK 360 Safaris" />
             </Field>
             <Field label="Meta description" hint="Max 160 characters.">
               <Textarea value={form.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} rows={2} maxLength={160} />
