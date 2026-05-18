@@ -62,7 +62,7 @@ const TEAM = [
 const FOUNDER_QUOTE =
   "Tanzania is not just a destination — it is an opportunity. Our mission at TANTREK 360 is to open it honestly: as wilderness worth protecting, as culture worth learning from, and as a market worth investing in. Every journey we curate should leave both the traveler and the land richer for the encounter.";
 
-const SECTORS = ["Tourism", "Finance", "Legal", "Staffing", "Investment"];
+const SECTORS = ["Tourism", "Safaris", "Investment"];
 
 export function AboutContent() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);

@@ -5,8 +5,8 @@ export function TravelAgencySchema() {
     name: "TANTREK 360 Safaris",
     description:
       "TANTREK 360 Safaris unites curated safari journeys with business consultancy and investment facilitation across Tanzania. Built for investors, diaspora, entrepreneurs, and discerning travelers.",
-    url: "https://tantreksafari.com",
-    email: "info@tantreksafari.com",
+    url: "https://tantrek360safaris.com",
+    email: "info@tantrek360safaris.com",
     telephone: "+34 637 04 86 15",
     areaServed: [
       { "@type": "Place", name: "Tanzania" },

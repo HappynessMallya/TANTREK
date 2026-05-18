@@ -118,7 +118,7 @@ export default function CmsSettingsPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Email address">
-              <Input type="email" value={form.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} placeholder="info@tantreksafari.com" />
+              <Input type="email" value={form.contactEmail} onChange={(e) => set("contactEmail", e.target.value)} placeholder="info@tantrek360safaris.com" />
             </Field>
             <Field label="Phone number">
               <Input type="tel" value={form.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+255 762 111 315" />
@@ -168,16 +168,16 @@ export default function CmsSettingsPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Instagram">
-              <Input type="url" value={form.instagramUrl} onChange={(e) => set("instagramUrl", e.target.value)} placeholder="https://instagram.com/tantreksafari" />
+              <Input type="url" value={form.instagramUrl} onChange={(e) => set("instagramUrl", e.target.value)} placeholder="https://instagram.com/tantrek360safaris" />
             </Field>
             <Field label="Facebook">
-              <Input type="url" value={form.facebookUrl} onChange={(e) => set("facebookUrl", e.target.value)} placeholder="https://facebook.com/tantreksafari" />
+              <Input type="url" value={form.facebookUrl} onChange={(e) => set("facebookUrl", e.target.value)} placeholder="https://facebook.com/tantrek360safaris" />
             </Field>
             <Field label="Twitter / X">
-              <Input type="url" value={form.twitterUrl} onChange={(e) => set("twitterUrl", e.target.value)} placeholder="https://twitter.com/tantreksafari" />
+              <Input type="url" value={form.twitterUrl} onChange={(e) => set("twitterUrl", e.target.value)} placeholder="https://twitter.com/tantrek360safaris" />
             </Field>
             <Field label="YouTube">
-              <Input type="url" value={form.youtubeUrl} onChange={(e) => set("youtubeUrl", e.target.value)} placeholder="https://youtube.com/@tantreksafari" />
+              <Input type="url" value={form.youtubeUrl} onChange={(e) => set("youtubeUrl", e.target.value)} placeholder="https://youtube.com/@tantrek360safaris" />
             </Field>
           </div>
         </SectionSaveCard>

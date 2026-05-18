@@ -55,10 +55,8 @@ export default function RootLayout({
       lang="en"
       className={`${poppins.variable} ${inter.variable}`}
     >
-      <head>
-        <TravelAgencySchema />
-      </head>
       <body className="min-h-screen flex flex-col bg-white text-tantrek-text">
+        <TravelAgencySchema />
         {children}
       </body>
     </html>

@@ -109,8 +109,8 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
                   WhatsApp
                 </a>
                 {" "}or email{" "}
-                <a href="mailto:info@tantreksafari.com" className="text-tantrek-orange font-semibold hover:underline break-all">
-                  info@tantreksafari.com
+                <a href="mailto:info@tantrek360safaris.com" className="text-tantrek-orange font-semibold hover:underline break-all">
+                  info@tantrek360safaris.com
                 </a>
                 .
               </p>

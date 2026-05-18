@@ -2,7 +2,36 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { publicApi } from "@/lib/public-api";
+
+const WHATSAPP_NUMBER = "34637048615";
+
+function buildWhatsAppMessage(form: Record<string, string | string[]>): string {
+  const circuits = Array.isArray(form.circuits) ? (form.circuits as string[]).join(", ") : "";
+  const lines = [
+    "Hello TANTREK 360 — I'd like to plan a trip.",
+    "",
+    form.name ? `Name: ${form.name as string}` : "",
+    form.email ? `Email: ${form.email as string}` : "",
+    form.phone ? `Phone: ${form.phone as string}` : "",
+    "",
+    form.experience ? `Service: ${form.experience as string}` : "",
+    circuits ? `Regions: ${circuits}` : "",
+    form.travel_month ? `Travel month: ${form.travel_month as string}` : "",
+    form.nights ? `Nights: ${form.nights as string}` : "",
+    form.budget ? `Budget: ${form.budget as string}` : "",
+    "",
+    form.notes ? `Notes:\n${form.notes as string}` : "",
+  ].filter((line, i, arr) => {
+    // Collapse consecutive blank lines
+    if (line === "" && arr[i - 1] === "") return false;
+    return true;
+  });
+  return lines.join("\n").trim();
+}
+
+function buildWhatsAppUrl(form: Record<string, string | string[]>): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(form))}`;
+}
 
 const STEPS = [
   {
@@ -130,8 +159,7 @@ export function PlanYourSafariForm({
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>(() => getInitialFormState(initialEmail, initialSeason));
   const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [whatsappUrl, setWhatsappUrl] = useState("");
 
   const currentStep = STEPS[step];
   const isLast = step === STEPS.length - 1;
@@ -141,32 +169,12 @@ export function PlanYourSafariForm({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (isLast) {
-      setSubmitting(true);
-      setSubmitError("");
-      const circuits = (form.circuits as string[]).join(", ");
-      const message = [
-        form.notes as string,
-        form.experience ? `Service: ${form.experience as string}` : "",
-        circuits ? `Regions: ${circuits}` : "",
-        form.nights ? `Nights: ${form.nights as string}` : "",
-      ].filter(Boolean).join("\n");
-
-      const result = await publicApi.submitInquiry({
-        name: (form.name as string) || "Anonymous",
-        email: (form.email as string) || "",
-        phone: (form.phone as string) || undefined,
-        message: message || "No message provided.",
-        travelDates: (form.travel_month as string) || undefined,
-        budget: (form.budget as string) || undefined,
-      });
-      setSubmitting(false);
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        setSubmitError(result.message ?? "Submission failed. Please try again.");
-      }
+      const url = buildWhatsAppUrl(form);
+      setWhatsappUrl(url);
+      window.open(url, "_blank", "noopener,noreferrer");
+      setSubmitted(true);
       return;
     }
     setStep((s) => s + 1);
@@ -179,23 +187,35 @@ export function PlanYourSafariForm({
   if (submitted) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-tantrek-orange/15 text-tantrek-orange">
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366]/15 text-[#25D366]">
+          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.683-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.607z" />
           </svg>
         </div>
         <h2 className="font-display text-2xl text-tantrek-navy font-semibold">
-          Thank you
+          WhatsApp opened
         </h2>
         <p className="mt-3 text-tantrek-text-muted leading-relaxed max-w-md mx-auto">
-          We&apos;ve received your details and will be in touch within 24&ndash;48 hours with a tailored
-          360° outline. For immediate discussion, message us on{" "}
-          <a href="https://wa.me/34637048615" target="_blank" rel="noopener noreferrer" className="text-tantrek-orange font-semibold hover:underline">
-            WhatsApp
+          We&apos;ve prefilled your itinerary request in WhatsApp — just hit send and we&apos;ll
+          reply within 24&ndash;48 hours with a tailored 360° outline.
+        </p>
+        {whatsappUrl && (
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(37,211,102,0.32)] transition-all hover:bg-[#1ebe57] hover:-translate-y-0.5"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.683-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.607z" />
+            </svg>
+            Open WhatsApp again
           </a>
-          {" "}or email{" "}
-          <a href="mailto:info@tantreksafari.com" className="text-tantrek-orange font-semibold hover:underline break-all">
-            info@tantreksafari.com
+        )}
+        <p className="mt-6 text-xs text-tantrek-text-muted">
+          Popup blocked? Reach us at{" "}
+          <a href="mailto:info@tantrek360safaris.com" className="text-tantrek-orange font-semibold hover:underline break-all">
+            info@tantrek360safaris.com
           </a>
           .
         </p>
@@ -373,26 +393,33 @@ export function PlanYourSafariForm({
             <span aria-hidden>←</span> Back
           </button>
         </div>
-        {submitError && (
-          <p className="text-red-600 text-sm text-center bg-red-50 border border-red-200 rounded-lg py-2 px-3">
-            {submitError}
-          </p>
-        )}
         <button
           type="button"
           onClick={handleNext}
-          disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-tantrek-orange px-6 py-4 font-semibold text-white shadow-[0_10px_24px_rgba(255,122,0,0.32)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          className={`flex w-full items-center justify-center gap-2 rounded-lg px-6 py-4 font-semibold text-white transition-all hover:-translate-y-0.5 ${
+            isLast
+              ? "bg-[#25D366] shadow-[0_10px_24px_rgba(37,211,102,0.32)] hover:bg-[#1ebe57]"
+              : "bg-tantrek-orange shadow-[0_10px_24px_rgba(255,122,0,0.32)] hover:bg-tantrek-orange-deep"
+          }`}
         >
-          {submitting ? "Sending..." : isLast ? "Request your itinerary" : "Continue"}
-          {!submitting && (
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+          {isLast ? (
+            <>
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.683-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.607z" />
+              </svg>
+              Send via WhatsApp
+            </>
+          ) : (
+            <>
+              Continue
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </>
           )}
         </button>
         <p className="text-center text-[10px] uppercase tracking-[0.22em] text-tantrek-text-muted font-semibold">
-          Response within 24–48 hours
+          {isLast ? "Opens WhatsApp · Reply within 24–48 hours" : "Response within 24–48 hours"}
         </p>
       </div>
     </div>

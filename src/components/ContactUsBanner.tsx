@@ -1,6 +1,6 @@
 "use client";
 
-const CONTACT_EMAIL = "info@tantreksafari.com";
+const CONTACT_EMAIL = "info@tantrek360safaris.com";
 
 export function ContactUsBanner() {
   return (

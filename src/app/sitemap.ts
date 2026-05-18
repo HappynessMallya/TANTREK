@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { destinations } from "@/data/destinations";
 import { experiences } from "@/data/experiences";
 
-const BASE = "https://tantreksafari.com";
+const BASE = "https://tantrek360safaris.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [

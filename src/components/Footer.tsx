@@ -73,7 +73,7 @@ export function Footer() {
                 wilderness — and its real opportunities.
               </p>
               <p className="text-white/55 text-xs font-body leading-relaxed pt-1">
-                Tourism • Finance • Legal • Staffing • Investment
+                Tourism • Safaris • Investment
               </p>
             </div>
             <div className="flex gap-3 pt-2">
@@ -89,7 +89,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="mailto:info@tantreksafari.com"
+                href="mailto:info@tantrek360safaris.com"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-tantrek-orange hover:text-white"
                 aria-label="Email TANTREK 360"
               >
@@ -170,8 +170,8 @@ export function Footer() {
                 </p>
                 <p>
                   Email:{" "}
-                  <a href="mailto:info@tantreksafari.com" className="hover:text-tantrek-orange transition-colors break-all">
-                    info@tantreksafari.com
+                  <a href="mailto:info@tantrek360safaris.com" className="hover:text-tantrek-orange transition-colors break-all">
+                    info@tantrek360safaris.com
                   </a>
                 </p>
                 <Link

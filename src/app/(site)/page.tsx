@@ -56,8 +56,8 @@ const WHY_CHOOSE_US = [
     icon: "globe",
   },
   {
-    title: "Multi-Sector Expertise",
-    copy: "Serving tourism, finance, legal, staffing, and investment sectors.",
+    title: "Tourism + Investment Expertise",
+    copy: "Curated safari experiences paired with real Tanzania investment exposure.",
     icon: "layers",
   },
   {
@@ -320,14 +320,6 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Quick trust strip */}
-            <div className="mt-12 flex flex-wrap justify-center items-center gap-6 sm:gap-10 text-white/65 text-[11px] uppercase tracking-[0.22em] font-medium">
-              <span>Tourism</span>
-              <span className="w-1 h-1 rounded-full bg-tantrek-orange" aria-hidden />
-              <span>Investment</span>
-              <span className="w-1 h-1 rounded-full bg-tantrek-orange" aria-hidden />
-              <span>End-to-end Support</span>
-            </div>
           </motion.div>
         )}
 

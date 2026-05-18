@@ -30,8 +30,8 @@ export default function CookiesPage() {
           <h2 className="font-display text-xl text-tantrek-navy font-semibold mt-8 mb-3">Contact</h2>
           <p className="text-base leading-relaxed text-tantrek-text-muted">
             Questions:{" "}
-            <a href="mailto:info@tantreksafari.com" className="text-tantrek-orange font-semibold hover:underline">
-              info@tantreksafari.com
+            <a href="mailto:info@tantrek360safaris.com" className="text-tantrek-orange font-semibold hover:underline">
+              info@tantrek360safaris.com
             </a>
             .
           </p>

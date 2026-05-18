@@ -6,7 +6,7 @@ import Image from "next/image";
 import { cmsApi } from "@/lib/cms-api";
 
 export default function CmsLoginPage() {
-  const [email, setEmail] = useState("admin@tantreksafari.com");
+  const [email, setEmail] = useState("admin@tantrek360safaris.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
@@ -135,7 +135,7 @@ export default function CmsLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full rounded-xl border border-[#D5CAAD] bg-white px-4 py-2.5 text-sm text-[#0D2218] placeholder-[#B0A88C] transition-all focus:border-luxury-gold focus:outline-none focus:ring-2 focus:ring-luxury-gold/15"
-                  placeholder="admin@tantreksafari.com"
+                  placeholder="admin@tantrek360safaris.com"
                   autoComplete="email"
                   required
                 />
