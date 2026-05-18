@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Safari Journal",
+  title: "Insights & Stories",
   description:
-    "Stories, insights and seasonal guidance from Tanzania's wild frontiers. Safari planning, wildlife encounters, destination guides, and conservation stories.",
+    "TANTREK 360 Insights — travel guidance, investment perspectives, and field notes from Tanzania's wilderness and emerging markets.",
 };
 
 export default function SafariJournalLayout({

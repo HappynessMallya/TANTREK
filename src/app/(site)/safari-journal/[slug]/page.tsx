@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     publicApi.getJournalPost(slug),
     Promise.resolve(JOURNAL_POSTS.find((p) => p.slug === slug)),
   ]);
-  const title = apiPost?.title ?? staticPost?.title ?? "Safari Journal";
+  const title = apiPost?.title ?? staticPost?.title ?? "TANTREK 360 Insights";
   const description = apiPost?.excerpt ?? staticPost?.excerpt ?? "";
   return { title, description };
 }
@@ -34,7 +34,7 @@ export default async function JournalPostPage({ params }: Props) {
   const title = apiPost?.title ?? staticPost?.title ?? "";
   const excerpt = apiPost?.excerpt ?? staticPost?.excerpt ?? "";
   const body = apiPost?.body ?? null;
-  const image = apiPost?.heroImage?.url ?? staticPost?.image ?? "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
+  const image = apiPost?.heroImage?.url ?? staticPost?.image ?? "/tour5.webp";
   const imageAlt = apiPost?.heroImage?.altText ?? staticPost?.imageAlt ?? title;
   const categoryLabel = apiPost?.category?.label
     ?? JOURNAL_CATEGORIES.find((c) => c.slug === (apiPost?.category?.slug ?? staticPost?.category))?.label
@@ -46,10 +46,10 @@ export default async function JournalPostPage({ params }: Props) {
     : null;
 
   return (
-    <article className="pb-20">
-      {/* Hero — image + gradient */}
-      <section className="relative w-full overflow-hidden pt-20">
-        <div className="relative h-[320px] w-full overflow-hidden sm:h-[380px] lg:h-[460px]">
+    <article className="bg-white pb-24">
+      {/* Hero — navy overlay over image */}
+      <section className="relative w-full overflow-hidden pt-20 bg-tantrek-navy-deep">
+        <div className="relative h-[360px] w-full overflow-hidden sm:h-[420px] lg:h-[500px]">
           <Image
             src={image}
             alt={imageAlt}
@@ -58,29 +58,37 @@ export default async function JournalPostPage({ params }: Props) {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-safari-green-dark via-safari-green-dark/70 to-transparent pointer-events-none" aria-hidden />
-          <div className="absolute inset-0 z-10 flex flex-col justify-end p-8 sm:p-10 lg:p-16">
-            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="absolute inset-0 bg-gradient-hero-overlay" aria-hidden />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 50% 40% at 80% 25%, rgba(255,122,0,0.18), transparent 70%)",
+            }}
+            aria-hidden
+          />
+          <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 sm:p-10 lg:p-14">
+            <div className="mx-auto w-full max-w-4xl">
               <Link
                 href="/safari-journal"
-                className="inline-block font-body text-luxury-gold text-[10px] font-semibold tracking-[0.25em] uppercase mb-4 hover:underline"
+                className="inline-flex items-center gap-1.5 font-body text-tantrek-orange text-[11px] font-bold tracking-[0.28em] uppercase mb-5 hover:underline"
               >
-                ← Blog
+                <span aria-hidden>←</span> Insights
               </Link>
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap mb-3">
                 {categoryLabel && (
-                  <span className="font-body text-luxury-gold/90 text-[10px] font-semibold tracking-wider uppercase">
+                  <span className="inline-flex items-center rounded-full bg-tantrek-orange px-3 py-1 font-body text-[10px] font-bold tracking-wider uppercase text-white shadow-[0_6px_14px_rgba(255,122,0,0.3)]">
                     {categoryLabel}
                   </span>
                 )}
                 {readTime && (
-                  <span className="font-body text-safari-sand-light/80 text-xs">{readTime}</span>
+                  <span className="font-body text-white/80 text-xs">{readTime}</span>
                 )}
                 {publishedAt && (
-                  <span className="font-body text-safari-sand-light/60 text-xs">{publishedAt}</span>
+                  <span className="font-body text-white/60 text-xs">· {publishedAt}</span>
                 )}
               </div>
-              <h1 className="font-display text-3xl font-bold tracking-tight text-white mt-2 sm:text-4xl lg:text-5xl xl:text-6xl">
+              <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl leading-tight">
                 {title}
               </h1>
             </div>
@@ -89,35 +97,54 @@ export default async function JournalPostPage({ params }: Props) {
       </section>
 
       {/* Story content */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
-        <div className="rounded-xl overflow-hidden border border-white/10 bg-safari-green-dark/60 backdrop-blur-sm shadow-[0_20px_50px_-15px_rgba(0,0,0,0.4)]">
-          <div className="p-8 sm:p-10 lg:p-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+        <div className="rounded-2xl overflow-hidden bg-white border border-tantrek-border shadow-elevated">
+          <div className="p-7 sm:p-10 lg:p-12">
             {excerpt && (
-              <p className="font-display text-lg sm:text-xl text-safari-sand-light/95 leading-relaxed italic">
+              <p className="font-display text-lg sm:text-xl text-tantrek-navy leading-relaxed font-medium">
                 {excerpt}
               </p>
             )}
-            <div className="my-8 h-px w-20 bg-luxury-gold/50" aria-hidden />
-            <div className="font-body text-safari-sand-light/90 text-base sm:text-lg leading-relaxed space-y-6 tracking-wide">
+            <div className="my-7 h-0.5 w-16 bg-tantrek-orange rounded-full" aria-hidden />
+            <div className="font-body text-tantrek-text text-base sm:text-lg leading-relaxed space-y-5">
               {body
                 ? body.split("\n\n").map((para, i) => (
                     <p key={i}>{para}</p>
                   ))
                 : (
-                  <p>
+                  <p className="text-tantrek-text-muted">
                     Full story coming soon. In the meantime, explore our{" "}
-                    <Link href="/destinations" className="text-luxury-gold hover:underline font-medium">
+                    <Link href="/destinations" className="text-tantrek-orange hover:underline font-semibold">
                       destinations
                     </Link>{" "}
                     or{" "}
-                    <Link href="/plan-your-safari" className="text-luxury-gold hover:underline font-medium">
-                      plan your safari
+                    <Link href="/plan-your-safari" className="text-tantrek-orange hover:underline font-semibold">
+                      plan your trip
                     </Link>
                     .
                   </p>
                 )}
             </div>
           </div>
+        </div>
+
+        {/* End-of-article CTA */}
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/safari-journal"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-tantrek-navy px-6 py-3 text-sm font-semibold text-tantrek-navy transition-all hover:bg-tantrek-navy hover:text-white"
+          >
+            <span aria-hidden>←</span> All Insights
+          </Link>
+          <Link
+            href="/plan-your-safari"
+            className="inline-flex items-center gap-2 rounded-full bg-tantrek-orange px-7 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(255,122,0,0.28)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5"
+          >
+            Speak to an Expert
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </article>

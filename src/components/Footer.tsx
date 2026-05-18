@@ -53,21 +53,18 @@ export function Footer() {
           <div className="space-y-6 max-w-xs lg:max-w-sm">
             <Link
               href="/"
-              className="block bg-white rounded-xl p-3 w-fit shadow-[0_6px_20px_rgba(0,0,0,0.25)]"
+              className="block bg-white rounded-2xl px-5 py-4 w-fit shadow-[0_10px_28px_rgba(0,0,0,0.3)]"
               aria-label="TANTREK 360 Safaris - Home"
             >
               <Image
                 src="/logo-footer.png"
                 alt="TANTREK 360 Safaris"
-                width={200}
-                height={56}
-                className="h-12 sm:h-14 w-auto object-contain"
+                width={566}
+                height={441}
+                className="h-24 sm:h-28 w-auto object-contain"
               />
             </Link>
             <div className="space-y-3">
-              <p className="text-[11px] font-body font-semibold tracking-[0.28em] uppercase text-tantrek-orange">
-                Beyond Routes. Beyond Maps.
-              </p>
               <p className="text-white text-base font-display font-medium leading-snug">
                 A 360° integrated ecosystem of travel, business, and investment in Tanzania.
               </p>

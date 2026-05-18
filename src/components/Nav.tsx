@@ -75,14 +75,14 @@ export function Nav() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link href="/" className="flex items-center gap-3 shrink-0" aria-label="TANTREK 360 Safaris - Home">
+        <div className="flex items-center justify-between h-20 lg:h-24">
+          <Link href="/" className="flex items-center shrink-0" aria-label="TANTREK 360 Safaris - Home">
             <Image
               src="/logo.png"
               alt="TANTREK 360 Safaris"
-              width={260}
-              height={72}
-              className="h-11 w-auto lg:h-14 object-contain object-left"
+              width={566}
+              height={441}
+              className="h-16 w-auto lg:h-20 object-contain object-left"
               priority
             />
           </Link>

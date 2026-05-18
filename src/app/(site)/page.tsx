@@ -228,7 +228,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero — cinematic videos with navy overlay + orange CTA */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-screen h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 bg-tantrek-navy-deep">
           {heroSlides.map((slide, i) => (
             <motion.div
