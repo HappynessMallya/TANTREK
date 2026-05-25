@@ -155,3 +155,49 @@ The outline is in `TANZANIA_OUTLINE_PATH` (same file). To replace with
 a real border, drop in a single SVG path string from any GeoJSON of
 Tanzania run through `svgo` — same viewBox (`0 0 600 620`) keeps the
 park coordinates valid.
+
+---
+
+# Journey Builder (new — /design-your-journey)
+
+A 3-step exploration tool (length → region → style) that composes a
+transparent day-by-day "sketch" and hands it off to the concierge form.
+
+## What it is — and explicitly isn't
+
+Framed honestly throughout the UI as a *starting sketch*, not a quote.
+The composition logic is intentionally simple:
+
+- 1 stop per ~3–4 nights of safari
+- Most iconic anchor in each region comes first
+  (Serengeti / Ruaha / Katavi)
+- Mixed circuits round-robin across N → S → W
+- Style choice layers a one-line phrase on every stop
+
+Logic lives in `JourneyBuilder.tsx` (`pickParks` + `composeSketch`).
+Easy to swap for a smarter algorithm or real availability check later
+— the inputs and outputs are well-typed.
+
+## The handoff to /plan-your-safari
+
+The sketch is URL-encoded into `?sketch=<summary>` and the
+plan-your-safari page:
+
+1. Shows the sketch in a highlighted card above the form (so the user
+   sees their selections preserved)
+2. Pre-fills the form's "Your vision" notes field with the same text
+
+If the client wants to track conversion from sketch → inquiry, the
+`sketch` query param is the signal — log it from server-side analytics.
+
+## Entry points
+
+- **Homepage hero**: tertiary "or sketch a draft journey first →" link
+  below the existing primary/secondary CTAs (kept quiet — primary
+  remains "Begin Your Journey")
+- **Plan-your-safari hero**: pill button "Sketch a draft journey first"
+  in the direct-contact rail next to WhatsApp/email
+
+Both are deliberately understated. The primary funnel is still
+homepage → plan-your-safari; the builder is an *alternative* for the
+explorer-type visitor.

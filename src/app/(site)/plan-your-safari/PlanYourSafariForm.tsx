@@ -140,10 +140,15 @@ const radioCardDefault =
 const radioCardChecked =
   "border-tantrek-orange bg-tantrek-orange/10 text-tantrek-navy font-medium";
 
-function getInitialFormState(initialEmail?: string, initialSeason?: string): FormState {
+function getInitialFormState(
+  initialEmail?: string,
+  initialSeason?: string,
+  initialNotes?: string
+): FormState {
   const state = { ...defaultState } as FormState;
   if (typeof initialEmail === "string" && initialEmail.trim()) state.email = initialEmail.trim();
   if (typeof initialSeason === "string" && initialSeason === "flexible") state.travel_month = "Flexible";
+  if (typeof initialNotes === "string" && initialNotes.trim()) state.notes = initialNotes;
   return state;
 }
 
@@ -151,13 +156,17 @@ export function PlanYourSafariForm({
   inline = false,
   initialEmail,
   initialSeason,
+  initialNotes,
 }: {
   inline?: boolean;
   initialEmail?: string;
   initialSeason?: string;
+  initialNotes?: string;
 }) {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState<FormState>(() => getInitialFormState(initialEmail, initialSeason));
+  const [form, setForm] = useState<FormState>(() =>
+    getInitialFormState(initialEmail, initialSeason, initialNotes)
+  );
   const [submitted, setSubmitted] = useState(false);
   const [whatsappUrl, setWhatsappUrl] = useState("");
 

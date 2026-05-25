@@ -415,6 +415,22 @@ export default function HomePage() {
             transition={{ duration: 0.9, ease: "easeOut" }}
             className="relative z-10 px-4 sm:px-6 text-center max-w-5xl mx-auto pb-24"
           >
+            {/* Frame caption — sits inline above the eyebrow, rotates with each slide */}
+            <div className="flex justify-center mb-6">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={heroSlides[heroSlideIndex]?.caption}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.45 }}
+                  className="hero-frame-caption font-body"
+                >
+                  {heroSlides[heroSlideIndex]?.caption}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+
             {home.heroEyebrow && (
               <p className="font-body text-tantrek-orange text-[11px] sm:text-xs font-semibold tracking-[0.34em] uppercase mb-7">
                 {home.heroEyebrow}
@@ -458,26 +474,16 @@ export default function HomePage() {
                 </Link>
               )}
             </div>
-          </motion.div>
-        )}
 
-        {/* Hero frame caption — anchors the visitor in a specific place
-            during the current slide. Hidden during the map phase. */}
-        {heroPhase === "slideshow" && (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={heroSlides[heroSlideIndex]?.caption}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.55 }}
-              className="absolute bottom-24 sm:bottom-28 left-1/2 -translate-x-1/2 z-10"
+            {/* Tertiary discovery option — quiet, sub-CTA */}
+            <Link
+              href="/design-your-journey"
+              className="mt-6 inline-flex items-center gap-1.5 font-body text-white/65 text-xs sm:text-sm tracking-wide hover:text-tantrek-orange transition-colors"
             >
-              <span className="hero-frame-caption font-body">
-                {heroSlides[heroSlideIndex]?.caption}
-              </span>
-            </motion.div>
-          </AnimatePresence>
+              <span className="opacity-70">or</span> sketch a draft journey first{" "}
+              <span aria-hidden>→</span>
+            </Link>
+          </motion.div>
         )}
 
         {heroPhase === "slideshow" && (

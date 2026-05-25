@@ -9,20 +9,20 @@ export const metadata: Metadata = {
     "Speak with a Tantrek safari designer. Every journey is shaped through a conversation — about how you want to travel, who you're travelling with, and what would make it unforgettable.",
 };
 
+type SearchParamsShape = { season?: string; email?: string; sketch?: string };
 type PlanPageProps = {
-  searchParams?:
-    | Promise<{ season?: string; email?: string }>
-    | { season?: string; email?: string };
+  searchParams?: Promise<SearchParamsShape> | SearchParamsShape;
 };
 
 export default async function PlanYourSafariPage(props: PlanPageProps) {
   const raw = props.searchParams;
   const resolved =
     raw && typeof (raw as Promise<unknown>).then === "function"
-      ? await (raw as Promise<{ season?: string; email?: string }>)
-      : ((raw as { season?: string; email?: string } | undefined) ?? {});
+      ? await (raw as Promise<SearchParamsShape>)
+      : ((raw as SearchParamsShape | undefined) ?? {});
   const initialEmail = typeof resolved.email === "string" ? resolved.email : "";
   const initialSeason = typeof resolved.season === "string" ? resolved.season : "";
+  const initialSketch = typeof resolved.sketch === "string" ? resolved.sketch : "";
 
   return (
     <main className="relative flex min-h-screen flex-col bg-white pt-20">
@@ -85,6 +85,15 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
               </svg>
               info@tantrek360safaris.com
             </a>
+            <Link
+              href="/design-your-journey"
+              className="inline-flex items-center gap-2 rounded-full border border-tantrek-orange/45 bg-tantrek-orange/10 px-5 py-2.5 text-tantrek-orange text-sm backdrop-blur-sm transition-all hover:bg-tantrek-orange hover:text-white hover:border-tantrek-orange"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M11 4H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Sketch a draft journey first
+            </Link>
             <p className="text-white/60 text-xs sm:text-sm font-body sm:ml-auto">
               Or read by a safari designer within 24 hours ↓
             </p>
@@ -265,10 +274,30 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
                 </p>
               )}
 
+              {initialSketch && (
+                <div className="mb-7 rounded-xl border border-tantrek-orange/30 bg-tantrek-orange/[0.06] p-5">
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-tantrek-orange/20 text-tantrek-orange">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </span>
+                    <p className="font-body text-[10px] font-bold uppercase tracking-[0.22em] text-tantrek-orange leading-snug pt-0.5">
+                      Your sketch is included · we&rsquo;ll see it on the
+                      final step
+                    </p>
+                  </div>
+                  <pre className="whitespace-pre-wrap font-body text-tantrek-text text-sm leading-relaxed">
+                    {initialSketch}
+                  </pre>
+                </div>
+              )}
+
               <PlanYourSafariForm
                 inline
                 initialEmail={initialEmail}
                 initialSeason={initialSeason}
+                initialNotes={initialSketch}
               />
 
               <p className="mt-7 pt-6 border-t border-tantrek-border text-tantrek-text-soft text-xs leading-relaxed">

@@ -836,3 +836,153 @@ body {
   flex-shrink: 0;
   box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.18);
 }
+
+/* ============================================================
+   JOURNEY BUILDER — design-your-journey
+   ============================================================ */
+
+/* Step indicator dots at the top of each step */
+.builder-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.55);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.builder-step-dot.is-active {
+  background: var(--tantrek-orange);
+  border-color: var(--tantrek-orange);
+  color: white;
+  transform: scale(1.08);
+}
+.builder-step-dot.is-done {
+  background: rgba(255, 122, 0, 0.18);
+  border-color: var(--tantrek-orange);
+  color: var(--tantrek-orange);
+}
+.builder-step-connector {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+.builder-step-connector.is-done::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--tantrek-orange);
+}
+
+/* Builder chip / option button */
+.builder-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  cursor: pointer;
+}
+.builder-chip:hover {
+  background: rgba(255, 122, 0, 0.10);
+  border-color: rgba(255, 122, 0, 0.4);
+  transform: translateY(-1px);
+}
+.builder-chip.is-selected {
+  background: var(--tantrek-orange);
+  border-color: var(--tantrek-orange);
+  color: white;
+  box-shadow: 0 12px 28px rgba(255, 122, 0, 0.32);
+}
+
+/* Larger illustrated option card (used for region + style steps) */
+.builder-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #001a3a;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  text-align: left;
+}
+.builder-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,43,91,0.10) 0%, rgba(0,20,50,0.85) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.builder-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 122, 0, 0.4);
+}
+.builder-card.is-selected {
+  border-color: var(--tantrek-orange);
+  box-shadow: 0 18px 40px rgba(255, 122, 0, 0.28);
+}
+.builder-card.is-selected::after {
+  background: linear-gradient(180deg, rgba(255,122,0,0.15) 0%, rgba(0,20,50,0.88) 100%);
+}
+.builder-card-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.8s ease;
+}
+.builder-card:hover .builder-card-image {
+  transform: scale(1.04);
+}
+
+/* Day-by-day timeline (the draft output) */
+.builder-day-rail {
+  position: relative;
+}
+.builder-day-rail::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(255,122,0,0.6), rgba(255,122,0,0.15));
+  border-radius: 2px;
+}
+.builder-day-stop {
+  position: relative;
+  padding-left: 3.5rem;
+  padding-bottom: 1.75rem;
+}
+.builder-day-stop:last-child {
+  padding-bottom: 0;
+}
+.builder-day-stop::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--tantrek-orange);
+  box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.18), 0 0 12px rgba(255, 122, 0, 0.45);
+}

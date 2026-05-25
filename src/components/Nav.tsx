@@ -101,10 +101,10 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-white transition-shadow duration-300 ${
         scrolled
-          ? "bg-white/96 backdrop-blur-md shadow-[0_2px_18px_rgba(17,24,39,0.07)] border-b border-tantrek-border"
-          : "bg-white/85 backdrop-blur-sm border-b border-transparent"
+          ? "shadow-[0_2px_18px_rgba(17,24,39,0.07)] border-b border-tantrek-border"
+          : "border-b border-transparent"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -151,9 +151,13 @@ export function Nav() {
                 (item.type === "journeys" && activeMap.journeys);
               const isOpen = openDropdown === item.label;
               return (
+                // self-stretch + flex makes this wrapper fill the full header
+                // row height (instead of just sizing to the button text). That
+                // way `top-full` on the dropdown anchors at the header's
+                // bottom edge — not 20–30px above it, inside the header.
                 <div
                   key={item.label}
-                  className="relative"
+                  className="relative self-stretch flex items-center"
                   onMouseEnter={() => setOpenDropdown(item.label)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
@@ -183,14 +187,19 @@ export function Nav() {
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10 }}
+                        // Left-anchored to the trigger (not centered on it).
+                        // Centering on a left-positioned trigger like
+                        // "Destinations" pushed the dropdown back into the
+                        // logo zone — unprofessional. Left-anchoring keeps
+                        // the dropdown visually attached to its trigger and
+                        // expanding into the empty nav space to the right.
+                        // top-full keeps it flush with the header bottom.
+                        initial={{ opacity: 0, y: -6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
+                        exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className={`absolute top-full pt-5 ${
-                          item.type === "destinations"
-                            ? "left-1/2 -translate-x-1/2 w-[860px]"
-                            : "left-1/2 -translate-x-1/2 w-[760px]"
+                        className={`absolute top-full left-0 ${
+                          item.type === "destinations" ? "w-[640px]" : "w-[560px]"
                         }`}
                       >
                         <div className="nav-dropdown-panel p-6 lg:p-7">
