@@ -242,25 +242,80 @@ body {
 .nav-dropdown-panel {
   background: #ffffff;
   border: 1px solid var(--tantrek-border);
-  box-shadow: 0 24px 48px rgba(17, 24, 39, 0.12);
-  border-radius: 14px;
+  box-shadow: 0 28px 64px rgba(17, 24, 39, 0.14);
+  border-radius: 18px;
 }
 .nav-dropdown-link {
   color: var(--tantrek-text);
+  position: relative;
+  transition: color 0.2s ease, background 0.2s ease, padding-left 0.25s ease;
 }
 .nav-dropdown-link:hover {
   background: rgba(255, 122, 0, 0.08);
   color: var(--tantrek-orange);
+  padding-left: calc(0.5rem + 6px);
 }
 .nav-dropdown-heading {
   color: var(--tantrek-navy);
   background: rgba(0, 59, 142, 0.06);
   border: 1px solid rgba(0, 59, 142, 0.12);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 .nav-dropdown-heading:hover {
   background: rgba(0, 59, 142, 0.12);
   border-color: rgba(0, 59, 142, 0.25);
   color: var(--tantrek-navy-deep);
+}
+
+/* Visual preview pane inside mega-menu */
+.nav-preview-pane {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--tantrek-navy-deep);
+  min-height: 280px;
+}
+.nav-preview-pane::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,43,91,0.15) 0%, rgba(0,20,50,0.78) 100%);
+  z-index: 1;
+}
+.nav-preview-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 0.4s ease, transform 0.8s ease;
+}
+.nav-preview-pane:hover .nav-preview-image {
+  transform: scale(1.04);
+}
+
+/* Refined desktop top-level nav link */
+.nav-toplink {
+  position: relative;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+.nav-toplink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -22px;
+  height: 2px;
+  background: var(--tantrek-orange);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+.nav-toplink.is-active::after,
+.nav-toplink:hover::after {
+  transform: scaleX(1);
 }
 
 /* ============================================================
@@ -394,4 +449,390 @@ body {
 ::selection {
   background: rgba(255, 122, 0, 0.25);
   color: var(--tantrek-navy-deep);
+}
+
+/* ============================================================
+   EDITORIAL — homepage redesign (luxury safari rhythm)
+   ============================================================ */
+
+/* Editorial section padding — more breathing room than the standard
+   luxury-section-padding. Used for hero-adjacent editorial moments. */
+.editorial-section-padding {
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}
+@media (min-width: 1024px) {
+  .editorial-section-padding {
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+}
+
+/* Editorial eyebrow — small, wide-tracked, with a leading rule */
+.editorial-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.editorial-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+/* Editorial serif accent — used for emotional pull-quotes and hero
+   keywords. Tight leading, italic optional. */
+.editorial-serif {
+  font-family: var(--font-playfair), Georgia, Cambria, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+/* Hero frame caption — anchors visitor in a specific Tanzania place
+   during the cinematic slideshow */
+.hero-frame-caption {
+  background: rgba(0, 43, 91, 0.40);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* Signature experience card — asymmetric magazine treatment.
+   .signature-feature is the large left tile; .signature-stack are the
+   3 stacked cards on the right. */
+.signature-feature,
+.signature-stack {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #001a3a;
+  box-shadow: 0 18px 48px rgba(0, 43, 91, 0.18);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.signature-feature::after,
+.signature-stack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,43,91,0.10) 0%, rgba(0,43,91,0.55) 55%, rgba(0,20,50,0.92) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.signature-feature:hover,
+.signature-stack:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 64px rgba(0, 43, 91, 0.28);
+}
+.signature-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.2s ease;
+}
+.signature-feature:hover .signature-image,
+.signature-stack:hover .signature-image {
+  transform: scale(1.06);
+}
+
+/* Editorial destination tile — replaces the generic circuit-card with
+   a more layered overlay and per-card hover lift */
+.editorial-destination {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 18px 48px rgba(0, 43, 91, 0.20);
+  background: #001a3a;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.editorial-destination::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,43,91,0.05) 0%, rgba(0,43,91,0.40) 50%, rgba(0,20,50,0.92) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.editorial-destination:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 64px rgba(0, 43, 91, 0.32);
+}
+
+/* Accommodation showcase — magazine-style image tile with restrained
+   metadata badge */
+.accommodation-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #001a3a;
+  box-shadow: 0 18px 48px rgba(0, 43, 91, 0.16);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.accommodation-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(0,20,50,0.88) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.accommodation-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 64px rgba(0, 43, 91, 0.28);
+}
+.accommodation-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.1s ease;
+}
+.accommodation-tile:hover .accommodation-image {
+  transform: scale(1.05);
+}
+
+/* Seasonal timeline — 4-quadrant migration / season overview on navy */
+.seasonal-section {
+  background:
+    linear-gradient(180deg, rgba(0,20,50,0.88) 0%, rgba(0,43,91,0.94) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,122,0,0.16) 0%, transparent 60%);
+  background-color: var(--tantrek-navy-deep);
+}
+.seasonal-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 1.75rem;
+  transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+.seasonal-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 1.75rem;
+  right: 1.75rem;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tantrek-orange), transparent);
+  opacity: 0.6;
+}
+.seasonal-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 122, 0, 0.32);
+  transform: translateY(-4px);
+}
+
+/* Editorial pull-quote — large emotional quote used in stories /
+   brand-statement / conservation sections */
+.editorial-pullquote {
+  font-family: var(--font-playfair), Georgia, Cambria, serif;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--tantrek-navy-deep);
+}
+.editorial-pullquote::before {
+  content: "“";
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 4em;
+  line-height: 0.85;
+  color: var(--tantrek-orange);
+  display: block;
+  margin-bottom: -0.25em;
+}
+
+/* Numbered editorial list — used in "Why Travel With Tantrek"
+   replacement of the equal-card grid */
+.editorial-reason {
+  position: relative;
+  padding-left: 4.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.editorial-reason .reason-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--tantrek-orange);
+}
+.editorial-reason::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3.25rem;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--tantrek-orange), transparent);
+  opacity: 0.35;
+}
+.editorial-reason:last-child::after {
+  display: none;
+}
+
+/* Concierge CTA framing — replaces transactional inquiry tone */
+.concierge-cta-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Reveal helper — subtle scroll-triggered entrance */
+.editorial-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* ============================================================
+   INTERACTIVE TANZANIA MAP — destinations discovery
+   ============================================================ */
+
+/* Map container — dark editorial canvas */
+.interactive-map-canvas {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 30%, rgba(255, 122, 0, 0.08) 0%, transparent 65%),
+    linear-gradient(180deg, #001229 0%, #002647 100%);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.interactive-map-canvas::before {
+  /* Subtle hairline grid for a "map paper" feel */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: center;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Tanzania outline path */
+.map-outline {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 122, 0, 0.45);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+/* Circuit zone fills — subtle radial inside the outline */
+.map-zone {
+  fill: rgba(255, 122, 0, 0.05);
+  pointer-events: none;
+  transition: fill 0.45s ease;
+}
+.map-zone.is-hovered {
+  fill: rgba(255, 122, 0, 0.14);
+}
+
+/* Park hotspot — pulsing dot + invisible larger hit area */
+.map-hotspot {
+  cursor: pointer;
+}
+.map-hotspot-pulse {
+  fill: rgba(255, 122, 0, 0.35);
+  transform-origin: center;
+  animation: hotspotPulse 2.4s ease-in-out infinite;
+}
+.map-hotspot-dot {
+  fill: var(--tantrek-orange);
+  stroke: white;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(255, 122, 0, 0.7));
+  transition: r 0.25s ease, filter 0.25s ease;
+}
+.map-hotspot:hover .map-hotspot-dot,
+.map-hotspot.is-active .map-hotspot-dot {
+  r: 9;
+  filter: drop-shadow(0 0 12px rgba(255, 122, 0, 0.95));
+}
+@keyframes hotspotPulse {
+  0%, 100% { transform: scale(0.6); opacity: 0.75; }
+  50% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Park label — sits below the dot, fades in on hover */
+.map-hotspot-label {
+  fill: white;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-anchor: middle;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 0.25s ease, font-size 0.25s ease;
+}
+.map-hotspot:hover .map-hotspot-label,
+.map-hotspot.is-active .map-hotspot-label {
+  opacity: 1;
+}
+
+/* Preview panel — slides in from the right */
+.map-preview-pane {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+.map-preview-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.map-preview-image img {
+  transition: transform 0.8s ease;
+}
+.map-preview-pane:hover .map-preview-image img {
+  transform: scale(1.04);
+}
+
+/* Mobile fallback list — hotspots-as-links */
+.map-mobile-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.map-mobile-list-item:hover {
+  background: rgba(255, 122, 0, 0.08);
+  border-color: rgba(255, 122, 0, 0.3);
+}
+.map-mobile-list-marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tantrek-orange);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.18);
 }

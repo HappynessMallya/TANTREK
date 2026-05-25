@@ -3,11 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { circuits, getDestinationsByCircuit } from "@/data/destinations";
+import { circuits, getDestinationsByCircuit, destinations } from "@/data/destinations";
+import { experiences } from "@/data/experiences";
 import type { Circuit } from "@/data/destinations";
 
+// ─── Destinations data shaped for mega-menu ─────────────────────────────────
 const circuitOrder: Circuit[] = ["northern", "southern", "western"];
 
 const destinationNavGroups = circuitOrder.map((circuitKey) => {
@@ -16,35 +18,50 @@ const destinationNavGroups = circuitOrder.map((circuitKey) => {
   return {
     circuitLabel: circuit.name,
     circuitHref: `/destinations/${circuit.slug}`,
-    parks: parks.map((p) => ({ label: p.name, href: `/destinations/${p.slug}` })),
+    parks: parks.map((p) => ({
+      label: p.name,
+      href: `/destinations/${p.slug}`,
+      image: p.imageUrl,
+      tagline: p.tagline,
+    })),
   };
 });
 
+const defaultDestinationPreview = {
+  image:
+    destinations[0]?.imageUrl ??
+    "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80",
+  label: "Tanzania",
+  tagline: "From the Serengeti's plains to Katavi's wild frontier.",
+};
+
+// ─── Journeys (formerly "Services") shaped for mega-menu ───────────────────
+const journeyItems = experiences.map((e) => ({
+  label: e.name,
+  href: `/experiences/${e.slug}`,
+  image: e.imageUrl ?? "/tour1.webp",
+  tagline: e.tagline,
+  eyebrow: e.eyebrow,
+}));
+
+const defaultJourneyPreview = {
+  image: journeyItems[0]?.image ?? "/tour1.webp",
+  label: "Signature Journeys",
+  tagline: "Four ways to travel Tantrek.",
+};
+
+// ─── Top-level nav structure ────────────────────────────────────────────────
 type NavLinkItem =
-  | { href: string; label: string }
-  | { label: string; isDestinations: true }
-  | { label: string; children: { href: string; label: string }[] };
+  | { type: "link"; href: string; label: string }
+  | { type: "destinations"; label: string }
+  | { type: "journeys"; label: string };
 
 const navLinks: NavLinkItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  {
-    label: "Services",
-    children: [
-      { href: "/experiences", label: "All Services" },
-      { href: "/experiences/luxury-fly-in", label: "Investment Safari Tours" },
-      { href: "/experiences/honeymoon", label: "Cultural Immersion" },
-      { href: "/experiences/photographic", label: "Bush & Beach Luxury" },
-      { href: "/experiences/conservation", label: "Diaspora Opportunity Tours" },
-      { href: "/experiences/corporate", label: "Corporate Tours" },
-    ],
-  },
-  {
-    label: "Destinations",
-    isDestinations: true,
-  },
-  { href: "/sustainability", label: "Impact" },
-  { href: "/safari-journal", label: "Insights" },
+  { type: "destinations", label: "Destinations" },
+  { type: "journeys", label: "Journeys" },
+  { type: "link", href: "/safari-journal", label: "Journal" },
+  { type: "link", href: "/about", label: "About" },
+  { type: "link", href: "/sustainability", label: "Impact" },
 ];
 
 export function Nav() {
@@ -54,6 +71,10 @@ export function Nav() {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
 
+  // Hover-driven preview state for visual mega-menus
+  const [destPreview, setDestPreview] = useState(defaultDestinationPreview);
+  const [journeyPreview, setJourneyPreview] = useState(defaultJourneyPreview);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -61,44 +82,75 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const linkBase =
-    "text-[13px] font-medium tracking-wide transition-colors";
-  const linkActive = "text-tantrek-orange";
-  const linkInactive = "text-tantrek-text hover:text-tantrek-orange";
+  // Reset previews when dropdowns close so the next open starts fresh
+  useEffect(() => {
+    if (openDropdown !== "Destinations") setDestPreview(defaultDestinationPreview);
+    if (openDropdown !== "Journeys") setJourneyPreview(defaultJourneyPreview);
+  }, [openDropdown]);
+
+  const activeMap = useMemo(
+    () => ({
+      destinations: pathname.startsWith("/destinations"),
+      journeys: pathname.startsWith("/experiences"),
+    }),
+    [pathname]
+  );
+
+  const isLinkActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-[0_2px_16px_rgba(17,24,39,0.06)] border-b border-tantrek-border"
-          : "bg-white/90 backdrop-blur-sm border-b border-transparent"
+          ? "bg-white/96 backdrop-blur-md shadow-[0_2px_18px_rgba(17,24,39,0.07)] border-b border-tantrek-border"
+          : "bg-white/85 backdrop-blur-sm border-b border-transparent"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 lg:h-24">
-          <Link href="/" className="flex items-center shrink-0" aria-label="TANTREK 360 Safaris - Home">
+        <div
+          className={`flex items-center justify-between transition-all duration-300 ${
+            scrolled ? "h-16 lg:h-20" : "h-20 lg:h-24"
+          }`}
+        >
+          {/* Logo — subtly shrinks on scroll */}
+          <Link href="/" className="flex items-center shrink-0" aria-label="TANTREK 360 Safaris — Home">
             <Image
               src="/logo.png"
               alt="TANTREK 360 Safaris"
               width={566}
               height={441}
-              className="h-16 w-auto lg:h-20 object-contain object-left"
+              className={`w-auto object-contain object-left transition-all duration-300 ${
+                scrolled ? "h-14 lg:h-16" : "h-16 lg:h-20"
+              }`}
               priority
             />
           </Link>
 
-          {/* Desktop */}
-          <div className="hidden lg:flex items-center gap-7">
-            {navLinks.map((item) =>
-              "href" in item ? (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`${linkBase} ${pathname === item.href ? linkActive : linkInactive}`}
-                >
-                  {item.label}
-                </Link>
-              ) : (
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((item) => {
+              if (item.type === "link") {
+                const active = isLinkActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-toplink font-body ${
+                      active ? "text-tantrek-orange is-active" : "text-tantrek-text hover:text-tantrek-orange"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              }
+
+              // Mega-menus (Destinations + Journeys)
+              const active =
+                (item.type === "destinations" && activeMap.destinations) ||
+                (item.type === "journeys" && activeMap.journeys);
+              const isOpen = openDropdown === item.label;
+              return (
                 <div
                   key={item.label}
                   className="relative"
@@ -107,11 +159,18 @@ export function Nav() {
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 ${linkBase} ${openDropdown === item.label ? linkActive : linkInactive}`}
+                    aria-expanded={isOpen}
+                    className={`nav-toplink font-body flex items-center gap-1 ${
+                      isOpen || active
+                        ? "text-tantrek-orange is-active"
+                        : "text-tantrek-text hover:text-tantrek-orange"
+                    }`}
                   >
                     {item.label}
                     <svg
-                      className={`w-4 h-4 shrink-0 transition-transform duration-200 ${openDropdown === item.label ? "rotate-180" : ""}`}
+                      className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -120,76 +179,48 @@ export function Nav() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
+
                   <AnimatePresence>
-                    {openDropdown === item.label && (
+                    {isOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: -8 }}
+                        initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        className={`absolute top-full left-0 pt-3 ${"isDestinations" in item && item.isDestinations ? "min-w-[580px]" : "w-max min-w-[260px]"}`}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className={`absolute top-full pt-5 ${
+                          item.type === "destinations"
+                            ? "left-1/2 -translate-x-1/2 w-[860px]"
+                            : "left-1/2 -translate-x-1/2 w-[760px]"
+                        }`}
                       >
-                        <div className="nav-dropdown-panel py-4 px-4 max-h-[70vh] overflow-y-auto">
-                          {"isDestinations" in item && item.isDestinations ? (
-                            <div>
-                              <Link
-                                href="/destinations"
-                                className="nav-dropdown-heading mb-4 block px-3 py-2.5 text-sm font-semibold rounded-lg transition-colors text-center"
-                              >
-                                All Tanzania Destinations
-                              </Link>
-                              <div className="grid grid-cols-2 gap-x-8 gap-y-5">
-                                {destinationNavGroups.map((group) => (
-                                  <div key={group.circuitHref} className="min-w-0">
-                                    <Link
-                                      href={group.circuitHref}
-                                      className="nav-dropdown-heading inline-block px-3 py-2 text-sm font-semibold rounded-lg transition-colors"
-                                    >
-                                      {group.circuitLabel}
-                                    </Link>
-                                    <p className="pt-2 pb-1.5 text-[10px] font-bold text-tantrek-orange uppercase tracking-wider">
-                                      Parks in this circuit
-                                    </p>
-                                    <ul className="pl-2 pb-2 space-y-1 text-sm text-left">
-                                      {group.parks.map((park) => (
-                                        <li key={park.href} className="leading-snug">
-                                          <Link
-                                            href={park.href}
-                                            className="nav-dropdown-link block px-2 py-1 rounded transition-colors"
-                                          >
-                                            {park.label}
-                                          </Link>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+                        <div className="nav-dropdown-panel p-6 lg:p-7">
+                          {item.type === "destinations" ? (
+                            <DestinationsMega
+                              groups={destinationNavGroups}
+                              preview={destPreview}
+                              onHoverPark={setDestPreview}
+                            />
                           ) : (
-                            "children" in item &&
-                            item.children?.map((child: { href: string; label: string }) => (
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                className="nav-dropdown-link block px-4 py-2.5 text-sm rounded-lg transition-colors"
-                              >
-                                {child.label}
-                              </Link>
-                            ))
+                            <JourneysMega
+                              items={journeyItems}
+                              preview={journeyPreview}
+                              onHover={setJourneyPreview}
+                            />
                           )}
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              )
-            )}
+              );
+            })}
 
+            {/* Concierge CTA */}
             <Link
               href="/plan-your-safari"
-              className="ml-2 inline-flex items-center gap-2 rounded-full bg-tantrek-orange px-5 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(255,122,0,0.28)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5"
+              className="ml-2 inline-flex items-center gap-2 rounded-full bg-tantrek-orange px-6 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(255,122,0,0.28)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5"
             >
-              Plan Your Trip
+              Begin Your Journey
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -205,6 +236,7 @@ export function Nav() {
               if (mobileOpen) setMobileExpanded(null);
             }}
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileOpen ? (
@@ -223,29 +255,38 @@ export function Nav() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
               className="lg:hidden overflow-hidden bg-white border-t border-tantrek-border"
             >
               <div className="py-4 space-y-1 px-2">
-                {navLinks.map((item) =>
-                  "href" in item ? (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-4 py-2.5 text-tantrek-text hover:bg-tantrek-orange/10 hover:text-tantrek-orange rounded-lg transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
+                {navLinks.map((item) => {
+                  if (item.type === "link") {
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="block px-4 py-3 text-tantrek-text hover:bg-tantrek-orange/10 hover:text-tantrek-orange rounded-lg transition-colors text-sm font-medium"
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  }
+
+                  const expanded = mobileExpanded === item.label;
+                  return (
                     <div key={item.label} className="border-b border-tantrek-border/60 last:border-0">
                       <button
                         type="button"
-                        onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
-                        className="flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-tantrek-text hover:bg-tantrek-orange/10 rounded-lg transition-colors"
+                        onClick={() => setMobileExpanded(expanded ? null : item.label)}
+                        className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-tantrek-text hover:bg-tantrek-orange/10 rounded-lg transition-colors"
+                        aria-expanded={expanded}
                       >
                         <span className="text-sm font-medium">{item.label}</span>
                         <svg
-                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${mobileExpanded === item.label ? "rotate-180" : ""}`}
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                            expanded ? "rotate-180" : ""
+                          }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -255,7 +296,7 @@ export function Nav() {
                         </svg>
                       </button>
                       <AnimatePresence>
-                        {mobileExpanded === item.label && (
+                        {expanded && (
                           <motion.div
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
@@ -264,11 +305,14 @@ export function Nav() {
                             className="overflow-hidden"
                           >
                             <div className="pl-4 pb-3 pt-1 space-y-1">
-                              {"isDestinations" in item && item.isDestinations ? (
+                              {item.type === "destinations" ? (
                                 <>
                                   <Link
                                     href="/destinations"
-                                    onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
+                                    onClick={() => {
+                                      setMobileOpen(false);
+                                      setMobileExpanded(null);
+                                    }}
                                     className="nav-dropdown-heading block py-2.5 px-3 my-1 rounded-lg font-semibold transition-colors text-sm"
                                   >
                                     All Destinations
@@ -277,7 +321,10 @@ export function Nav() {
                                     <div key={group.circuitHref} className="mt-2 pl-2">
                                       <Link
                                         href={group.circuitHref}
-                                        onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
+                                        onClick={() => {
+                                          setMobileOpen(false);
+                                          setMobileExpanded(null);
+                                        }}
                                         className="nav-dropdown-heading inline-block py-2 px-3 my-1 rounded-lg font-semibold transition-colors text-sm"
                                       >
                                         {group.circuitLabel}
@@ -287,8 +334,11 @@ export function Nav() {
                                           <li key={park.href}>
                                             <Link
                                               href={park.href}
-                                              onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
-                                              className="nav-dropdown-link block px-2 py-1 rounded"
+                                              onClick={() => {
+                                                setMobileOpen(false);
+                                                setMobileExpanded(null);
+                                              }}
+                                              className="nav-dropdown-link block px-2 py-1.5 rounded"
                                             >
                                               {park.label}
                                             </Link>
@@ -299,31 +349,48 @@ export function Nav() {
                                   ))}
                                 </>
                               ) : (
-                                "children" in item &&
-                                item.children?.map((child: { href: string; label: string }) => (
+                                <>
                                   <Link
-                                    key={child.href}
-                                    href={child.href}
-                                    onClick={() => { setMobileOpen(false); setMobileExpanded(null); }}
-                                    className="nav-dropdown-link block py-2.5 px-2 rounded-lg text-sm"
+                                    href="/experiences"
+                                    onClick={() => {
+                                      setMobileOpen(false);
+                                      setMobileExpanded(null);
+                                    }}
+                                    className="nav-dropdown-heading block py-2.5 px-3 my-1 rounded-lg font-semibold transition-colors text-sm"
                                   >
-                                    {child.label}
+                                    All Journeys
                                   </Link>
-                                ))
+                                  <ul className="pl-2 space-y-1 text-sm">
+                                    {journeyItems.map((j) => (
+                                      <li key={j.href}>
+                                        <Link
+                                          href={j.href}
+                                          onClick={() => {
+                                            setMobileOpen(false);
+                                            setMobileExpanded(null);
+                                          }}
+                                          className="nav-dropdown-link block px-2 py-1.5 rounded"
+                                        >
+                                          {j.label}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </>
                               )}
                             </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
                     </div>
-                  )
-                )}
+                  );
+                })}
                 <Link
                   href="/plan-your-safari"
                   onClick={() => setMobileOpen(false)}
                   className="mt-3 mx-2 flex items-center justify-center gap-2 rounded-full bg-tantrek-orange px-5 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(255,122,0,0.28)] transition-all hover:bg-tantrek-orange-deep"
                 >
-                  Plan Your Trip
+                  Begin Your Journey
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -334,5 +401,184 @@ export function Nav() {
         </AnimatePresence>
       </nav>
     </header>
+  );
+}
+
+// ─── DestinationsMega — three circuits + a visual preview pane ──────────────
+type DestPreview = { image: string; label: string; tagline: string };
+
+function DestinationsMega({
+  groups,
+  preview,
+  onHoverPark,
+}: {
+  groups: typeof destinationNavGroups;
+  preview: DestPreview;
+  onHoverPark: (p: DestPreview) => void;
+}) {
+  return (
+    <div className="grid grid-cols-12 gap-6">
+      <div className="col-span-7">
+        <Link
+          href="/destinations"
+          className="nav-dropdown-heading mb-5 block px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors text-center"
+        >
+          All Tanzania Destinations
+        </Link>
+        <div className="grid grid-cols-3 gap-x-5 gap-y-4">
+          {groups.map((group) => (
+            <div key={group.circuitHref} className="min-w-0">
+              <Link
+                href={group.circuitHref}
+                className="block font-display text-[11px] font-bold text-tantrek-navy uppercase tracking-[0.18em] pb-2 hover:text-tantrek-orange transition-colors"
+              >
+                {group.circuitLabel}
+              </Link>
+              <ul className="space-y-0.5">
+                {group.parks.map((park) => (
+                  <li key={park.href}>
+                    <Link
+                      href={park.href}
+                      onMouseEnter={() =>
+                        onHoverPark({
+                          image: park.image,
+                          label: park.label,
+                          tagline: park.tagline,
+                        })
+                      }
+                      className="nav-dropdown-link block px-2 py-1.5 rounded text-[13px] leading-snug"
+                    >
+                      {park.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="col-span-5">
+        <div
+          className="nav-preview-pane h-full"
+          onMouseLeave={() => onHoverPark(defaultDestinationPreview)}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={preview.image}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="nav-preview-image"
+              style={{ backgroundImage: `url(${preview.image})` }}
+            />
+          </AnimatePresence>
+          <div className="relative z-10 h-full flex flex-col justify-end p-5">
+            <p className="font-body text-tantrek-orange text-[10px] font-bold tracking-[0.26em] uppercase mb-2">
+              Featured
+            </p>
+            <p className="font-display text-white text-lg font-semibold leading-tight">
+              {preview.label}
+            </p>
+            <p className="mt-1 text-white/85 text-xs leading-snug line-clamp-2">
+              {preview.tagline}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── JourneysMega — experiences with a visual preview pane ──────────────────
+type JourneyPreview = { image: string; label: string; tagline: string };
+
+function JourneysMega({
+  items,
+  preview,
+  onHover,
+}: {
+  items: typeof journeyItems;
+  preview: JourneyPreview;
+  onHover: (p: JourneyPreview) => void;
+}) {
+  return (
+    <div className="grid grid-cols-12 gap-6">
+      <div className="col-span-7">
+        <Link
+          href="/experiences"
+          className="nav-dropdown-heading mb-5 block px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors text-center"
+        >
+          All Signature Journeys
+        </Link>
+        <ul className="space-y-1">
+          {items.map((j) => (
+            <li key={j.href}>
+              <Link
+                href={j.href}
+                onMouseEnter={() =>
+                  onHover({
+                    image: j.image,
+                    label: j.label,
+                    tagline: j.tagline,
+                  })
+                }
+                className="nav-dropdown-link group block px-3 py-2.5 rounded-lg"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <div className="min-w-0">
+                    {j.eyebrow && (
+                      <p className="font-body text-[10px] font-semibold tracking-[0.22em] uppercase text-tantrek-text-muted group-hover:text-tantrek-orange transition-colors">
+                        {j.eyebrow}
+                      </p>
+                    )}
+                    <p className="font-display text-[14px] font-semibold leading-snug mt-0.5">
+                      {j.label}
+                    </p>
+                  </div>
+                  <span
+                    className="text-tantrek-text-soft group-hover:text-tantrek-orange transition-colors shrink-0"
+                    aria-hidden
+                  >
+                    →
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="col-span-5">
+        <div
+          className="nav-preview-pane h-full"
+          onMouseLeave={() => onHover(defaultJourneyPreview)}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={preview.image}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="nav-preview-image"
+              style={{ backgroundImage: `url(${preview.image})` }}
+            />
+          </AnimatePresence>
+          <div className="relative z-10 h-full flex flex-col justify-end p-5">
+            <p className="font-body text-tantrek-orange text-[10px] font-bold tracking-[0.26em] uppercase mb-2">
+              Featured
+            </p>
+            <p className="font-display text-white text-lg font-semibold leading-tight">
+              {preview.label}
+            </p>
+            <p className="mt-1 text-white/85 text-xs leading-snug line-clamp-2">
+              {preview.tagline}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

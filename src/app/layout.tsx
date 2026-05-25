@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Inter } from "next/font/google";
+import { Poppins, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { TravelAgencySchema } from "@/components/seo/TravelAgencySchema";
 
@@ -13,6 +13,14 @@ const poppins = Poppins({
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -53,7 +61,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${inter.variable}`}
+      className={`${poppins.variable} ${inter.variable} ${playfair.variable}`}
     >
       <body className="min-h-screen flex flex-col bg-white text-tantrek-text">
         <TravelAgencySchema />

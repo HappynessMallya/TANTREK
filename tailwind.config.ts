@@ -62,6 +62,7 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-poppins)", "Montserrat", "system-ui", "sans-serif"],
         body: ["var(--font-inter)", "system-ui", "sans-serif"],
+        serif: ["var(--font-playfair)", "Georgia", "Cambria", "serif"],
       },
       backgroundImage: {
         "gradient-orange": "linear-gradient(90deg, #FF7A00 0%, #FF4D00 100%)",
