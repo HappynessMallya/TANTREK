@@ -30,48 +30,48 @@ function InquiryRow({ inquiry, onStatusChange, onDelete }: {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    <div className="border-t border-slate-700/40 first:border-t-0">
+    <div className="border-t border-[#EAE4D0] first:border-t-0">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="w-full grid grid-cols-[2fr_1.5fr_auto_auto_auto] items-center gap-4 px-4 py-3 text-left hover:bg-slate-800/30 transition-colors"
+        className="w-full grid grid-cols-[2fr_1.5fr_auto_auto_auto] items-center gap-4 px-4 py-3 text-left hover:bg-[#F3EEE2] transition-colors"
       >
         <div>
-          <p className="text-sm font-medium text-white">{inquiry.name}</p>
-          <p className="text-xs text-slate-500 truncate">{inquiry.email}</p>
+          <p className="text-sm font-medium text-[#0D2218]">{inquiry.name}</p>
+          <p className="text-xs text-[#8A9990] truncate">{inquiry.email}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-400 truncate">{inquiry.travelDates ?? "—"}</p>
-          {inquiry.guests && <p className="text-xs text-slate-600">{inquiry.guests} guest{inquiry.guests !== 1 ? "s" : ""}</p>}
+          <p className="text-xs text-[#6A7B70] truncate">{inquiry.travelDates ?? "—"}</p>
+          {inquiry.guests && <p className="text-xs text-[#A9A090]">{inquiry.guests} guest{inquiry.guests !== 1 ? "s" : ""}</p>}
         </div>
         <div>
           <Badge label={inquiry.status} variant={STATUS_COLORS[inquiry.status]} />
         </div>
-        <div className="text-xs text-slate-500 whitespace-nowrap">{formatDate(inquiry.createdAt)}</div>
-        <svg className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${expanded ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-xs text-[#8A9990] whitespace-nowrap">{formatDate(inquiry.createdAt)}</div>
+        <svg className={`h-4 w-4 shrink-0 text-[#8A9990] transition-transform ${expanded ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {expanded && (
         <div className="px-4 pb-4 space-y-4">
-          <div className="rounded-lg border border-slate-700/40 bg-slate-900/40 p-4 space-y-3">
+          <div className="rounded-lg border border-[#EAE4D0] bg-[#FAF8F2] p-4 space-y-3">
             {inquiry.phone && (
-              <p className="text-sm text-slate-300">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 mr-2">Phone</span>
+              <p className="text-sm text-[#3A4640]">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#6A7B70] mr-2">Phone</span>
                 {inquiry.phone}
               </p>
             )}
             {inquiry.message && (
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Message</p>
-                <p className="text-sm text-slate-300 whitespace-pre-wrap">{inquiry.message}</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#6A7B70] mb-1">Message</p>
+                <p className="text-sm text-[#3A4640] whitespace-pre-wrap">{inquiry.message}</p>
               </div>
             )}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mr-1">Mark as</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#6A7B70] mr-1">Mark as</p>
             {(["new", "read", "replied"] as Inquiry["status"][]).map((s) => (
               <button
                 key={s}
@@ -80,8 +80,8 @@ function InquiryRow({ inquiry, onStatusChange, onDelete }: {
                 onClick={() => onStatusChange(inquiry.id, s)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                   inquiry.status === s
-                    ? "bg-slate-700 text-slate-300 cursor-default"
-                    : "bg-slate-800/60 text-slate-400 hover:bg-slate-700 hover:text-white"
+                    ? "bg-[#EAE4D0] text-[#3A4640] cursor-default"
+                    : "bg-[#FAF8F2] text-[#6A7B70] hover:bg-[#EAE4D0] hover:text-[#0D2218]"
                 }`}
               >
                 {s}
@@ -91,12 +91,12 @@ function InquiryRow({ inquiry, onStatusChange, onDelete }: {
             <div className="ml-auto">
               {confirmDelete ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Delete permanently?</span>
-                  <button type="button" onClick={() => onDelete(inquiry.id)} className="text-xs text-red-400 hover:text-red-300 font-medium">Yes, delete</button>
-                  <button type="button" onClick={() => setConfirmDelete(false)} className="text-xs text-slate-400 hover:text-slate-200">Cancel</button>
+                  <span className="text-xs text-[#6A7B70]">Delete permanently?</span>
+                  <button type="button" onClick={() => onDelete(inquiry.id)} className="text-xs text-red-600 hover:text-red-700 font-medium">Yes, delete</button>
+                  <button type="button" onClick={() => setConfirmDelete(false)} className="text-xs text-[#6A7B70] hover:text-[#0D2218]">Cancel</button>
                 </div>
               ) : (
-                <button type="button" onClick={() => setConfirmDelete(true)} className="text-xs text-slate-600 hover:text-red-400 transition-colors">
+                <button type="button" onClick={() => setConfirmDelete(true)} className="text-xs text-[#A9A090] hover:text-red-600 transition-colors">
                   Delete
                 </button>
               )}
@@ -161,8 +161,8 @@ export default function CmsInquiriesPage() {
         description="View and manage contact form submissions from prospective guests."
         action={
           newCount > 0 ? (
-            <span className="flex items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-300 ring-1 ring-amber-500/30">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="flex items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-500/30">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
               {newCount} new
             </span>
           ) : undefined
@@ -183,8 +183,8 @@ export default function CmsInquiriesPage() {
             onClick={() => setFilter(f)}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
               filter === f
-                ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40"
-                : "bg-slate-800/60 text-slate-400 hover:text-slate-200"
+                ? "bg-amber-500/20 text-amber-700 ring-1 ring-amber-500/40"
+                : "bg-[#FAF8F2] text-[#6A7B70] hover:text-[#0D2218]"
             }`}
           >
             {f === "all" ? `All (${total})` : f}
@@ -215,8 +215,8 @@ export default function CmsInquiriesPage() {
           }
         />
       ) : (
-        <div className="rounded-xl border border-slate-700/60 overflow-hidden">
-          <div className="grid grid-cols-[2fr_1.5fr_auto_auto_auto] items-center gap-4 bg-slate-800/60 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+        <div className="rounded-xl border border-[#EAE4D0] overflow-hidden">
+          <div className="grid grid-cols-[2fr_1.5fr_auto_auto_auto] items-center gap-4 bg-[#FAF8F2] px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-[#6A7B70]">
             <span>Contact</span>
             <span>Travel dates / Guests</span>
             <span>Status</span>

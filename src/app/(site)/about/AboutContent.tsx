@@ -4,8 +4,10 @@ import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { publicApi, type AboutContent as AboutContentType } from "@/lib/public-api";
 
-const ABOUT_TESTIMONIALS = [
+// ─── Static defaults (current live content) ─────────────────────────────────
+const DEFAULT_TESTIMONIALS = [
   {
     quote:
       "TANTREK 360 turned a familiarisation trip into a real foothold in Tanzania — verified partners, honest market briefings, and a team that stayed in touch long after we flew home.",
@@ -32,69 +34,90 @@ const ABOUT_TESTIMONIALS = [
   },
 ];
 
-const TEAM = [
-  {
-    name: "Emmanuel K.",
-    role: "Head of Field Operations",
-    imageUrl:
-      "https://ui-avatars.com/api/?name=Emmanuel+K&size=400&background=003B8E&color=FFFFFF&bold=true",
-    alt: "Emmanuel K., Head of Field Operations",
-  },
-  {
-    name: "Sarah M.",
-    role: "Client Experience Director",
-    imageUrl:
-      "https://ui-avatars.com/api/?name=Sarah+M&size=400&background=003B8E&color=FFFFFF&bold=true",
-    alt: "Sarah M., Client Experience Director",
-  },
-  {
-    name: "Dr. Lucas J.",
-    role: "Investment Advisor",
-    imageUrl:
-      "https://ui-avatars.com/api/?name=Lucas+J&size=400&background=003B8E&color=FFFFFF&bold=true",
-    alt: "Dr. Lucas J., Investment Advisor",
-  },
-  {
-    name: "Nia W.",
-    role: "Private Concierge",
-    imageUrl:
-      "https://ui-avatars.com/api/?name=Nia+W&size=400&background=003B8E&color=FFFFFF&bold=true",
-    alt: "Nia W., Private Concierge",
-  },
+const DEFAULT_TEAM = [
+  { name: "Emmanuel K.", role: "Head of Field Operations", imageUrl: "https://ui-avatars.com/api/?name=Emmanuel+K&size=400&background=003B8E&color=FFFFFF&bold=true", alt: "Emmanuel K., Head of Field Operations" },
+  { name: "Sarah M.", role: "Client Experience Director", imageUrl: "https://ui-avatars.com/api/?name=Sarah+M&size=400&background=003B8E&color=FFFFFF&bold=true", alt: "Sarah M., Client Experience Director" },
+  { name: "Dr. Lucas J.", role: "Investment Advisor", imageUrl: "https://ui-avatars.com/api/?name=Lucas+J&size=400&background=003B8E&color=FFFFFF&bold=true", alt: "Dr. Lucas J., Investment Advisor" },
+  { name: "Nia W.", role: "Private Concierge", imageUrl: "https://ui-avatars.com/api/?name=Nia+W&size=400&background=003B8E&color=FFFFFF&bold=true", alt: "Nia W., Private Concierge" },
 ];
 
-const FOUNDER_QUOTE =
-  "Tanzania is not just a destination — it is an opportunity. Our mission at Tantrek is to open it honestly: as wilderness worth protecting, as culture worth learning from, and as a market worth investing in. Every journey we curate should leave both the traveller and the land richer for the encounter.";
-
-const COMMITMENTS = [
-  {
-    number: "01",
-    title: "Travel",
-    body:
-      "Curated safari and cultural journeys — Tanzania's iconic parks, communities, and coast, delivered with precision and warmth.",
-  },
-  {
-    number: "02",
-    title: "Trade",
-    body:
-      "Real exposure to Tanzanian markets — tourism, real estate, SMEs, and beyond. Verified partners, honest briefings, considered introductions.",
-  },
-  {
-    number: "03",
-    title: "Trust",
-    body:
-      "End-to-end facilitation, from entity setup and compliance to ongoing partnership support — long after the safari ends.",
-  },
+const DEFAULT_COMMITMENTS = [
+  { number: "01", title: "Travel", body: "Curated safari and cultural journeys — Tanzania's iconic parks, communities, and coast, delivered with precision and warmth." },
+  { number: "02", title: "Trade", body: "Real exposure to Tanzanian markets — tourism, real estate, SMEs, and beyond. Verified partners, honest briefings, considered introductions." },
+  { number: "03", title: "Trust", body: "End-to-end facilitation, from entity setup and compliance to ongoing partnership support — long after the safari ends." },
 ];
+
+const DEFAULTS = {
+  heroEyebrow: "About Tantrek",
+  heroImage: "/tour8.webp",
+  // Headline rendered as "<main> <accent>" — accent shown in orange italic.
+  heroHeadlineMain: "Travel, trade, and",
+  heroHeadlineAccent: "trust.",
+  heroSubheadline:
+    "A small Tanzanian house of safari designers, country specialists, and business advisors — guiding travellers, investors, and returning diaspora through Tanzania end-to-end.",
+  foundationEyebrow: "Our Foundation",
+  foundationHeadlineMain: "Built on unwavering",
+  foundationHeadlineAccent: "honesty & integrity.",
+  storyBody:
+    "Tantrek was founded on a simple conviction: that travel into Tanzania should also be travel into Tanzania's real economy. Wilderness and opportunity are inseparable here — and both deserve to be opened ethically.\n\nEvery engagement is built on transparency, accountability, and trust. We act in our clients' best interests — delivering reliable guidance, ethical solutions, and long-term partnerships grounded in credibility and quiet professional excellence.",
+  foundationTags: ["Tourism", "Safaris", "Investment"],
+  foundationImage: "/tour2.webp",
+  commitmentsEyebrow: "What We Do",
+  commitmentsHeadlineMain: "Three commitments,",
+  commitmentsHeadlineAccent: "one journey.",
+  commitmentsIntro: "Each part of what we do supports the other. That's the 360°.",
+  teamEyebrow: "The Team",
+  teamHeadlineMain: "The people behind",
+  teamHeadlineAccent: "the 360°.",
+  teamIntro:
+    "Field operators, business advisors, and concierges — combining deep Tanzania experience with global professional standards. Owner-led, Tanzania-based.",
+  teamNote: "Portrait placeholders — to be replaced with team photography.",
+  founderQuote:
+    "Tanzania is not just a destination — it is an opportunity. Our mission at Tantrek is to open it honestly: as wilderness worth protecting, as culture worth learning from, and as a market worth investing in. Every journey we curate should leave both the traveller and the land richer for the encounter.",
+  founderName: "Tantrek Founders",
+  founderTitle: "Vision & Leadership",
+  ctaEyebrow: "Begin a Conversation",
+  ctaHeadlineMain: "Impact, community, and",
+  ctaHeadlineAccent: "the long view.",
+  ctaBody:
+    "Our work is built on long-term partnerships with Tanzanian communities, conservation partners, and ethical operators. Talk to us about what you have in mind.",
+};
+
+/** Render a headline that may be a single CMS string OR the default main+accent. */
+function Headline({ cms, main, accent }: { cms?: string; main: string; accent: string }) {
+  if (cms) return <>{cms}</>;
+  return (
+    <>
+      {main}{" "}
+      <span className="font-serif italic font-normal text-tantrek-orange">{accent}</span>
+    </>
+  );
+}
 
 export function AboutContent() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [c, setC] = useState<AboutContentType>({});
 
-  const goTo = useCallback((index: number) => {
-    if (index < 0) setTestimonialIndex(ABOUT_TESTIMONIALS.length - 1);
-    else if (index >= ABOUT_TESTIMONIALS.length) setTestimonialIndex(0);
-    else setTestimonialIndex(index);
+  // CMS hydration — merge over defaults.
+  useEffect(() => {
+    publicApi.getAbout().then((data) => {
+      if (data) setC(data);
+    });
   }, []);
+
+  const testimonials = c.testimonials?.length ? c.testimonials : DEFAULT_TESTIMONIALS;
+  const team = c.team?.length ? c.team : DEFAULT_TEAM;
+  const commitments = c.commitments?.length ? c.commitments : DEFAULT_COMMITMENTS;
+
+  const goTo = useCallback(
+    (index: number) => {
+      const len = testimonials.length;
+      if (index < 0) setTestimonialIndex(len - 1);
+      else if (index >= len) setTestimonialIndex(0);
+      else setTestimonialIndex(index);
+    },
+    [testimonials.length]
+  );
 
   useEffect(() => {
     const t = setInterval(() => goTo(testimonialIndex + 1), 7000);
@@ -103,13 +126,11 @@ export function AboutContent() {
 
   return (
     <>
-      {/* ═══════════════════════════════════════════════════════════════════
-          1 · Cinematic hero
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 1 · Cinematic hero */}
       <section className="relative flex min-h-[78vh] items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/tour8.webp"
+            src={c.heroImage || DEFAULTS.heroImage}
             alt=""
             fill
             className="object-cover"
@@ -132,17 +153,14 @@ export function AboutContent() {
             animate={{ opacity: 1, y: 0 }}
             className="editorial-eyebrow text-tantrek-orange mb-6 justify-center"
           >
-            About Tantrek
+            {c.heroEyebrow || DEFAULTS.heroEyebrow}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             className="font-display text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[84px] mb-7"
           >
-            Travel, trade, and{" "}
-            <span className="font-serif italic font-normal text-tantrek-orange">
-              trust.
-            </span>
+            <Headline cms={c.heroHeadline} main={DEFAULTS.heroHeadlineMain} accent={DEFAULTS.heroHeadlineAccent} />
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -150,16 +168,12 @@ export function AboutContent() {
             transition={{ delay: 0.1 }}
             className="text-white/90 text-base sm:text-lg lg:text-xl font-body leading-relaxed max-w-2xl mx-auto"
           >
-            A small Tanzanian house of safari designers, country specialists,
-            and business advisors — guiding travellers, investors, and
-            returning diaspora through Tanzania end-to-end.
+            {c.heroSubheadline || DEFAULTS.heroSubheadline}
           </motion.p>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          2 · Foundation — editorial 2-column, white-dominant
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 2 · Foundation */}
       <section className="bg-white editorial-section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-start">
@@ -171,31 +185,18 @@ export function AboutContent() {
               className="lg:col-span-7 order-2 lg:order-1"
             >
               <p className="editorial-eyebrow text-tantrek-orange mb-6">
-                Our Foundation
+                {c.foundationEyebrow || DEFAULTS.foundationEyebrow}
               </p>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight">
-                Built on unwavering{" "}
-                <span className="font-serif italic font-normal text-tantrek-orange">
-                  honesty &amp; integrity.
-                </span>
+                <Headline cms={c.foundationHeadline} main={DEFAULTS.foundationHeadlineMain} accent={DEFAULTS.foundationHeadlineAccent} />
               </h2>
               <div className="mt-8 space-y-5 font-body text-tantrek-text-muted text-base lg:text-lg leading-relaxed">
-                <p>
-                  Tantrek was founded on a simple conviction: that travel into
-                  Tanzania should also be travel into Tanzania&rsquo;s real
-                  economy. Wilderness and opportunity are inseparable here —
-                  and both deserve to be opened ethically.
-                </p>
-                <p>
-                  Every engagement is built on transparency, accountability,
-                  and trust. We act in our clients&rsquo; best interests —
-                  delivering reliable guidance, ethical solutions, and
-                  long-term partnerships grounded in credibility and quiet
-                  professional excellence.
-                </p>
+                {(c.storyBody || DEFAULTS.storyBody).split("\n\n").map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
               </div>
               <div className="mt-8 flex flex-wrap gap-2.5">
-                {["Tourism", "Safaris", "Investment"].map((s) => (
+                {(c.foundationTags?.length ? c.foundationTags : DEFAULTS.foundationTags).map((s) => (
                   <span
                     key={s}
                     className="px-4 py-2 rounded-full bg-tantrek-surface border border-tantrek-border text-tantrek-navy text-xs font-semibold tracking-wide"
@@ -214,7 +215,7 @@ export function AboutContent() {
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,43,91,0.18)]">
                 <Image
-                  src="/tour2.webp"
+                  src={c.foundationImage || DEFAULTS.foundationImage}
                   alt="Tantrek in the field"
                   fill
                   className="object-cover"
@@ -227,43 +228,37 @@ export function AboutContent() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          3 · Travel · Trade · Trust — editorial numbered (not card grid)
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 3 · Travel · Trade · Trust */}
       <section className="bg-tantrek-surface luxury-section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
             <div className="lg:col-span-5">
               <p className="editorial-eyebrow text-tantrek-orange mb-6">
-                What We Do
+                {c.commitmentsEyebrow || DEFAULTS.commitmentsEyebrow}
               </p>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight">
-                Three commitments,{" "}
-                <span className="font-serif italic font-normal text-tantrek-orange">
-                  one journey.
-                </span>
+                <Headline cms={c.commitmentsHeadline} main={DEFAULTS.commitmentsHeadlineMain} accent={DEFAULTS.commitmentsHeadlineAccent} />
               </h2>
               <p className="mt-5 text-tantrek-text-muted text-base lg:text-lg leading-relaxed max-w-md">
-                Each part of what we do supports the other. That&rsquo;s the
-                360°.
+                {c.commitmentsIntro || DEFAULTS.commitmentsIntro}
               </p>
             </div>
             <div className="lg:col-span-7 space-y-9">
-              {COMMITMENTS.map((c, i) => (
+              {commitments.map((cm, i) => (
                 <motion.div
-                  key={c.number}
+                  key={cm.number ?? cm.title}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
                   className="editorial-reason"
                 >
-                  <span className="reason-number">{c.number}</span>
+                  <span className="reason-number">{cm.number ?? String(i + 1).padStart(2, "0")}</span>
                   <h3 className="font-display text-xl lg:text-2xl text-tantrek-navy font-semibold mb-2">
-                    {c.title}
+                    {cm.title}
                   </h3>
                   <p className="text-tantrek-text-muted text-base leading-relaxed max-w-2xl">
-                    {c.body}
+                    {cm.body}
                   </p>
                 </motion.div>
               ))}
@@ -272,31 +267,19 @@ export function AboutContent() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          4 · Reflections — editorial pull-quote testimonials (navy)
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 4 · Reflections — testimonials */}
       <section className="relative overflow-hidden bg-tantrek-navy-deep editorial-section-padding px-4 sm:px-6 lg:px-8">
         <div className="absolute inset-0 z-0 opacity-22">
-          <Image
-            src="/tour5.webp"
-            alt=""
-            fill
-            className="object-cover blur-sm scale-110"
-            sizes="100vw"
-          />
+          <Image src="/tour5.webp" alt="" fill className="object-cover blur-sm scale-110" sizes="100vw" />
         </div>
         <div className="absolute inset-0 bg-tantrek-navy-deep/78" aria-hidden />
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="flex flex-col gap-6 mb-12 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="editorial-eyebrow text-tantrek-orange mb-5">
-                Reflections
-              </p>
+              <p className="editorial-eyebrow text-tantrek-orange mb-5">Reflections</p>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-tight">
                 In their{" "}
-                <span className="font-serif italic font-normal text-tantrek-orange">
-                  words.
-                </span>
+                <span className="font-serif italic font-normal text-tantrek-orange">words.</span>
               </h2>
             </div>
             <div className="flex gap-3">
@@ -330,15 +313,17 @@ export function AboutContent() {
                 className="max-w-3xl"
               >
                 <blockquote className="font-serif italic text-2xl sm:text-3xl lg:text-[34px] text-white leading-snug">
-                  &ldquo;{ABOUT_TESTIMONIALS[testimonialIndex].quote}&rdquo;
+                  &ldquo;{testimonials[testimonialIndex]?.quote}&rdquo;
                 </blockquote>
                 <footer className="mt-8">
                   <p className="font-display text-lg text-white font-semibold">
-                    {ABOUT_TESTIMONIALS[testimonialIndex].name}
+                    {testimonials[testimonialIndex]?.name}
                   </p>
-                  <p className="text-tantrek-orange text-xs font-body font-bold tracking-[0.22em] uppercase mt-1">
-                    {ABOUT_TESTIMONIALS[testimonialIndex].location}
-                  </p>
+                  {testimonials[testimonialIndex]?.location && (
+                    <p className="text-tantrek-orange text-xs font-body font-bold tracking-[0.22em] uppercase mt-1">
+                      {testimonials[testimonialIndex]?.location}
+                    </p>
+                  )}
                 </footer>
               </motion.div>
             </AnimatePresence>
@@ -348,38 +333,27 @@ export function AboutContent() {
             <motion.div
               className="absolute left-0 top-0 h-full bg-tantrek-orange"
               initial={false}
-              animate={{
-                width: `${((testimonialIndex + 1) / ABOUT_TESTIMONIALS.length) * 100}%`,
-              }}
+              animate={{ width: `${((testimonialIndex + 1) / testimonials.length) * 100}%` }}
               transition={{ type: "tween", duration: 0.3 }}
             />
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          5 · Team — refined, editorial framing
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 5 · Team */}
       <section className="bg-white luxury-section-padding">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-14 lg:mb-16">
-            <p className="editorial-eyebrow text-tantrek-orange mb-5">
-              The Team
-            </p>
+            <p className="editorial-eyebrow text-tantrek-orange mb-5">{c.teamEyebrow || DEFAULTS.teamEyebrow}</p>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight">
-              The people behind{" "}
-              <span className="font-serif italic font-normal text-tantrek-orange">
-                the 360°.
-              </span>
+              <Headline cms={c.teamHeadline} main={DEFAULTS.teamHeadlineMain} accent={DEFAULTS.teamHeadlineAccent} />
             </h2>
             <p className="mt-5 text-tantrek-text-muted text-base lg:text-lg leading-relaxed">
-              Field operators, business advisors, and concierges — combining
-              deep Tanzania experience with global professional standards.
-              Owner-led, Tanzania-based.
+              {c.teamIntro || DEFAULTS.teamIntro}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10">
-            {TEAM.map((member, i) => (
+            {team.map((member, i) => (
               <motion.div
                 key={member.name}
                 initial={{ opacity: 0, y: 16 }}
@@ -389,55 +363,43 @@ export function AboutContent() {
                 className="flex flex-col items-center text-center"
               >
                 <div className="relative size-28 overflow-hidden rounded-full ring-4 ring-tantrek-orange/15 mb-4 md:size-36 shadow-card">
-                  <Image
-                    src={member.imageUrl}
-                    alt={member.alt}
-                    fill
-                    className="object-cover"
-                    sizes="144px"
-                  />
+                  <Image src={member.imageUrl} alt={member.alt ?? member.name} fill className="object-cover" sizes="144px" />
                 </div>
-                <h4 className="font-display text-lg font-semibold text-tantrek-navy">
-                  {member.name}
-                </h4>
-                <p className="text-tantrek-text-muted text-sm font-body mt-1">
-                  {member.role}
-                </p>
+                <h4 className="font-display text-lg font-semibold text-tantrek-navy">{member.name}</h4>
+                <p className="text-tantrek-text-muted text-sm font-body mt-1">{member.role}</p>
               </motion.div>
             ))}
           </div>
-          <p className="mt-12 text-center text-tantrek-text-soft text-xs italic font-body">
-            Portrait placeholders — to be replaced with team photography.
-          </p>
+          {(c.teamNote ?? DEFAULTS.teamNote) && (
+            <p className="mt-12 text-center text-tantrek-text-soft text-xs italic font-body">
+              {c.teamNote ?? DEFAULTS.teamNote}
+            </p>
+          )}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          6 · Founder quote — editorial pull-quote
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 6 · Founder quote */}
       <section className="bg-tantrek-surface editorial-section-padding px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <p className="editorial-eyebrow text-tantrek-orange mb-8 justify-center text-center mx-auto block w-fit">
             From the Founders
           </p>
           <blockquote className="editorial-pullquote text-2xl sm:text-3xl lg:text-[36px] text-tantrek-navy-deep">
-            {FOUNDER_QUOTE}
+            {c.founderQuote || DEFAULTS.founderQuote}
           </blockquote>
           <footer className="mt-10 text-center">
             <cite className="font-display text-tantrek-navy text-lg lg:text-xl not-italic font-bold">
-              Tantrek Founders
+              {c.founderName || DEFAULTS.founderName}
             </cite>
             <p className="text-tantrek-text-muted text-[11px] font-body tracking-[0.24em] uppercase mt-1">
-              Vision &amp; Leadership
+              {c.founderTitle || DEFAULTS.founderTitle}
             </p>
             <div className="mt-5 mx-auto w-16 h-0.5 rounded-full bg-tantrek-orange" />
           </footer>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          7 · Concierge CTA — matches site language
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 7 · Concierge CTA */}
       <section className="section-bg-frontier relative editorial-section-padding overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
@@ -447,18 +409,13 @@ export function AboutContent() {
         <div className="absolute inset-0 frontier-overlay" aria-hidden />
         <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 text-center">
           <p className="editorial-eyebrow text-tantrek-orange mb-6 justify-center">
-            Begin a Conversation
+            {c.ctaEyebrow || DEFAULTS.ctaEyebrow}
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-[1.12]">
-            Impact, community, and{" "}
-            <span className="font-serif italic font-normal text-tantrek-orange">
-              the long view.
-            </span>
+            <Headline cms={c.ctaHeadline} main={DEFAULTS.ctaHeadlineMain} accent={DEFAULTS.ctaHeadlineAccent} />
           </h2>
           <p className="mt-6 text-white/85 font-body text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-            Our work is built on long-term partnerships with Tanzanian
-            communities, conservation partners, and ethical operators.
-            Talk to us about what you have in mind.
+            {c.ctaBody || DEFAULTS.ctaBody}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
             <Link

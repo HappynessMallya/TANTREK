@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { publicApi } from "@/lib/public-api";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy policy for TANTREK 360 Safaris. How we collect, use, and protect your information.",
 };
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const legal = await publicApi.getLegal("privacy");
+
   return (
     <main className="min-h-screen bg-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -16,7 +19,13 @@ export default function PrivacyPolicyPage() {
         >
           <span aria-hidden>←</span> Home
         </Link>
-        <h1 className="font-display text-3xl sm:text-4xl text-tantrek-navy font-bold mb-8">Privacy Policy</h1>
+        <h1 className="font-display text-3xl sm:text-4xl text-tantrek-navy font-bold mb-8">{legal?.title ?? "Privacy Policy"}</h1>
+        {legal?.body ? (
+          <div
+            className="legal-prose max-w-none text-tantrek-text font-body space-y-6"
+            dangerouslySetInnerHTML={{ __html: legal.body }}
+          />
+        ) : (
         <div className="max-w-none text-tantrek-text font-body space-y-6">
           <p className="text-base leading-relaxed text-tantrek-text-muted">
             TANTREK 360 Safaris (&quot;we&quot;) respects your privacy. This policy describes how we
@@ -42,6 +51,7 @@ export default function PrivacyPolicyPage() {
             .
           </p>
         </div>
+        )}
       </div>
     </main>
   );

@@ -70,14 +70,14 @@ export default function CmsLegalPage() {
       {!cmsApi.isConfigured && <Alert type="warn" message="Set NEXT_PUBLIC_CMS_API_URL to load content." />}
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-xl bg-slate-800/60 p-1 w-fit">
+      <div className="flex gap-1 rounded-xl bg-[#FAF8F2] p-1 w-fit">
         {TABS.map((t) => (
           <button
             key={t.id}
             type="button"
             onClick={() => { setTab(t.id); setMessage(null); }}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-              tab === t.id ? "bg-slate-700 text-white" : "text-slate-400 hover:text-slate-200"
+              tab === t.id ? "bg-[#EAE4D0] text-[#0D2218]" : "text-[#6A7B70] hover:text-[#0D2218]"
             }`}
           >
             {t.label}

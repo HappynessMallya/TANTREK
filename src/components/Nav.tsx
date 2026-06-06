@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { circuits, getDestinationsByCircuit, destinations } from "@/data/destinations";
 import { experiences } from "@/data/experiences";
 import type { Circuit } from "@/data/destinations";
+import { publicApi } from "@/lib/public-api";
 
 // ─── Destinations data shaped for mega-menu ─────────────────────────────────
 const circuitOrder: Circuit[] = ["northern", "southern", "western"];
@@ -75,11 +76,60 @@ export function Nav() {
   const [destPreview, setDestPreview] = useState(defaultDestinationPreview);
   const [journeyPreview, setJourneyPreview] = useState(defaultJourneyPreview);
 
+  // Mega-menu content — static `@/data` build is the fallback; CMS overrides.
+  const [destGroups, setDestGroups] = useState(destinationNavGroups);
+  const [journeys, setJourneys] = useState(journeyItems);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // CMS hydration for the Destinations + Journeys mega-menus.
+  useEffect(() => {
+    publicApi.getDestinations({ limit: 100 }).then((list) => {
+      if (!list?.length) return;
+      const order: Circuit[] = ["northern", "southern", "western"];
+      const byCircuit = new Map<string, (typeof destinationNavGroups)[number]>();
+      for (const d of list) {
+        const cslug = d.circuit?.slug ?? "northern";
+        const cname = d.circuit?.name ?? circuits[cslug as Circuit]?.name ?? "Tanzania";
+        if (!byCircuit.has(cslug)) {
+          byCircuit.set(cslug, {
+            circuitLabel: cname,
+            circuitHref: `/destinations/${cslug}`,
+            parks: [],
+          });
+        }
+        byCircuit.get(cslug)!.parks.push({
+          label: d.name,
+          href: `/destinations/${d.slug}`,
+          image: d.heroImage?.url ?? defaultDestinationPreview.image,
+          tagline: d.tagline ?? "",
+        });
+      }
+      const groups = Array.from(byCircuit.values()).sort((a, b) => {
+        const ai = order.indexOf(a.circuitHref.split("/").pop() as Circuit);
+        const bi = order.indexOf(b.circuitHref.split("/").pop() as Circuit);
+        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      });
+      if (groups.length) setDestGroups(groups);
+    });
+
+    publicApi.getExperiences({ limit: 100 }).then((list) => {
+      if (!list?.length) return;
+      setJourneys(
+        list.map((e) => ({
+          label: e.name ?? e.title ?? "",
+          href: `/experiences/${e.slug}`,
+          image: e.heroImage?.url ?? e.imageUrl ?? "/tour1.webp",
+          tagline: e.tagline ?? "",
+          eyebrow: e.eyebrow,
+        }))
+      );
+    });
   }, []);
 
   // Reset previews when dropdowns close so the next open starts fresh
@@ -205,13 +255,13 @@ export function Nav() {
                         <div className="nav-dropdown-panel p-6 lg:p-7">
                           {item.type === "destinations" ? (
                             <DestinationsMega
-                              groups={destinationNavGroups}
+                              groups={destGroups}
                               preview={destPreview}
                               onHoverPark={setDestPreview}
                             />
                           ) : (
                             <JourneysMega
-                              items={journeyItems}
+                              items={journeys}
                               preview={journeyPreview}
                               onHover={setJourneyPreview}
                             />
@@ -326,7 +376,7 @@ export function Nav() {
                                   >
                                     All Destinations
                                   </Link>
-                                  {destinationNavGroups.map((group) => (
+                                  {destGroups.map((group) => (
                                     <div key={group.circuitHref} className="mt-2 pl-2">
                                       <Link
                                         href={group.circuitHref}
@@ -370,7 +420,7 @@ export function Nav() {
                                     All Journeys
                                   </Link>
                                   <ul className="pl-2 space-y-1 text-sm">
-                                    {journeyItems.map((j) => (
+                                    {journeys.map((j) => (
                                       <li key={j.href}>
                                         <Link
                                           href={j.href}

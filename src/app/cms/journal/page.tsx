@@ -67,10 +67,10 @@ export default function CmsJournalPage() {
       {error && <Alert type="error" message={error} onDismiss={() => setError(null)} />}
 
       <div className="relative">
-        <svg className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#8A9990]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <input type="search" placeholder="Search posts…" value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-slate-700 bg-slate-800/60 pl-9 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-amber-500/80 focus:outline-none" />
+        <input type="search" placeholder="Search posts…" value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-[#D5CAAD] bg-[#FAF8F2] pl-9 pr-3 py-2.5 text-sm text-[#0D2218] placeholder-[#B0A88C] focus:border-luxury-gold focus:outline-none" />
       </div>
 
       {loading ? (
@@ -82,22 +82,22 @@ export default function CmsJournalPage() {
           icon={<svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>}
         />
       ) : (
-        <div className="rounded-xl border border-slate-700/60 overflow-hidden">
-          <div className="grid grid-cols-[3fr_auto_auto_auto] items-center gap-4 bg-slate-800/60 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+        <div className="rounded-xl border border-[#EAE4D0] overflow-hidden">
+          <div className="grid grid-cols-[3fr_auto_auto_auto] items-center gap-4 bg-[#FAF8F2] px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-[#6A7B70]">
             <span>Title</span><span>Category</span><span>Read time</span><span></span>
           </div>
           {filtered.map((p, i) => (
-            <div key={p.slug} className={`grid grid-cols-[3fr_auto_auto_auto] items-center gap-4 px-4 py-3 border-t border-slate-700/40 hover:bg-slate-800/30 transition-colors ${i === 0 ? "border-t-0" : ""}`}>
+            <div key={p.slug} className={`grid grid-cols-[3fr_auto_auto_auto] items-center gap-4 px-4 py-3 border-t border-[#EAE4D0] hover:bg-[#F3EEE2] transition-colors ${i === 0 ? "border-t-0" : ""}`}>
               <div>
-                <p className="text-sm font-medium text-white">{p.title}</p>
-                <p className="text-xs text-slate-500">/journal/{p.slug}</p>
-                {p.excerpt && <p className="mt-0.5 text-xs text-slate-600 line-clamp-1">{p.excerpt}</p>}
+                <p className="text-sm font-medium text-[#0D2218]">{p.title}</p>
+                <p className="text-xs text-[#8A9990]">/journal/{p.slug}</p>
+                {p.excerpt && <p className="mt-0.5 text-xs text-[#A9A090] line-clamp-1">{p.excerpt}</p>}
               </div>
-              <div>{p.category ? <Badge label={p.category.label} variant={catColors[p.category.slug] ?? "default"} /> : <span className="text-xs text-slate-600">—</span>}</div>
-              <div className="text-xs text-slate-500">{p.readTime ?? "—"}</div>
+              <div>{p.category ? <Badge label={p.category.label} variant={catColors[p.category.slug] ?? "default"} /> : <span className="text-xs text-[#A9A090]">—</span>}</div>
+              <div className="text-xs text-[#8A9990]">{p.readTime ?? "—"}</div>
               <div className="flex items-center gap-1">
                 <Link href={`/cms/journal/${p.slug}`}><Button variant="ghost" size="sm">Edit</Button></Link>
-                <Button variant="ghost" size="sm" onClick={() => handleDelete(p.slug, p.title)} className="!text-slate-600 hover:!text-red-400">
+                <Button variant="ghost" size="sm" onClick={() => handleDelete(p.slug, p.title)} className="!text-[#A9A090] hover:!text-red-600">
                   <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </Button>
               </div>

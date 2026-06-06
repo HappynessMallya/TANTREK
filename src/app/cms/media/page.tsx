@@ -103,7 +103,7 @@ function MediaCard({
           <button
             type="button"
             onClick={() => onCopy(item.url)}
-            className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/20 backdrop-blur transition-colors"
+            className="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-[#0D2218] hover:bg-white/20 backdrop-blur transition-colors"
           >
             Copy URL
           </button>
@@ -257,7 +257,8 @@ export default function CmsMediaPage() {
         <div className="px-6 py-4 border-b border-[#EAE4D0] bg-[#FDFCF9]">
           <h3 className="font-display text-base font-semibold text-[#0D2218]">Upload a new file</h3>
           <p className="mt-0.5 text-xs text-[#8A9990]">
-            Choose the exact page and section this file belongs to — so it&apos;s easy to find later.
+            Uploading here <span className="font-semibold text-[#6A7B70]">stores and tags</span> the file — it does not place it on the site yet.
+            To make it appear, open that section&apos;s editor (e.g. <span className="text-luxury-gold">Hero Slides → “Choose from Library”</span>) and select it.
           </p>
         </div>
 
@@ -266,7 +267,7 @@ export default function CmsMediaPage() {
 
             {/* File type */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#8A9990] mb-1.5">File type</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A7B70] mb-1.5">File type</label>
               <select
                 value={upType}
                 onChange={(e) => {
@@ -283,7 +284,7 @@ export default function CmsMediaPage() {
 
             {/* Usage — specific page + section */}
             <div className="lg:col-span-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#8A9990] mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A7B70] mb-1.5">
                 Page &amp; section this file is for
               </label>
               {upType === "image" ? (
@@ -329,7 +330,7 @@ export default function CmsMediaPage() {
 
             {/* File picker + upload button */}
             <div className="sm:col-span-2 lg:col-span-3">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#8A9990] mb-1.5">File</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#6A7B70] mb-1.5">File</label>
               <div className="flex items-center gap-3">
                 <label className="flex-1 cursor-pointer">
                   <input
@@ -370,7 +371,7 @@ export default function CmsMediaPage() {
 
           {uploadState === "done" && (
             <div className="mt-4">
-              <Alert type="success" message="File uploaded. You can now copy its URL and paste it into the relevant page section." onDismiss={() => setUploadState("idle")} />
+              <Alert type="success" message="Uploaded to the library. To put it live, open the matching section editor (e.g. Hero Slides → “Choose from Library”) and select it." onDismiss={() => setUploadState("idle")} />
             </div>
           )}
           {uploadError && (
@@ -390,7 +391,7 @@ export default function CmsMediaPage() {
             onClick={() => setFilter(f)}
             className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors capitalize ${
               filter === f
-                ? "bg-luxury-dark-emerald text-white"
+                ? "bg-luxury-dark-emerald text-[#0D2218]"
                 : "bg-white border border-[#EAE4D0] text-[#8A9990] hover:text-[#0D2218] hover:border-[#C0B8A0]"
             }`}
           >

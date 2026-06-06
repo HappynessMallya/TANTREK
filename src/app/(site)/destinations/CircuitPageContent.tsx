@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { Circuit } from "@/data/destinations";
 import { getDestinationsByCircuit } from "@/data/destinations";
+import { publicApi } from "@/lib/public-api";
 
 type CircuitPageContentProps = {
   circuit: Circuit;
@@ -13,6 +15,11 @@ type CircuitPageContentProps = {
   intro: string;
   ctaText: string;
 };
+
+type ParkCard = { slug: string; name: string; tagline?: string; imageUrl: string };
+
+const FALLBACK_HERO =
+  "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
 
 // Pull a trailing word like "Tanzania" or "Circuit" out of the page title so
 // the hero can render it as a serif italic accent (editorial luxury).
@@ -29,11 +36,41 @@ export function CircuitPageContent({
   intro,
   ctaText,
 }: CircuitPageContentProps) {
-  const parks = getDestinationsByCircuit(circuit);
-  const heroImage =
-    parks[0]?.imageUrl ??
-    "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80";
-  const { main: titleMain, accent: titleAccent } = splitTitle(title);
+  const staticParks: ParkCard[] = getDestinationsByCircuit(circuit).map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    imageUrl: p.imageUrl,
+  }));
+
+  const [parks, setParks] = useState<ParkCard[]>(staticParks);
+  const [hero, setHero] = useState({ eyebrow, title, intro });
+
+  // CMS hydration — parks from /destinations?circuit=…, hero copy from /circuits/:slug.
+  useEffect(() => {
+    publicApi.getDestinations({ circuit }).then((list) => {
+      if (!list?.length) return;
+      setParks(
+        list.map((d) => ({
+          slug: d.slug,
+          name: d.name,
+          tagline: d.tagline,
+          imageUrl: d.heroImage?.url ?? FALLBACK_HERO,
+        }))
+      );
+    });
+    publicApi.getCircuit(circuit).then((c) => {
+      if (!c) return;
+      setHero((h) => ({
+        eyebrow: c.name ?? h.eyebrow,
+        title: c.heroTitle ?? h.title,
+        intro: c.heroIntro ?? h.intro,
+      }));
+    });
+  }, [circuit, eyebrow, title, intro]);
+
+  const heroImage = parks[0]?.imageUrl ?? FALLBACK_HERO;
+  const { main: titleMain, accent: titleAccent } = splitTitle(hero.title);
 
   return (
     <>
@@ -66,7 +103,7 @@ export function CircuitPageContent({
             animate={{ opacity: 1, y: 0 }}
             className="editorial-eyebrow text-tantrek-orange mb-5"
           >
-            {eyebrow}
+            {hero.eyebrow}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
@@ -90,7 +127,7 @@ export function CircuitPageContent({
             transition={{ delay: 0.1 }}
             className="mt-6 max-w-2xl font-body text-base sm:text-lg lg:text-xl text-white/85 leading-relaxed"
           >
-            {intro}
+            {hero.intro}
           </motion.p>
         </div>
       </section>

@@ -2,48 +2,130 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { publicApi, type FooterContent, type SiteSettings } from "@/lib/public-api";
 
-const SERVICES_LINKS = [
-  { label: "Investment Safari Tours", href: "/experiences/luxury-fly-in" },
-  { label: "Cultural Immersion", href: "/experiences/honeymoon" },
-  { label: "Bush & Beach Luxury", href: "/experiences/photographic" },
-  { label: "Diaspora Opportunity Tours", href: "/experiences/conservation" },
-  { label: "Corporate Tours", href: "/experiences/corporate" },
-];
-
-const DESTINATION_SECTIONS = [
-  {
-    heading: "Northern Tanzania",
-    links: [
-      { label: "Serengeti", href: "/destinations/northern" },
-      { label: "Ngorongoro", href: "/destinations/northern" },
-      { label: "Tarangire", href: "/destinations/northern" },
-      { label: "Lake Manyara", href: "/destinations/northern" },
-    ],
+// ─── Static defaults (current live content) ─────────────────────────────────
+// These are the fallback: the footer renders identically to today until the
+// CMS returns data, then API values override field-by-field.
+const DEFAULT_FOOTER: Required<
+  Pick<
+    FooterContent,
+    | "brandTagline"
+    | "brandDescription"
+    | "brandSubline"
+    | "destinationSections"
+    | "servicesLinks"
+    | "companyLinks"
+    | "newsletter"
+    | "legalLinks"
+  >
+> & { getInTouch: NonNullable<FooterContent["getInTouch"]> } = {
+  brandTagline: "A 360° integrated ecosystem of travel, business, and investment in Tanzania.",
+  brandDescription:
+    "Connecting investors, diaspora, entrepreneurs, and global professionals to Tanzania's wilderness — and its real opportunities.",
+  brandSubline: "Tourism • Safaris • Investment",
+  destinationSections: [
+    {
+      heading: "Northern Tanzania",
+      links: [
+        { label: "Serengeti", href: "/destinations/northern" },
+        { label: "Ngorongoro", href: "/destinations/northern" },
+        { label: "Tarangire", href: "/destinations/northern" },
+        { label: "Lake Manyara", href: "/destinations/northern" },
+      ],
+    },
+    {
+      heading: "Southern Tanzania",
+      links: [
+        { label: "Julius Nyerere", href: "/destinations/southern" },
+        { label: "Ruaha", href: "/destinations/southern" },
+      ],
+    },
+    {
+      heading: "Western Tanzania",
+      links: [{ label: "Katavi", href: "/destinations/western" }],
+    },
+  ],
+  servicesLinks: [
+    { label: "Investment Safari Tours", href: "/experiences/luxury-fly-in" },
+    { label: "Cultural Immersion", href: "/experiences/honeymoon" },
+    { label: "Bush & Beach Luxury", href: "/experiences/photographic" },
+    { label: "Diaspora Opportunity Tours", href: "/experiences/conservation" },
+    { label: "Corporate Tours", href: "/experiences/corporate" },
+  ],
+  companyLinks: [
+    { label: "About TANTREK 360", href: "/about" },
+    { label: "Why Choose Us", href: "/about" },
+    { label: "Our Impact", href: "/sustainability" },
+    { label: "Speak to an Expert", href: "/plan-your-safari" },
+    { label: "Insights", href: "/safari-journal" },
+  ],
+  getInTouch: {
+    location: "Tanzania • Spain",
+    whatsappLabel: "+34 637 04 86 15",
+    whatsappUrl: "https://wa.me/34637048615",
+    email: "info@tantrek360safaris.com",
+    ctaLabel: "Speak to an Expert",
+    ctaHref: "/plan-your-safari",
   },
-  {
-    heading: "Southern Tanzania",
-    links: [
-      { label: "Julius Nyerere", href: "/destinations/southern" },
-      { label: "Ruaha", href: "/destinations/southern" },
-    ],
+  newsletter: {
+    heading: "Stay informed",
+    copy: "Tanzania investment insights and curated journeys delivered to your inbox.",
+    placeholder: "Your email",
+    buttonLabel: "Subscribe",
   },
-  {
-    heading: "Western Tanzania",
-    links: [{ label: "Katavi", href: "/destinations/western" }],
-  },
-];
-
-const COMPANY_LINKS = [
-  { label: "About TANTREK 360", href: "/about" },
-  { label: "Why Choose Us", href: "/about" },
-  { label: "Our Impact", href: "/sustainability" },
-  { label: "Speak to an Expert", href: "/plan-your-safari" },
-  { label: "Insights", href: "/safari-journal" },
-];
+  legalLinks: [
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms", href: "/terms" },
+    { label: "Cookie Policy", href: "/cookies" },
+  ],
+};
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const [data, setData] = useState(DEFAULT_FOOTER);
+
+  // CMS hydration — override defaults with footer + settings when available.
+  useEffect(() => {
+    Promise.allSettled([publicApi.getFooter(), publicApi.getSettings()]).then(
+      ([footerRes, settingsRes]) => {
+        const footer =
+          footerRes.status === "fulfilled" ? (footerRes.value as FooterContent | null) : null;
+        const settings =
+          settingsRes.status === "fulfilled" ? (settingsRes.value as SiteSettings | null) : null;
+        if (!footer && !settings) return;
+
+        setData((prev) => {
+          const getInTouch = { ...prev.getInTouch, ...(footer?.getInTouch ?? {}) };
+          // Settings contact info also feeds the "get in touch" block.
+          if (settings?.contactEmail) getInTouch.email = settings.contactEmail;
+          if (settings?.whatsappNumber) {
+            const digits = settings.whatsappNumber.replace(/[^\d]/g, "");
+            getInTouch.whatsappUrl = `https://wa.me/${digits}`;
+            if (!footer?.getInTouch?.whatsappLabel) getInTouch.whatsappLabel = settings.whatsappNumber;
+          }
+          if (settings?.officeAddress) getInTouch.location = settings.officeAddress;
+
+          return {
+            brandTagline: footer?.brandTagline ?? prev.brandTagline,
+            brandDescription: footer?.brandDescription ?? prev.brandDescription,
+            brandSubline: footer?.brandSubline ?? prev.brandSubline,
+            destinationSections: footer?.destinationSections?.length
+              ? footer.destinationSections
+              : prev.destinationSections,
+            servicesLinks: footer?.servicesLinks?.length ? footer.servicesLinks : prev.servicesLinks,
+            companyLinks: footer?.companyLinks?.length ? footer.companyLinks : prev.companyLinks,
+            getInTouch,
+            newsletter: { ...prev.newsletter, ...(footer?.newsletter ?? {}) },
+            legalLinks: footer?.legalLinks?.length ? footer.legalLinks : prev.legalLinks,
+          };
+        });
+      }
+    );
+  }, []);
+
+  const t = data.getInTouch;
 
   return (
     <footer className="footer-luxury relative overflow-hidden pt-20 sm:pt-24 pb-10 sm:pb-12 px-4 sm:px-6 lg:px-8">
@@ -66,19 +148,18 @@ export function Footer() {
             </Link>
             <div className="space-y-3">
               <p className="text-white text-base font-display font-medium leading-snug">
-                A 360° integrated ecosystem of travel, business, and investment in Tanzania.
+                {data.brandTagline}
               </p>
               <p className="text-white/75 text-sm font-body leading-relaxed">
-                Connecting investors, diaspora, entrepreneurs, and global professionals to Tanzania&apos;s
-                wilderness — and its real opportunities.
+                {data.brandDescription}
               </p>
               <p className="text-white/55 text-xs font-body leading-relaxed pt-1">
-                Tourism • Safaris • Investment
+                {data.brandSubline}
               </p>
             </div>
             <div className="flex gap-3 pt-2">
               <a
-                href="https://wa.me/34637048615"
+                href={t.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-tantrek-orange hover:text-white"
@@ -89,7 +170,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="mailto:info@tantrek360safaris.com"
+                href={`mailto:${t.email}`}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-tantrek-orange hover:text-white"
                 aria-label="Email TANTREK 360"
               >
@@ -107,7 +188,7 @@ export function Footer() {
                 Destinations
               </h3>
               <div className="space-y-3 text-[12px] font-body">
-                {DESTINATION_SECTIONS.map((section) => (
+                {data.destinationSections.map((section) => (
                   <div key={section.heading} className="space-y-1.5">
                     <p className="font-semibold uppercase tracking-[0.16em] text-white/90 text-[10px]">
                       {section.heading}
@@ -131,7 +212,7 @@ export function Footer() {
                 Services
               </h3>
               <ul className="space-y-2 text-[12px] font-body text-white/75">
-                {SERVICES_LINKS.map(({ label, href }) => (
+                {data.servicesLinks.map(({ label, href }) => (
                   <li key={href + label}>
                     <Link href={href} className="hover:text-tantrek-orange transition-colors">
                       {label}
@@ -146,7 +227,7 @@ export function Footer() {
                 Company
               </h3>
               <ul className="space-y-2 text-[12px] font-body text-white/75">
-                {COMPANY_LINKS.map(({ label, href }) => (
+                {data.companyLinks.map(({ label, href }) => (
                   <li key={`${href}-${label}`}>
                     <Link href={href} className="hover:text-tantrek-orange transition-colors">
                       {label}
@@ -161,32 +242,32 @@ export function Footer() {
                 Get in touch
               </h3>
               <div className="space-y-2 text-[12px] font-body text-white/80">
-                <p>Tanzania • Spain</p>
+                <p>{t.location}</p>
                 <p>
                   WhatsApp:{" "}
-                  <a href="https://wa.me/34637048615" className="hover:text-tantrek-orange transition-colors">
-                    +34 637 04 86 15
+                  <a href={t.whatsappUrl} className="hover:text-tantrek-orange transition-colors">
+                    {t.whatsappLabel}
                   </a>
                 </p>
                 <p>
                   Email:{" "}
-                  <a href="mailto:info@tantrek360safaris.com" className="hover:text-tantrek-orange transition-colors break-all">
-                    info@tantrek360safaris.com
+                  <a href={`mailto:${t.email}`} className="hover:text-tantrek-orange transition-colors break-all">
+                    {t.email}
                   </a>
                 </p>
                 <Link
-                  href="/plan-your-safari"
+                  href={t.ctaHref ?? "/plan-your-safari"}
                   className="mt-3 inline-flex items-center gap-2 rounded-full bg-tantrek-orange px-5 py-2.5 text-[11px] font-semibold tracking-wider uppercase text-white shadow-[0_8px_20px_rgba(255,122,0,0.32)] transition-all hover:bg-tantrek-orange-deep hover:-translate-y-0.5"
                 >
-                  Speak to an Expert
+                  {t.ctaLabel}
                 </Link>
               </div>
               <div className="pt-4 space-y-2">
                 <p className="font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-tantrek-orange">
-                  Stay informed
+                  {data.newsletter.heading}
                 </p>
                 <p className="text-[12px] text-white/65 leading-relaxed">
-                  Tanzania investment insights and curated journeys delivered to your inbox.
+                  {data.newsletter.copy}
                 </p>
                 <form
                   onSubmit={(e) => e.preventDefault()}
@@ -194,14 +275,14 @@ export function Footer() {
                 >
                   <input
                     type="email"
-                    placeholder="Your email"
+                    placeholder={data.newsletter.placeholder}
                     className="flex-1 rounded-full bg-white/10 border border-white/20 px-3 py-2 text-[12px] text-white placeholder:text-white/40 focus:outline-none focus:border-tantrek-orange"
                   />
                   <button
                     type="submit"
                     className="px-4 py-2 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-tantrek-orange text-white hover:bg-tantrek-orange-deep transition-colors"
                   >
-                    Subscribe
+                    {data.newsletter.buttonLabel}
                   </button>
                 </form>
               </div>
@@ -212,17 +293,14 @@ export function Footer() {
         <div className="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row justify-between items-center gap-4 text-white/60 text-[11px] font-body">
           <p>© {year} TANTREK 360 Safaris. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy-policy" className="hover:text-tantrek-orange transition-colors">
-              Privacy Policy
-            </Link>
-            <span className="w-px h-3 bg-white/20" aria-hidden />
-            <Link href="/terms" className="hover:text-tantrek-orange transition-colors">
-              Terms
-            </Link>
-            <span className="w-px h-3 bg-white/20" aria-hidden />
-            <Link href="/cookies" className="hover:text-tantrek-orange transition-colors">
-              Cookie Policy
-            </Link>
+            {data.legalLinks.map(({ label, href }, i) => (
+              <span key={href} className="flex items-center gap-4">
+                {i > 0 && <span className="w-px h-3 bg-white/20" aria-hidden />}
+                <Link href={href} className="hover:text-tantrek-orange transition-colors">
+                  {label}
+                </Link>
+              </span>
+            ))}
           </div>
         </div>
       </div>

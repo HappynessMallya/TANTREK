@@ -28,10 +28,56 @@ export interface HomeContent {
   ourStoryQuote?: string;
   ourStoryBody?: string;
   ourStoryBgImage?: string;
+  finalCtaEyebrow?: string;
   finalCtaHeadline?: string;
   finalCtaSubcopy?: string;
   finalCtaButtonLabel?: string;
   finalCtaButtonHref?: string;
+  finalCtaSecondaryLabel?: string;
+  finalCtaSecondaryHref?: string;
+  finalCtaReassurance?: string;
+
+  // ── Lower homepage sections (nested objects — matches the backend seed) ────
+  brandStatement?: { eyebrow?: string; pullquote?: string; body1?: string; body2?: string };
+
+  signatureJourneys?: {
+    eyebrow?: string;
+    heading?: string;
+    intro?: string;
+    items?: Array<{ slug?: string; eyebrow?: string; title: string; blurb?: string; href?: string; image?: string }>;
+  };
+
+  featuredCircuits?: Array<{ title: string; pullQuote?: string; body?: string; href?: string; image?: string; meta?: string }>;
+
+  whyTravel?: {
+    eyebrow?: string;
+    heading?: string;
+    items?: Array<{ number?: string; title: string; body: string }>;
+  };
+
+  accommodations?: {
+    eyebrow?: string;
+    heading?: string;
+    intro?: string;
+    items?: Array<{ name: string; region?: string; blurb?: string; image?: string }>;
+  };
+
+  seasons?: {
+    eyebrow?: string;
+    heading?: string;
+    intro?: string;
+    items?: Array<{ months?: string; title: string; body: string }>;
+  };
+
+  testimonials?: {
+    eyebrow?: string;
+    heading?: string;
+    items?: Array<{ quote: string; name: string; trip?: string; initials?: string }>;
+  };
+
+  impactStats?: Array<{ value: string; label: string }>;
+
+  conservation?: { eyebrow?: string; whereItGoes?: string; whoWeWorkWith?: string };
 }
 
 export interface HeroSlide {
@@ -97,15 +143,36 @@ export interface JournalPost {
   author?: string;
 }
 
+export interface LinkItem { label: string; href: string; }
+
 export interface AboutContent {
+  heroEyebrow?: string;
   heroImage?: string;
   heroHeadline?: string;
   heroSubheadline?: string;
+  foundationEyebrow?: string;
+  foundationHeadline?: string;
   storyBody?: string;
+  foundationTags?: string[];
+  foundationImage?: string;
+  commitmentsEyebrow?: string;
+  commitmentsHeadline?: string;
+  commitmentsIntro?: string;
+  commitments?: Array<{ number?: string; title: string; body: string }>;
+  teamEyebrow?: string;
+  teamHeadline?: string;
+  teamIntro?: string;
+  team?: Array<{ name: string; role: string; imageUrl: string; alt?: string }>;
+  teamNote?: string;
+  testimonials?: Array<{ quote: string; name: string; location?: string }>;
+  founderQuote?: string;
   founderName?: string;
   founderTitle?: string;
-  founderQuote?: string;
   founderImage?: string;
+  ctaEyebrow?: string;
+  ctaHeadline?: string;
+  ctaBody?: string;
+  // legacy flat values (kept for back-compat with older CMS payloads)
   valuesTitle?: string;
   value1Title?: string; value1Body?: string;
   value2Title?: string; value2Body?: string;
@@ -115,10 +182,23 @@ export interface AboutContent {
 }
 
 export interface SustainabilityContent {
+  heroEyebrow?: string;
   heroImage?: string;
   headline?: string;
   subheadline?: string;
   intro?: string;
+  commitmentsEyebrow?: string;
+  commitmentsHeadline?: string;
+  fieldQuote?: string;
+  pillars?: Array<{ number?: string; title: string; body: string; cta?: string; href?: string }>;
+  statsEyebrow?: string;
+  statsHeadline?: string;
+  stats?: Array<{ value: string; label: string }>;
+  statsNote?: string;
+  ctaEyebrow?: string;
+  ctaHeadline?: string;
+  ctaBody?: string;
+  // legacy flat values
   pillar1Title?: string; pillar1Body?: string;
   pillar2Title?: string; pillar2Body?: string;
   pillar3Title?: string; pillar3Body?: string;
@@ -127,15 +207,71 @@ export interface SustainabilityContent {
 }
 
 export interface PlanContent {
+  heroEyebrow?: string;
   heroImage?: string;
-  eyebrow?: string;
-  headline?: string;
-  intro?: string;
-  step1Title?: string; step1Body?: string;
-  step2Title?: string; step2Body?: string;
-  step3Title?: string; step3Body?: string;
+  heroHeadline?: string;
+  heroSubhead?: string;
+  steps?: Array<{ step?: string; title: string; body: string }>;
   formHeadline?: string;
   formSubtext?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+}
+
+export interface SiteSettings {
+  siteTitle?: string;
+  siteDescription?: string;
+  logo?: string;
+  logoAlt?: string;
+  ogImage?: string;
+  contactEmail?: string;
+  phone?: string;
+  whatsappNumber?: string;
+  officeAddress?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  youtubeUrl?: string;
+}
+
+export interface FooterContent {
+  brandTagline?: string;
+  brandDescription?: string;
+  brandSubline?: string;
+  destinationSections?: Array<{ heading: string; links: LinkItem[] }>;
+  servicesLinks?: LinkItem[];
+  companyLinks?: LinkItem[];
+  getInTouch?: {
+    location?: string;
+    whatsappLabel?: string;
+    whatsappUrl?: string;
+    email?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+  };
+  newsletter?: { heading?: string; copy?: string; placeholder?: string; buttonLabel?: string };
+  legalLinks?: LinkItem[];
+}
+
+export interface NavContent {
+  items?: Array<{ label: string; href?: string; type?: string }>;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+export interface LegalContent {
+  title?: string;
+  body?: string;
+  metaDescription?: string;
+}
+
+export interface CircuitContent {
+  slug: string;
+  name: string;
+  heroTitle?: string;
+  heroIntro?: string;
+  heroImageUrl?: string;
+  destinations?: DestinationItem[];
 }
 
 // ─── Core fetch helper ────────────────────────────────────────────────────────
@@ -216,6 +352,17 @@ export const publicApi = {
   getAbout: () => get<AboutContent>("/about"),
   getSustainability: () => get<SustainabilityContent>("/sustainability"),
   getPlanYourSafari: () => get<PlanContent>("/plan-your-safari"),
+
+  // ── Global: settings / footer / nav ─────────────────────────────────────────
+  getSettings: () => get<SiteSettings>("/settings"),
+  getFooter: () => get<FooterContent>("/footer"),
+  getNav: () => get<NavContent>("/nav"),
+
+  // ── Legal ────────────────────────────────────────────────────────────────────
+  getLegal: (key: "privacy" | "terms" | "cookies") => get<LegalContent>(`/legal/${key}`),
+
+  // ── Circuits ──────────────────────────────────────────────────────────────────
+  getCircuit: (slug: string) => get<CircuitContent>(`/circuits/${encodeURIComponent(slug)}`),
 
   // ── Inquiry submission (Plan Your Safari form) ─────────────────────────────
   async submitInquiry(data: {

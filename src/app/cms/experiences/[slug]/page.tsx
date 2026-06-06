@@ -11,34 +11,75 @@ import { Textarea } from "../../_components/Textarea";
 import { Toggle } from "../../_components/Toggle";
 import { SaveBar } from "../../_components/SaveBar";
 import { PageLoader } from "../../_components/Spinner";
+import { MediaLibraryHint } from "../../_components/SectionSaveCard";
+import { GalleryManager, type GalleryItem } from "../../_components/GalleryManager";
 
+// Field names match the backend Prisma model / ExperienceDto (camelCase).
 type Exp = {
   slug: string;
   name: string;
   tagline: string;
   eyebrow: string;
-  short_description: string;
   body: string;
   metaDescription: string;
-  metaTitle: string;
+  seoTitle: string;
   highlights: string[];
-  destinations_included: string[];
-  duration_days: string;
-  price_range: string;
+  durationDays: string; // string in the form; converted to number on save
+  priceRange: string;
   cta: string;
-  imageUrl: string;
-  gallery: string[];
+  heroImageUrl: string;
   featured: boolean;
 };
 
 const EMPTY: Exp = {
-  slug: "", name: "", tagline: "", eyebrow: "", short_description: "", body: "",
-  metaDescription: "", metaTitle: "", highlights: [], destinations_included: [],
-  duration_days: "", price_range: "", cta: "", imageUrl: "", gallery: [], featured: false,
+  slug: "", name: "", tagline: "", eyebrow: "", body: "",
+  metaDescription: "", seoTitle: "", highlights: [],
+  durationDays: "", priceRange: "", cta: "", heroImageUrl: "", featured: false,
 };
 
 function toLines(a: string[]) { return a.join("\n"); }
 function fromLines(s: string) { return s.split("\n").map((l) => l.trim()).filter(Boolean); }
+
+function fromApi(d: Record<string, unknown>): Exp {
+  const heroImage = d.heroImage as { url?: string } | undefined;
+  return {
+    ...EMPTY,
+    slug: (d.slug as string) ?? "",
+    name: (d.name as string) ?? "",
+    tagline: (d.tagline as string) ?? "",
+    eyebrow: (d.eyebrow as string) ?? "",
+    body: (d.body as string) ?? "",
+    metaDescription: (d.metaDescription as string) ?? "",
+    seoTitle: (d.seoTitle as string) ?? "",
+    highlights: (d.highlights as string[]) ?? [],
+    durationDays: typeof d.durationDays === "number" ? String(d.durationDays) : "",
+    priceRange: (d.priceRange as string) ?? "",
+    cta: (d.cta as string) ?? "",
+    heroImageUrl: heroImage?.url ?? (d.imageUrl as string) ?? "",
+    featured: Boolean(d.featured),
+  };
+}
+
+function toApi(form: Exp): Record<string, unknown> {
+  const body: Record<string, unknown> = {
+    name: form.name,
+    slug: form.slug || undefined,
+    eyebrow: form.eyebrow,
+    tagline: form.tagline,
+    body: form.body,
+    metaDescription: form.metaDescription,
+    seoTitle: form.seoTitle,
+    highlights: form.highlights,
+    priceRange: form.priceRange,
+    cta: form.cta,
+    heroImageUrl: form.heroImageUrl,
+    featured: form.featured,
+  };
+  if (form.durationDays.trim() && !Number.isNaN(Number(form.durationDays))) {
+    body.durationDays = parseInt(form.durationDays, 10);
+  }
+  return body;
+}
 
 export default function CmsExperienceEditPage() {
   const params = useParams() ?? {};
@@ -47,13 +88,23 @@ export default function CmsExperienceEditPage() {
   const isNew = slug === "new";
 
   const [form, setForm] = useState<Exp>(EMPTY);
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     if (isNew || !cmsApi.isConfigured) { setLoading(false); return; }
-    cmsApi.getExperience(slug).then((d) => { setForm({ ...EMPTY, ...(d as unknown as Exp) }); setLoading(false); }).catch(() => setLoading(false));
+    cmsApi
+      .getExperience(slug)
+      .then((d) => {
+        const data = d as unknown as Record<string, unknown>;
+        setForm(fromApi(data));
+        const g = (data.gallery as Array<{ id: string; url?: string; media?: { url?: string } }>) ?? [];
+        setGallery(g.map((x) => ({ id: x.id, url: x.url ?? x.media?.url ?? "" })));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [slug, isNew]);
 
   const set = <K extends keyof Exp>(k: K, v: Exp[K]) => setForm((f) => ({ ...f, [k]: v }));
@@ -63,8 +114,9 @@ export default function CmsExperienceEditPage() {
     setMessage(null);
     setSaving(true);
     try {
-      if (isNew) await cmsApi.createExperience(form as unknown as Record<string, unknown>);
-      else await cmsApi.updateExperience(slug, form as unknown as Record<string, unknown>);
+      const body = toApi(form);
+      if (isNew) await cmsApi.createExperience(body);
+      else await cmsApi.updateExperience(slug, body);
       setMessage({ type: "success", text: "Experience saved." });
       if (isNew && form.slug) router.push(`/cms/experiences/${form.slug}`);
     } catch (err) {
@@ -90,9 +142,9 @@ export default function CmsExperienceEditPage() {
               <Field label="Title" required><Input value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Luxury Fly-in Safari" required /></Field>
               <Field label="Slug" required hint="/experiences/{slug}"><Input value={form.slug} onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="luxury-fly-in" required /></Field>
               <Field label="Eyebrow label"><Input value={form.eyebrow} onChange={(e) => set("eyebrow", e.target.value)} placeholder="Ultra-Luxury Aviation" /></Field>
-              <Field label="Tagline"><Input value={form.tagline} onChange={(e) => set("tagline", e.target.value)} placeholder="From airstrip to wilderness…" /></Field>
-              <Field label="Duration (days)"><Input type="number" min="1" max="30" value={form.duration_days} onChange={(e) => set("duration_days", e.target.value)} placeholder="7" /></Field>
-              <Field label="Price range"><Input value={form.price_range} onChange={(e) => set("price_range", e.target.value)} placeholder="From $8,500 per person" /></Field>
+              <Field label="Tagline" hint="Short line used in cards and listings."><Input value={form.tagline} onChange={(e) => set("tagline", e.target.value)} placeholder="From airstrip to wilderness…" /></Field>
+              <Field label="Duration (days)"><Input type="number" min="1" max="30" value={form.durationDays} onChange={(e) => set("durationDays", e.target.value)} placeholder="7" /></Field>
+              <Field label="Price range"><Input value={form.priceRange} onChange={(e) => set("priceRange", e.target.value)} placeholder="From $8,500 per person" /></Field>
             </div>
           </CardSection>
         </Card>
@@ -100,41 +152,40 @@ export default function CmsExperienceEditPage() {
         <Card>
           <CardSection title="Content">
             <div className="space-y-4">
-              <Field label="Short description" hint="Used in listings and cards."><Textarea value={form.short_description} onChange={(e) => set("short_description", e.target.value)} rows={2} /></Field>
               <Field label="Full description / body"><Textarea value={form.body} onChange={(e) => set("body", e.target.value)} rows={7} placeholder="Describe the experience in detail…" /></Field>
               <Field label="CTA button text"><Input value={form.cta} onChange={(e) => set("cta", e.target.value)} placeholder="Plan your fly-in safari" /></Field>
+              <Field label="Highlights (one per line)"><Textarea value={toLines(form.highlights)} onChange={(e) => set("highlights", fromLines(e.target.value))} rows={5} placeholder={"Private charter flights\nCamp-to-camp logistics"} /></Field>
             </div>
           </CardSection>
         </Card>
 
         <Card>
-          <CardSection title="Highlights & Destinations" description="One item per line.">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field label="Highlights"><Textarea value={toLines(form.highlights)} onChange={(e) => set("highlights", fromLines(e.target.value))} rows={5} placeholder={"Private charter flights\nCamp-to-camp logistics"} /></Field>
-              <Field label="Destinations included" hint="Slugs or names."><Textarea value={toLines(form.destinations_included)} onChange={(e) => set("destinations_included", fromLines(e.target.value))} rows={5} placeholder={"Ruaha\nKatavi"} /></Field>
-            </div>
-          </CardSection>
-        </Card>
-
-        <Card>
-          <CardSection title="Media" description="Paste CDN URLs from Media Library.">
+          <CardSection title="Hero image" description="Paste a URL from the Media Library.">
             <div className="space-y-4">
-              <Field label="Hero image URL"><Input type="url" value={form.imageUrl} onChange={(e) => set("imageUrl", e.target.value)} placeholder="https://cdn…" /></Field>
-              {form.imageUrl && (
-                <div className="h-36 rounded-lg overflow-hidden bg-slate-900">
+              <Field label="Hero image URL" hint={<MediaLibraryHint />}><Input type="url" value={form.heroImageUrl} onChange={(e) => set("heroImageUrl", e.target.value)} placeholder="https://minio.tantrek360safaris.com/cms-media/…" /></Field>
+              {form.heroImageUrl && (
+                <div className="h-36 rounded-lg overflow-hidden bg-[#0D2218]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={form.imageUrl} alt="" className="h-full w-full object-cover" />
+                  <img src={form.heroImageUrl} alt="" className="h-full w-full object-cover" />
                 </div>
               )}
-              <Field label="Gallery URLs (one per line)"><Textarea value={toLines(form.gallery)} onChange={(e) => set("gallery", fromLines(e.target.value))} rows={3} /></Field>
             </div>
           </CardSection>
         </Card>
+
+        {/* Gallery (existing experiences only) */}
+        {!isNew && (
+          <Card>
+            <CardSection title="Gallery" description="Pick images from the Media Library. Changes save immediately.">
+              <GalleryManager kind="experience" slug={slug} initial={gallery} />
+            </CardSection>
+          </Card>
+        )}
 
         <Card>
           <CardSection title="SEO">
             <div className="space-y-4">
-              <Field label="Meta title"><Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} /></Field>
+              <Field label="SEO title"><Input value={form.seoTitle} onChange={(e) => set("seoTitle", e.target.value)} /></Field>
               <Field label="Meta description" hint="Max 160 chars."><Textarea value={form.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} rows={2} maxLength={160} /></Field>
             </div>
           </CardSection>

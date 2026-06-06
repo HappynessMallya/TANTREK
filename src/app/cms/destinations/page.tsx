@@ -86,7 +86,7 @@ export default function CmsDestinationsPage() {
 
       {/* Search */}
       <div className="relative">
-        <svg className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#8A9990]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <input
@@ -94,7 +94,7 @@ export default function CmsDestinationsPage() {
           placeholder="Search destinations…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-slate-700 bg-slate-800/60 pl-9 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-amber-500/80 focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+          className="w-full rounded-lg border border-[#D5CAAD] bg-[#FAF8F2] pl-9 pr-3 py-2.5 text-sm text-[#0D2218] placeholder-[#B0A88C] focus:border-luxury-gold focus:outline-none focus:ring-1 focus:ring-luxury-gold/30"
         />
       </div>
 
@@ -112,9 +112,9 @@ export default function CmsDestinationsPage() {
           }
         />
       ) : (
-        <div className="rounded-xl border border-slate-700/60 overflow-hidden">
+        <div className="rounded-xl border border-[#EAE4D0] overflow-hidden">
           {/* Header row */}
-          <div className="grid grid-cols-[1fr_2fr_auto_auto_auto] items-center gap-4 bg-slate-800/60 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <div className="grid grid-cols-[1fr_2fr_auto_auto_auto] items-center gap-4 bg-[#FAF8F2] px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-[#6A7B70]">
             <span>Image</span>
             <span>Name / Slug</span>
             <span>Circuit</span>
@@ -125,16 +125,16 @@ export default function CmsDestinationsPage() {
           {filtered.map((d, i) => (
             <div
               key={d.slug}
-              className={`grid grid-cols-[1fr_2fr_auto_auto_auto] items-center gap-4 px-4 py-3 border-t border-slate-700/40 hover:bg-slate-800/30 transition-colors ${i === 0 ? "border-t-0" : ""}`}
+              className={`grid grid-cols-[1fr_2fr_auto_auto_auto] items-center gap-4 px-4 py-3 border-t border-[#EAE4D0] hover:bg-[#F3EEE2] transition-colors ${i === 0 ? "border-t-0" : ""}`}
             >
               {/* Thumbnail */}
-              <div className="h-11 w-16 shrink-0 rounded-md overflow-hidden bg-slate-900">
+              <div className="h-11 w-16 shrink-0 rounded-md overflow-hidden bg-[#0D2218]">
                 {destImage(d) ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={destImage(d)} alt="" className="h-full w-full object-cover" loading="lazy" />
                 ) : (
                   <div className="flex h-full items-center justify-center">
-                    <svg className="h-5 w-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5 text-[#C8BFA8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14" />
                     </svg>
                   </div>
@@ -143,8 +143,8 @@ export default function CmsDestinationsPage() {
 
               {/* Name */}
               <div>
-                <p className="text-sm font-medium text-white">{d.name}</p>
-                <p className="text-xs text-slate-500">/destinations/{d.slug}</p>
+                <p className="text-sm font-medium text-[#0D2218]">{d.name}</p>
+                <p className="text-xs text-[#8A9990]">/destinations/{d.slug}</p>
               </div>
 
               {/* Circuit */}
@@ -152,18 +152,18 @@ export default function CmsDestinationsPage() {
                 {destCircuitSlug(d) ? (
                   <Badge label={destCircuitSlug(d)!} variant={circuitColor[destCircuitSlug(d)!] ?? "default"} />
                 ) : (
-                  <span className="text-xs text-slate-600">—</span>
+                  <span className="text-xs text-[#A9A090]">—</span>
                 )}
               </div>
 
               {/* Featured */}
               <div className="flex justify-center">
                 {d.featured ? (
-                  <span className="text-amber-400" title="Featured">
+                  <span className="text-amber-500" title="Featured">
                     <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                   </span>
                 ) : (
-                  <span className="text-slate-700">
+                  <span className="text-[#C8BFA8]">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
                   </span>
                 )}
@@ -178,7 +178,7 @@ export default function CmsDestinationsPage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDelete(d.slug, d.name)}
-                  className="!text-slate-600 hover:!text-red-400"
+                  className="!text-[#A9A090] hover:!text-red-600"
                 >
                   <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </Button>

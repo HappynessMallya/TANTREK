@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { publicApi, type HomeContent } from "@/lib/public-api";
+import { publicApi } from "@/lib/public-api";
 
 const AnimatedTanzaniaMap = dynamic(
   () => import("@/components/AnimatedTanzaniaMap").then((m) => ({ default: m.AnimatedTanzaniaMap })),
@@ -22,7 +22,7 @@ const STATIC_HERO_SLIDES: { src: string; alt: string; caption: string }[] = [
   { src: "/wanyama.mp4", alt: "Ruaha wildlife", caption: "Ruaha · Wild Frontier" },
 ];
 
-const STATIC_HOME: Required<HomeContent> = {
+const STATIC_HOME = {
   heroEyebrow: "Curated Safaris · Investment · Opportunity",
   heroHeadline: "Beyond Routes.\nBeyond Maps.",
   heroSubhead:
@@ -50,6 +50,10 @@ const STATIC_HOME: Required<HomeContent> = {
 };
 
 const SLIDE_DURATION_MS = 7000;
+
+// Hero slides can be video or image — detect by extension so the carousel
+// renders the right element for each.
+const isVideoSrc = (src: string) => /\.(mp4|webm|mov|m4v)(\?|$)/i.test(src);
 
 // ─── Section 3: Signature Safari Experiences ──────────────────────────────────
 // Asymmetric magazine layout — one large feature + three stacked. Each is a
@@ -252,6 +256,61 @@ const IMPACT_STATS = [
   { value: "300+", label: "Bespoke journeys designed" },
 ];
 
+// ─── Editable lower-section content (defaults; CMS overrides via /home) ──────
+// Shape mirrors the backend `/home` content blob: nested section objects with
+// eyebrow/heading/intro/items. Defaults keep the homepage unchanged until the
+// CMS returns values.
+const DEFAULT_SECTIONS = {
+  brandStatement: {
+    eyebrow: "The Tantrek Posture",
+    pullquote:
+      "We design journeys for travellers who care how a place is left behind — not only how it looks at sunset.",
+    body1:
+      "Tantrek is a small Tanzanian house of safari designers, guides, and country specialists. We build private itineraries — one conversation at a time — for people who want depth, not checklist travel.",
+    body2:
+      "Through TANTREK 360, the same care extends beyond the bush — to the investors, the returning diaspora, and the entrepreneurs who want a quieter, better-introduced way into Tanzania.",
+  },
+  signatureJourneys: {
+    eyebrow: "Signature Journeys",
+    intro: "Each is a posture, not a package. We design the rest around the way you want to be in the wild.",
+    items: SIGNATURE_EXPERIENCES as Array<{
+      slug?: string; eyebrow?: string; title: string; blurb?: string; href?: string; image?: string;
+    }>,
+  },
+  featuredCircuits: FEATURED_CIRCUITS as Array<{
+    title: string; pullQuote?: string; body?: string; href?: string; image?: string; meta?: string;
+  }>,
+  whyTravel: {
+    eyebrow: "Why Travel With Us",
+    items: REASONS as Array<{ number?: string; title: string; body: string }>,
+  },
+  accommodations: {
+    eyebrow: "Where You’ll Stay",
+    intro:
+      "We work with the lodges and camps we’d stay in ourselves — owner-run, quietly run, and chosen for the way they leave a place better than they found it.",
+    items: ACCOMMODATIONS as Array<{ name: string; region?: string; blurb?: string; image?: string }>,
+  },
+  seasons: {
+    eyebrow: "The Tanzania Calendar",
+    intro:
+      "Tanzania doesn’t have one season — it has many. Each window opens onto a different country. Here’s how we read the calendar.",
+    items: SEASONS as Array<{ months?: string; title: string; body: string }>,
+  },
+  testimonials: {
+    eyebrow: "In Their Words",
+    items: TESTIMONIALS as Array<{ quote: string; name: string; trip?: string; initials?: string }>,
+  },
+  impactStats: IMPACT_STATS as Array<{ value: string; label: string }>,
+  conservation: {
+    eyebrow: "Conservation & Heritage",
+    whereItGoes:
+      "A portion of every Tantrek journey supports community-led conservancies and the next generation of Tanzanian guides.",
+    whoWeWorkWith:
+      "Camps and operators chosen for their conservation record, fair employment, and quiet excellence in the field.",
+  },
+};
+type Sections = typeof DEFAULT_SECTIONS;
+
 // ─── Reusable: editorial eyebrow + rule ──────────────────────────────────────
 function Eyebrow({ children, tone = "orange" }: { children: React.ReactNode; tone?: "orange" | "white" }) {
   return (
@@ -272,7 +331,8 @@ export default function HomePage() {
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const heroVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
-  const [home, setHome] = useState<Required<HomeContent>>(STATIC_HOME);
+  const [home, setHome] = useState(STATIC_HOME);
+  const [sections, setSections] = useState<Sections>(DEFAULT_SECTIONS);
   const [heroSlides, setHeroSlides] =
     useState<{ src: string; alt: string; caption: string }[]>(STATIC_HERO_SLIDES);
 
@@ -288,7 +348,25 @@ export default function HomePage() {
       publicApi.getHeroSlides(),
     ]).then(([homeRes, slidesRes]) => {
       if (homeRes.status === "fulfilled" && homeRes.value) {
-        setHome({ ...STATIC_HOME, ...homeRes.value });
+        const d = homeRes.value;
+        setHome({ ...STATIC_HOME, ...d });
+        // Merge nested section objects; keep default items when the API omits them.
+        const mergeSection = <T extends { items?: unknown[] }>(prev: T, next?: Partial<T>): T => ({
+          ...prev,
+          ...(next ?? {}),
+          items: (next?.items?.length ? next.items : prev.items) as T["items"],
+        });
+        setSections((prev) => ({
+          brandStatement: { ...prev.brandStatement, ...(d.brandStatement ?? {}) },
+          signatureJourneys: mergeSection(prev.signatureJourneys, d.signatureJourneys),
+          featuredCircuits: d.featuredCircuits?.length ? d.featuredCircuits : prev.featuredCircuits,
+          whyTravel: mergeSection(prev.whyTravel, d.whyTravel),
+          accommodations: mergeSection(prev.accommodations, d.accommodations),
+          seasons: mergeSection(prev.seasons, d.seasons),
+          testimonials: mergeSection(prev.testimonials, d.testimonials),
+          impactStats: d.impactStats?.length ? d.impactStats : prev.impactStats,
+          conservation: { ...prev.conservation, ...(d.conservation ?? {}) },
+        }));
       }
       if (slidesRes.status === "fulfilled" && slidesRes.value?.length) {
         const active = slidesRes.value
@@ -309,13 +387,14 @@ export default function HomePage() {
   }, []);
 
   // ── Testimonial rotation ───────────────────────────────────────────────────
+  const testimonialCount = sections.testimonials.items.length;
   const goTo = useCallback((index: number) => {
     setTestimonialIndex(() => {
-      if (index < 0) return TESTIMONIALS.length - 1;
-      if (index >= TESTIMONIALS.length) return 0;
+      if (index < 0) return testimonialCount - 1;
+      if (index >= testimonialCount) return 0;
       return index;
     });
-  }, []);
+  }, [testimonialCount]);
 
   useEffect(() => {
     const t = setInterval(() => goTo(testimonialIndex + 1), 7000);
@@ -355,6 +434,17 @@ export default function HomePage() {
   const heroPrimaryLine = heroLines[0];
   const heroAccentLine = heroLines[1];
 
+  // CMS-overridable section content (defaults to the built-in copy above).
+  const brand = sections.brandStatement;
+  const conservation = sections.conservation;
+  const signatureExperiences = sections.signatureJourneys.items;
+  const featuredCircuits = sections.featuredCircuits;
+  const reasons = sections.whyTravel.items;
+  const accommodations = sections.accommodations.items;
+  const seasons = sections.seasons.items;
+  const testimonials = sections.testimonials.items;
+  const impactStats = sections.impactStats;
+
   return (
     <>
       {/* ═════════════════════════════════════════════════════════════════════
@@ -378,21 +468,31 @@ export default function HomePage() {
               transition={{ duration: 1.2, ease: "easeInOut" }}
               className="absolute inset-0"
             >
-              <video
-                ref={(el) => {
-                  heroVideoRefs.current[i] = el;
-                }}
-                src={slide.src}
-                muted
-                loop
-                playsInline
-                preload="auto"
-                disablePictureInPicture
-                disableRemotePlayback
-                className="absolute inset-0 w-full h-full object-cover"
-                aria-label={slide.alt}
-                aria-hidden={heroSlideIndex !== i}
-              />
+              {isVideoSrc(slide.src) ? (
+                <video
+                  ref={(el) => {
+                    heroVideoRefs.current[i] = el;
+                  }}
+                  src={slide.src}
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  className="absolute inset-0 w-full h-full object-cover"
+                  aria-label={slide.alt}
+                  aria-hidden={heroSlideIndex !== i}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={slide.src}
+                  alt={slide.alt}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  aria-hidden={heroSlideIndex !== i}
+                />
+              )}
             </motion.div>
           ))}
           <div className="absolute inset-0 bg-gradient-hero-overlay pointer-events-none z-[2]" aria-hidden />
@@ -515,10 +615,9 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
               className="lg:col-span-7"
             >
-              <Eyebrow>The Tantrek Posture</Eyebrow>
+              <Eyebrow>{brand.eyebrow}</Eyebrow>
               <p className="editorial-pullquote mt-8 text-3xl sm:text-4xl lg:text-[42px]">
-                We design journeys for travellers who care how a place is left
-                behind — not only how it looks at sunset.
+                {brand.pullquote}
               </p>
             </motion.div>
 
@@ -529,18 +628,8 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.1 }}
               className="lg:col-span-5 lg:pt-10 space-y-6 font-body text-tantrek-text-muted text-base leading-relaxed"
             >
-              <p>
-                Tantrek is a small Tanzanian house of safari designers, guides,
-                and country specialists. We build private itineraries — one
-                conversation at a time — for people who want depth, not
-                checklist travel.
-              </p>
-              <p>
-                Through <span className="text-tantrek-navy font-semibold">TANTREK 360</span>,
-                the same care extends beyond the bush — to the investors, the
-                returning diaspora, and the entrepreneurs who want a quieter,
-                better-introduced way into Tanzania.
-              </p>
+              <p>{brand.body1}</p>
+              <p>{brand.body2}</p>
               <Link
                 href="/about"
                 className="inline-flex items-center gap-2 text-tantrek-navy font-semibold tracking-wide text-sm hover:text-tantrek-orange transition-colors pt-2"
@@ -567,7 +656,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="max-w-3xl mb-14 lg:mb-20"
           >
-            <Eyebrow>Signature Journeys</Eyebrow>
+            <Eyebrow>{sections.signatureJourneys.eyebrow}</Eyebrow>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6">
               Four ways to travel{" "}
               <span className="font-serif italic font-normal text-tantrek-orange">
@@ -575,8 +664,7 @@ export default function HomePage() {
               </span>
             </h2>
             <p className="mt-5 text-tantrek-text-muted text-base lg:text-lg leading-relaxed">
-              Each is a posture, not a package. We design the rest around the
-              way you want to be in the wild.
+              {sections.signatureJourneys.intro}
             </p>
           </motion.div>
 
@@ -590,23 +678,23 @@ export default function HomePage() {
               className="lg:col-span-7"
             >
               <Link
-                href={SIGNATURE_EXPERIENCES[0].href}
+                href={signatureExperiences[0].href ?? "/experiences"}
                 className="signature-feature group block h-full min-h-[560px]"
               >
                 <div
                   className="signature-image"
-                  style={{ backgroundImage: `url(${SIGNATURE_EXPERIENCES[0].image})` }}
+                  style={{ backgroundImage: `url(${signatureExperiences[0].image})` }}
                   aria-hidden
                 />
                 <div className="relative z-10 h-full flex flex-col justify-end p-8 sm:p-10 lg:p-12">
                   <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.30em] uppercase mb-4">
-                    {SIGNATURE_EXPERIENCES[0].eyebrow}
+                    {signatureExperiences[0].eyebrow}
                   </p>
                   <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-tight max-w-lg">
-                    {SIGNATURE_EXPERIENCES[0].title}
+                    {signatureExperiences[0].title}
                   </h3>
                   <p className="mt-5 text-white/85 text-base lg:text-lg max-w-xl leading-relaxed">
-                    {SIGNATURE_EXPERIENCES[0].blurb}
+                    {signatureExperiences[0].blurb}
                   </p>
                   <span className="mt-7 inline-flex items-center gap-2 text-white text-[11px] font-bold tracking-[0.24em] uppercase group-hover:gap-4 transition-all">
                     Discover the journey <span aria-hidden>→</span>
@@ -617,7 +705,7 @@ export default function HomePage() {
 
             {/* Three stacked tiles — right column */}
             <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-7">
-              {SIGNATURE_EXPERIENCES.slice(1).map((exp, i) => (
+              {signatureExperiences.slice(1).map((exp, i) => (
                 <motion.div
                   key={exp.slug}
                   initial={{ opacity: 0, x: 24 }}
@@ -627,7 +715,7 @@ export default function HomePage() {
                   className="flex-1"
                 >
                   <Link
-                    href={exp.href}
+                    href={exp.href ?? "/experiences"}
                     className="signature-stack group block h-full min-h-[170px]"
                   >
                     <div
@@ -696,7 +784,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-7">
-            {FEATURED_CIRCUITS.map((circuit, i) => (
+            {featuredCircuits.map((circuit, i) => (
               <motion.div
                 key={circuit.href}
                 initial={{ opacity: 0, y: 24 }}
@@ -705,7 +793,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.08, duration: 0.6 }}
               >
                 <Link
-                  href={circuit.href}
+                  href={circuit.href ?? "/destinations"}
                   className="editorial-destination group block h-full min-h-[460px]"
                   style={{
                     backgroundImage: `url(${circuit.image})`,
@@ -793,7 +881,7 @@ export default function HomePage() {
               transition={{ duration: 0.7, delay: 0.1 }}
               className="lg:col-span-7"
             >
-              <Eyebrow>Why Travel With Us</Eyebrow>
+              <Eyebrow>{sections.whyTravel.eyebrow}</Eyebrow>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6 mb-10">
                 Four quiet differences{" "}
                 <span className="font-serif italic font-normal text-tantrek-orange">
@@ -802,7 +890,7 @@ export default function HomePage() {
               </h2>
 
               <div className="space-y-9">
-                {REASONS.map((r, i) => (
+                {reasons.map((r, i) => (
                   <motion.div
                     key={r.number}
                     initial={{ opacity: 0, y: 16 }}
@@ -840,7 +928,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="lg:col-span-7"
             >
-              <Eyebrow>Where You&rsquo;ll Stay</Eyebrow>
+              <Eyebrow>{sections.accommodations.eyebrow}</Eyebrow>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6">
                 A small, careful collection of{" "}
                 <span className="font-serif italic font-normal text-tantrek-orange">
@@ -855,9 +943,7 @@ export default function HomePage() {
               transition={{ delay: 0.1 }}
               className="lg:col-span-5 text-tantrek-text-muted text-base lg:text-lg leading-relaxed"
             >
-              We work with the lodges and camps we&rsquo;d stay in ourselves — owner-run,
-              quietly run, and chosen for the way they leave a place better than
-              they found it.
+              {sections.accommodations.intro}
             </motion.p>
           </div>
 
@@ -872,25 +958,25 @@ export default function HomePage() {
               <div className="accommodation-tile group h-full min-h-[520px]">
                 <div
                   className="accommodation-image"
-                  style={{ backgroundImage: `url(${ACCOMMODATIONS[0].image})` }}
+                  style={{ backgroundImage: `url(${accommodations[0].image})` }}
                   aria-hidden
                 />
                 <div className="relative z-10 h-full flex flex-col justify-end p-8 lg:p-10">
                   <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.28em] uppercase mb-3">
-                    {ACCOMMODATIONS[0].region}
+                    {accommodations[0].region}
                   </p>
                   <h3 className="font-display text-3xl lg:text-4xl text-white font-bold leading-tight">
-                    {ACCOMMODATIONS[0].name}
+                    {accommodations[0].name}
                   </h3>
                   <p className="mt-4 text-white/85 text-base lg:text-lg leading-relaxed max-w-xl">
-                    {ACCOMMODATIONS[0].blurb}
+                    {accommodations[0].blurb}
                   </p>
                 </div>
               </div>
             </motion.div>
 
             <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-7">
-              {ACCOMMODATIONS.slice(1).map((lodge, i) => (
+              {accommodations.slice(1).map((lodge, i) => (
                 <motion.div
                   key={lodge.name}
                   initial={{ opacity: 0, x: 24 }}
@@ -938,7 +1024,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="max-w-3xl mb-8 lg:mb-10"
           >
-            <Eyebrow tone="white">The Tanzania Calendar</Eyebrow>
+            <Eyebrow tone="white">{sections.seasons.eyebrow}</Eyebrow>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-white font-bold leading-tight mt-4">
               When to come, and{" "}
               <span className="font-serif italic font-normal text-tantrek-orange">
@@ -946,13 +1032,12 @@ export default function HomePage() {
               </span>
             </h2>
             <p className="mt-4 text-white/75 text-sm lg:text-base leading-relaxed">
-              Tanzania doesn&rsquo;t have one season — it has many. Each window opens
-              onto a different country. Here&rsquo;s how we read the calendar.
+              {sections.seasons.intro}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-            {SEASONS.map((s, i) => (
+            {seasons.map((s, i) => (
               <motion.div
                 key={s.title}
                 initial={{ opacity: 0, y: 24 }}
@@ -1003,7 +1088,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-8"
           >
-            <Eyebrow>In Their Words</Eyebrow>
+            <Eyebrow>{sections.testimonials.eyebrow}</Eyebrow>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-tantrek-navy font-bold leading-tight mt-4">
               Stories from{" "}
               <span className="font-serif italic font-normal text-tantrek-orange">
@@ -1024,17 +1109,17 @@ export default function HomePage() {
               >
                 <div className="text-center px-2 sm:px-8">
                   <blockquote className="editorial-pullquote text-xl sm:text-2xl lg:text-[26px] max-w-3xl mx-auto">
-                    {TESTIMONIALS[testimonialIndex].quote}
+                    {testimonials[testimonialIndex].quote}
                   </blockquote>
                   <footer className="mt-7 flex flex-col items-center">
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-tantrek-navy text-white font-display text-sm font-semibold">
-                      {TESTIMONIALS[testimonialIndex].initials}
+                      {testimonials[testimonialIndex].initials}
                     </div>
                     <p className="mt-2.5 font-body font-semibold text-tantrek-navy text-sm">
-                      {TESTIMONIALS[testimonialIndex].name}
+                      {testimonials[testimonialIndex].name}
                     </p>
                     <p className="mt-0.5 font-body text-xs text-tantrek-text-muted">
-                      {TESTIMONIALS[testimonialIndex].trip}
+                      {testimonials[testimonialIndex].trip}
                     </p>
                   </footer>
                 </div>
@@ -1053,7 +1138,7 @@ export default function HomePage() {
                 </svg>
               </button>
               <div className="flex gap-2">
-                {TESTIMONIALS.map((_, i) => (
+                {testimonials.map((_, i) => (
                   <button
                     key={i}
                     type="button"
@@ -1080,7 +1165,7 @@ export default function HomePage() {
 
           {/* Impact stats — quietly anchored below testimonials */}
           <div className="mt-12 lg:mt-14 pt-8 border-t border-tantrek-border grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {IMPACT_STATS.map((stat, i) => (
+            {impactStats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 16 }}
@@ -1120,7 +1205,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <Eyebrow tone="white">Conservation &amp; Heritage</Eyebrow>
+            <Eyebrow tone="white">{conservation.eyebrow}</Eyebrow>
             {home.ourStoryQuote && (
               <p className="font-serif italic mt-8 text-3xl sm:text-4xl lg:text-[44px] text-white leading-[1.15] font-medium max-w-3xl">
                 “{home.ourStoryQuote}”
@@ -1147,8 +1232,7 @@ export default function HomePage() {
                   Where it goes
                 </p>
                 <p className="mt-3 text-white/85 text-sm leading-relaxed">
-                  A portion of every Tantrek journey supports community-led
-                  conservancies and the next generation of Tanzanian guides.
+                  {conservation.whereItGoes}
                 </p>
               </div>
               <div>
@@ -1156,8 +1240,7 @@ export default function HomePage() {
                   Who we work with
                 </p>
                 <p className="mt-3 text-white/85 text-sm leading-relaxed">
-                  Camps and operators chosen for their conservation record,
-                  fair employment, and quiet excellence in the field.
+                  {conservation.whoWeWorkWith}
                 </p>
               </div>
               <Link

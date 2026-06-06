@@ -101,7 +101,7 @@ export default function CmsJournalEditPage() {
               <Field label="Image alt text"><Input value={form.imageAlt} onChange={(e) => set("imageAlt", e.target.value)} placeholder="Wildebeest migration at sunrise" /></Field>
             </div>
             {form.imageUrl && (
-              <div className="mt-3 h-36 rounded-lg overflow-hidden bg-slate-900">
+              <div className="mt-3 h-36 rounded-lg overflow-hidden bg-[#0D2218]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={form.imageUrl} alt={form.imageAlt} className="h-full w-full object-cover" />
               </div>

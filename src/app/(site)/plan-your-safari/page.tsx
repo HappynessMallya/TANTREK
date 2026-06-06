@@ -2,12 +2,32 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PlanYourSafariForm } from "./PlanYourSafariForm";
+import { publicApi } from "@/lib/public-api";
 
 export const metadata: Metadata = {
   title: "Begin Your Journey — TANTREK Safari Designers",
   description:
     "Speak with a Tantrek safari designer. Every journey is shaped through a conversation — about how you want to travel, who you're travelling with, and what would make it unforgettable.",
 };
+
+// Static defaults (current live content) — CMS overrides when available.
+const DEFAULT_STEPS = [
+  {
+    step: "01",
+    title: "A conversation",
+    body: "You share what you have in mind. We read it personally — never an auto-responder — and reply within 24 hours.",
+  },
+  {
+    step: "02",
+    title: "A draft journey",
+    body: "If it feels right, we sketch a private itinerary — camps, timing, pacing — and walk you through every choice.",
+  },
+  {
+    step: "03",
+    title: "The trip itself",
+    body: "From the moment you land to the moment you fly home, your safari designer is one message away.",
+  },
+];
 
 type SearchParamsShape = { season?: string; email?: string; sketch?: string };
 type PlanPageProps = {
@@ -23,6 +43,10 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
   const initialEmail = typeof resolved.email === "string" ? resolved.email : "";
   const initialSeason = typeof resolved.season === "string" ? resolved.season : "";
   const initialSketch = typeof resolved.sketch === "string" ? resolved.sketch : "";
+
+  // CMS hydration (server-side fetch; null → static defaults below).
+  const plan = await publicApi.getPlanYourSafari();
+  const steps = plan?.steps?.length ? plan.steps : DEFAULT_STEPS;
 
   return (
     <main className="relative flex min-h-screen flex-col bg-white pt-20">
@@ -49,17 +73,22 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
           aria-hidden
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <p className="editorial-eyebrow text-tantrek-orange mb-6">Safari Design Studio</p>
+          <p className="editorial-eyebrow text-tantrek-orange mb-6">{plan?.heroEyebrow ?? "Safari Design Studio"}</p>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white font-bold leading-[1.05] max-w-4xl">
-            Begin your{" "}
-            <span className="font-serif italic font-normal text-tantrek-orange">
-              African story.
-            </span>
+            {plan?.heroHeadline ? (
+              plan.heroHeadline
+            ) : (
+              <>
+                Begin your{" "}
+                <span className="font-serif italic font-normal text-tantrek-orange">
+                  African story.
+                </span>
+              </>
+            )}
           </h1>
           <p className="mt-6 max-w-2xl text-white/85 text-base sm:text-lg lg:text-xl leading-relaxed font-body">
-            Every Tantrek journey is shaped slowly — through conversation,
-            instinct, and the careful work of those who know the land. Tell us
-            how you&rsquo;d like to travel; we&rsquo;ll design the rest.
+            {plan?.heroSubhead ??
+              "Every Tantrek journey is shaped slowly — through conversation, instinct, and the careful work of those who know the land. Tell us how you'd like to travel; we'll design the rest."}
           </p>
 
           {/* Direct-contact rail — gives the visitor a sense of who is on the
@@ -108,25 +137,9 @@ export default async function PlanYourSafariPage(props: PlanPageProps) {
       <section className="bg-tantrek-surface border-b border-tantrek-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-            {[
-              {
-                step: "01",
-                title: "A conversation",
-                body: "You share what you have in mind. We read it personally — never an auto-responder — and reply within 24 hours.",
-              },
-              {
-                step: "02",
-                title: "A draft journey",
-                body: "If it feels right, we sketch a private itinerary — camps, timing, pacing — and walk you through every choice.",
-              },
-              {
-                step: "03",
-                title: "The trip itself",
-                body: "From the moment you land to the moment you fly home, your safari designer is one message away.",
-              },
-            ].map((s) => (
-              <div key={s.step} className="editorial-reason">
-                <span className="reason-number">{s.step}</span>
+            {steps.map((s, i) => (
+              <div key={s.step ?? s.title} className="editorial-reason">
+                <span className="reason-number">{s.step ?? String(i + 1).padStart(2, "0")}</span>
                 <h3 className="font-display text-lg text-tantrek-navy font-semibold mb-2">
                   {s.title}
                 </h3>

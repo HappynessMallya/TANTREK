@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { publicApi } from "@/lib/public-api";
 
 export const metadata: Metadata = {
   title: "Cookie Policy",
   description: "Cookie policy for TANTREK 360 Safaris website.",
 };
 
-export default function CookiesPage() {
+export default async function CookiesPage() {
+  const legal = await publicApi.getLegal("cookies");
+
   return (
     <main className="min-h-screen bg-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -16,7 +19,13 @@ export default function CookiesPage() {
         >
           <span aria-hidden>←</span> Home
         </Link>
-        <h1 className="font-display text-3xl sm:text-4xl text-tantrek-navy font-bold mb-8">Cookie Policy</h1>
+        <h1 className="font-display text-3xl sm:text-4xl text-tantrek-navy font-bold mb-8">{legal?.title ?? "Cookie Policy"}</h1>
+        {legal?.body ? (
+          <div
+            className="legal-prose max-w-none text-tantrek-text font-body space-y-6"
+            dangerouslySetInnerHTML={{ __html: legal.body }}
+          />
+        ) : (
         <div className="max-w-none text-tantrek-text font-body space-y-6">
           <p className="text-base leading-relaxed text-tantrek-text-muted">
             Our website may use cookies and similar technologies to improve your experience, remember
@@ -36,6 +45,7 @@ export default function CookiesPage() {
             .
           </p>
         </div>
+        )}
       </div>
     </main>
   );

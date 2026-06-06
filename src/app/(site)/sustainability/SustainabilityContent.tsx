@@ -2,14 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { publicApi, type SustainabilityContent as SustainabilityContentType } from "@/lib/public-api";
 
-const HERO_IMAGE = "/land.jpg";
-
-// Three commitment pillars — rendered as an editorial 2-column with imagery
-// + numbered list rather than the equal 3-card grid the report flagged as
-// template-feel.
-const PILLARS = [
+// ─── Static defaults (current live content) ─────────────────────────────────
+const DEFAULT_PILLARS = [
   {
     number: "01",
     title: "Low-Density Tourism",
@@ -36,29 +34,54 @@ const PILLARS = [
   },
 ];
 
-const STATS = [
+const DEFAULT_STATS = [
   { value: "120k+", label: "Acres protected" },
   { value: "100%", label: "Solar at partner camps" },
   { value: "450+", label: "Scholarships funded" },
   { value: "Zero", label: "Single-use plastics" },
 ];
 
+const DEFAULTS = {
+  heroEyebrow: "Conservation & Community",
+  heroImage: "/land.jpg",
+  headlineMain: "Travel that leaves a",
+  headlineAccent: "place better",
+  headlineTail: " than it found it.",
+  subheadline:
+    "Low-density tourism, fair employment, conservation partnerships — the unglamorous work that makes a wild place stay wild.",
+  commitmentsEyebrow: "Our Commitments",
+  commitmentsHeadlineMain: "Three commitments to",
+  commitmentsHeadlineAccent: "the wild.",
+  fieldQuote: "The land remembers who walked here, and how quietly.",
+  statsEyebrow: "The Numbers Behind It",
+  statsHeadline: "What this work looks like, in figures.",
+  statsNote:
+    "Figures are aggregated across Tantrek and our partner camps and conservancies. We'd rather show fewer, honest numbers than many impressive ones.",
+  ctaEyebrow: "Travel With Purpose",
+  ctaHeadlineMain: "Join the next chapter of",
+  ctaHeadlineAccent: "responsible exploration.",
+  ctaBody:
+    "Every Tantrek journey supports the places it visits — and the people who keep those places wild. Begin a conversation with a safari designer to find out how.",
+};
+
 export function SustainabilityContent() {
+  const [c, setC] = useState<SustainabilityContentType>({});
+
+  useEffect(() => {
+    publicApi.getSustainability().then((data) => {
+      if (data) setC(data);
+    });
+  }, []);
+
+  const pillars = c.pillars?.length ? c.pillars : DEFAULT_PILLARS;
+  const stats = c.stats?.length ? c.stats : DEFAULT_STATS;
+
   return (
     <>
-      {/* ═══════════════════════════════════════════════════════════════════
-          1 · Cinematic hero
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 1 · Cinematic hero */}
       <section className="relative h-[80vh] min-h-[500px] w-full overflow-hidden pt-20">
         <div className="absolute inset-0">
-          <Image
-            src={HERO_IMAGE}
-            alt=""
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
+          <Image src={c.heroImage || DEFAULTS.heroImage} alt="" fill className="object-cover" priority sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-hero-overlay" aria-hidden />
           <div
             className="absolute inset-0"
@@ -75,18 +98,24 @@ export function SustainabilityContent() {
             animate={{ opacity: 1, y: 0 }}
             className="editorial-eyebrow text-tantrek-orange mb-5"
           >
-            Conservation &amp; Community
+            {c.heroEyebrow || DEFAULTS.heroEyebrow}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             className="font-display text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-[88px] max-w-5xl"
           >
-            Travel that leaves a{" "}
-            <span className="font-serif italic font-normal text-tantrek-orange">
-              place better
-            </span>{" "}
-            than it found it.
+            {c.headline ? (
+              c.headline
+            ) : (
+              <>
+                {DEFAULTS.headlineMain}{" "}
+                <span className="font-serif italic font-normal text-tantrek-orange">
+                  {DEFAULTS.headlineAccent}
+                </span>
+                {DEFAULTS.headlineTail}
+              </>
+            )}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -94,15 +123,12 @@ export function SustainabilityContent() {
             transition={{ delay: 0.1 }}
             className="mt-6 max-w-2xl font-body text-base sm:text-lg lg:text-xl text-white/85 leading-relaxed"
           >
-            Low-density tourism, fair employment, conservation partnerships —
-            the unglamorous work that makes a wild place stay wild.
+            {c.subheadline || DEFAULTS.subheadline}
           </motion.p>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          2 · Three commitments — editorial 2-column with imagery + numbered
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 2 · Three commitments */}
       <section className="bg-white luxury-section-padding">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-start">
@@ -114,12 +140,12 @@ export function SustainabilityContent() {
               className="lg:col-span-5 lg:sticky lg:top-28"
             >
               <p className="editorial-eyebrow text-tantrek-orange mb-6">
-                Our Commitments
+                {c.commitmentsEyebrow || DEFAULTS.commitmentsEyebrow}
               </p>
               <h2 className="font-display text-3xl sm:text-4xl text-tantrek-navy font-bold leading-tight mb-8">
-                Three commitments to{" "}
+                {DEFAULTS.commitmentsHeadlineMain}{" "}
                 <span className="font-serif italic font-normal text-tantrek-orange">
-                  the wild.
+                  {DEFAULTS.commitmentsHeadlineAccent}
                 </span>
               </h2>
 
@@ -137,8 +163,7 @@ export function SustainabilityContent() {
                     The Field
                   </p>
                   <p className="font-serif italic text-lg lg:text-xl leading-snug">
-                    &ldquo;The land remembers who walked here, and how
-                    quietly.&rdquo;
+                    &ldquo;{c.fieldQuote || DEFAULTS.fieldQuote}&rdquo;
                   </p>
                 </div>
               </div>
@@ -151,28 +176,30 @@ export function SustainabilityContent() {
               transition={{ duration: 0.7, delay: 0.1 }}
               className="lg:col-span-7 space-y-10"
             >
-              {PILLARS.map((p, i) => (
+              {pillars.map((p, i) => (
                 <motion.div
-                  key={p.number}
+                  key={p.number ?? p.title}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   className="editorial-reason"
                 >
-                  <span className="reason-number">{p.number}</span>
+                  <span className="reason-number">{p.number ?? String(i + 1).padStart(2, "0")}</span>
                   <h3 className="font-display text-xl lg:text-2xl text-tantrek-navy font-semibold mb-3">
                     {p.title}
                   </h3>
                   <p className="text-tantrek-text-muted text-base leading-relaxed max-w-2xl">
                     {p.body}
                   </p>
-                  <Link
-                    href={p.href}
-                    className="mt-4 inline-flex items-center gap-2 font-body text-tantrek-navy text-sm font-semibold tracking-wide hover:text-tantrek-orange transition-colors"
-                  >
-                    {p.cta} <span aria-hidden>→</span>
-                  </Link>
+                  {p.cta && p.href && (
+                    <Link
+                      href={p.href}
+                      className="mt-4 inline-flex items-center gap-2 font-body text-tantrek-navy text-sm font-semibold tracking-wide hover:text-tantrek-orange transition-colors"
+                    >
+                      {p.cta} <span aria-hidden>→</span>
+                    </Link>
+                  )}
                 </motion.div>
               ))}
             </motion.div>
@@ -180,21 +207,19 @@ export function SustainabilityContent() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          3 · Impact stats — editorial strip, restrained typography
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 3 · Impact stats */}
       <section className="bg-tantrek-surface border-y border-tantrek-border py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-10 lg:mb-12">
             <p className="editorial-eyebrow text-tantrek-orange mb-5">
-              The Numbers Behind It
+              {c.statsEyebrow || DEFAULTS.statsEyebrow}
             </p>
             <h2 className="font-display text-2xl sm:text-3xl text-tantrek-navy font-bold leading-tight">
-              What this work looks like, in figures.
+              {c.statsHeadline || DEFAULTS.statsHeadline}
             </h2>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
-            {STATS.map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 16 }}
@@ -213,16 +238,12 @@ export function SustainabilityContent() {
             ))}
           </div>
           <p className="mt-12 text-tantrek-text-muted text-xs leading-relaxed max-w-2xl">
-            Figures are aggregated across Tantrek and our partner camps and
-            conservancies. We&rsquo;d rather show fewer, honest numbers than
-            many impressive ones.
+            {c.statsNote || DEFAULTS.statsNote}
           </p>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          4 · Concierge CTA
-          ═══════════════════════════════════════════════════════════════════ */}
+      {/* 4 · Concierge CTA */}
       <section className="section-bg-frontier relative editorial-section-padding overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
@@ -232,18 +253,16 @@ export function SustainabilityContent() {
         <div className="absolute inset-0 frontier-overlay" aria-hidden />
         <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 text-center">
           <p className="editorial-eyebrow text-tantrek-orange mb-6 justify-center">
-            Travel With Purpose
+            {c.ctaEyebrow || DEFAULTS.ctaEyebrow}
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-[1.12]">
-            Join the next chapter of{" "}
+            {DEFAULTS.ctaHeadlineMain}{" "}
             <span className="font-serif italic font-normal text-tantrek-orange">
-              responsible exploration.
+              {DEFAULTS.ctaHeadlineAccent}
             </span>
           </h2>
           <p className="mt-6 text-white/85 font-body text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-            Every Tantrek journey supports the places it visits — and the
-            people who keep those places wild. Begin a conversation with a
-            safari designer to find out how.
+            {c.ctaBody || DEFAULTS.ctaBody}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
             <Link
