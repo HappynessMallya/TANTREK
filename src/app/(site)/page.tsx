@@ -930,28 +930,28 @@ export default function HomePage() {
           educational — the report flagged "seasonal storytelling" and a
           "seasonal safari calendar" as gaps.
           ═════════════════════════════════════════════════════════════════════ */}
-      <section className="seasonal-section relative editorial-section-padding overflow-hidden">
+      <section className="seasonal-section relative py-16 lg:py-20 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-3xl mb-14 lg:mb-16"
+            className="max-w-3xl mb-8 lg:mb-10"
           >
             <Eyebrow tone="white">The Tanzania Calendar</Eyebrow>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-tight mt-6">
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-white font-bold leading-tight mt-4">
               When to come, and{" "}
               <span className="font-serif italic font-normal text-tantrek-orange">
                 what you&rsquo;ll find.
               </span>
             </h2>
-            <p className="mt-5 text-white/75 text-base lg:text-lg leading-relaxed">
+            <p className="mt-4 text-white/75 text-sm lg:text-base leading-relaxed">
               Tanzania doesn&rsquo;t have one season — it has many. Each window opens
               onto a different country. Here&rsquo;s how we read the calendar.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
             {SEASONS.map((s, i) => (
               <motion.div
                 key={s.title}
@@ -959,15 +959,15 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.08 }}
-                className="seasonal-card"
+                className="seasonal-card !p-5 lg:!p-6"
               >
-                <p className="font-body text-tantrek-orange text-[10px] font-bold tracking-[0.28em] uppercase mb-4">
+                <p className="font-body text-tantrek-orange text-[10px] font-bold tracking-[0.28em] uppercase mb-3">
                   {s.months}
                 </p>
-                <h3 className="font-serif text-2xl text-white font-medium leading-tight">
+                <h3 className="font-serif text-xl text-white font-medium leading-tight">
                   {s.title}
                 </h3>
-                <p className="mt-3 text-white/75 text-sm leading-relaxed">
+                <p className="mt-2 text-white/75 text-sm leading-relaxed">
                   {s.body}
                 </p>
               </motion.div>
@@ -978,7 +978,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-12 text-center text-white/70 text-sm font-body"
+            className="mt-8 text-center text-white/70 text-sm font-body"
           >
             Tell us when you&rsquo;d like to travel — we&rsquo;ll design the journey
             around the season.{" "}
@@ -995,16 +995,16 @@ export default function HomePage() {
           Editorial pull-quote treatment, with the impact stats anchored
           quietly below — establishing trust without a separate stat strip.
           ═════════════════════════════════════════════════════════════════════ */}
-      <section className="bg-tantrek-surface luxury-section-padding">
+      <section className="bg-tantrek-surface py-16 lg:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14"
+            className="text-center mb-8"
           >
             <Eyebrow>In Their Words</Eyebrow>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6">
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-tantrek-navy font-bold leading-tight mt-4">
               Stories from{" "}
               <span className="font-serif italic font-normal text-tantrek-orange">
                 the field.
@@ -1012,7 +1012,7 @@ export default function HomePage() {
             </h2>
           </motion.div>
 
-          <div className="relative min-h-[340px] flex flex-col items-center justify-center">
+          <div className="relative min-h-[240px] flex flex-col items-center justify-center">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={testimonialIndex}
@@ -1023,17 +1023,17 @@ export default function HomePage() {
                 className="w-full"
               >
                 <div className="text-center px-2 sm:px-8">
-                  <blockquote className="editorial-pullquote text-2xl sm:text-3xl lg:text-[34px] max-w-3xl mx-auto">
+                  <blockquote className="editorial-pullquote text-xl sm:text-2xl lg:text-[26px] max-w-3xl mx-auto">
                     {TESTIMONIALS[testimonialIndex].quote}
                   </blockquote>
-                  <footer className="mt-10 flex flex-col items-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-tantrek-navy text-white font-display text-sm font-semibold">
+                  <footer className="mt-7 flex flex-col items-center">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-tantrek-navy text-white font-display text-sm font-semibold">
                       {TESTIMONIALS[testimonialIndex].initials}
                     </div>
-                    <p className="mt-3 font-body font-semibold text-tantrek-navy">
+                    <p className="mt-2.5 font-body font-semibold text-tantrek-navy text-sm">
                       {TESTIMONIALS[testimonialIndex].name}
                     </p>
-                    <p className="mt-1 font-body text-sm text-tantrek-text-muted">
+                    <p className="mt-0.5 font-body text-xs text-tantrek-text-muted">
                       {TESTIMONIALS[testimonialIndex].trip}
                     </p>
                   </footer>
@@ -1041,7 +1041,7 @@ export default function HomePage() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex items-center justify-center gap-4 mt-12">
+            <div className="flex items-center justify-center gap-4 mt-8">
               <button
                 type="button"
                 onClick={() => goTo(testimonialIndex - 1)}
@@ -1079,7 +1079,7 @@ export default function HomePage() {
           </div>
 
           {/* Impact stats — quietly anchored below testimonials */}
-          <div className="mt-20 lg:mt-24 pt-12 border-t border-tantrek-border grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div className="mt-12 lg:mt-14 pt-8 border-t border-tantrek-border grid grid-cols-1 sm:grid-cols-3 gap-6">
             {IMPACT_STATS.map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -1089,7 +1089,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.1 }}
                 className="text-center"
               >
-                <div className="font-serif text-4xl lg:text-5xl text-tantrek-navy font-medium leading-none">
+                <div className="font-serif text-3xl lg:text-4xl text-tantrek-navy font-medium leading-none">
                   {stat.value}
                 </div>
                 <div className="mt-3 font-body text-[11px] tracking-[0.22em] uppercase text-tantrek-text-muted font-semibold">
