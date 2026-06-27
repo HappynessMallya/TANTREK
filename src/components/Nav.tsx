@@ -239,16 +239,21 @@ export function Nav() {
                       <motion.div
                         // Centered on the trigger: the panel drops straight
                         // down from its word (trigger sits at the panel's
-                        // horizontal centre) for a balanced, professional
-                        // feel. The nav now lives in the right half of the
-                        // header, so a 560–640px panel centred under either
-                        // trigger clears the logo on the left. `top-full`
-                        // keeps it flush with the header's bottom edge.
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
+                        // horizontal centre). `left-1/2` puts the panel's left
+                        // edge at the word's centre; the `x: "-50%"` below
+                        // pulls it back by half its width to centre it.
+                        //
+                        // NOTE: the X-centre MUST live inside Framer Motion's
+                        // transform (via `x`), not a Tailwind `-translate-x-1/2`
+                        // class — Motion writes an inline `transform` for the
+                        // `y` slide animation, and that inline style overrides
+                        // the CSS class, silently dropping the horizontal
+                        // centring. `top-full` keeps it flush to the header.
+                        initial={{ opacity: 0, y: -6, x: "-50%" }}
+                        animate={{ opacity: 1, y: 0, x: "-50%" }}
+                        exit={{ opacity: 0, y: -6, x: "-50%" }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className={`absolute top-full left-1/2 -translate-x-1/2 max-w-[calc(100vw-2rem)] ${
+                        className={`absolute top-full left-1/2 max-w-[calc(100vw-2rem)] ${
                           item.type === "destinations" ? "w-[720px]" : "w-[620px]"
                         }`}
                       >
