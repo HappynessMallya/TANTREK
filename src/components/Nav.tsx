@@ -237,19 +237,19 @@ export function Nav() {
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
-                        // Left-anchored to the trigger (not centered on it).
-                        // Centering on a left-positioned trigger like
-                        // "Destinations" pushed the dropdown back into the
-                        // logo zone — unprofessional. Left-anchoring keeps
-                        // the dropdown visually attached to its trigger and
-                        // expanding into the empty nav space to the right.
-                        // top-full keeps it flush with the header bottom.
+                        // Centered on the trigger: the panel drops straight
+                        // down from its word (trigger sits at the panel's
+                        // horizontal centre) for a balanced, professional
+                        // feel. The nav now lives in the right half of the
+                        // header, so a 560–640px panel centred under either
+                        // trigger clears the logo on the left. `top-full`
+                        // keeps it flush with the header's bottom edge.
                         initial={{ opacity: 0, y: -6 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className={`absolute top-full left-0 ${
-                          item.type === "destinations" ? "w-[640px]" : "w-[560px]"
+                        className={`absolute top-full left-1/2 -translate-x-1/2 max-w-[calc(100vw-2rem)] ${
+                          item.type === "destinations" ? "w-[720px]" : "w-[620px]"
                         }`}
                       >
                         <div className="nav-dropdown-panel p-6 lg:p-7">

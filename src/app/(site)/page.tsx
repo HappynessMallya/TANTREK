@@ -649,10 +649,10 @@ export default function HomePage() {
                   <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.30em] uppercase mb-3">
                     {signatureExperiences[0].eyebrow}
                   </p>
-                  <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-tight max-w-lg">
+                  <h3 className="font-display text-2xl sm:text-3xl lg:text-[34px] text-white font-semibold leading-tight max-w-lg">
                     {signatureExperiences[0].title}
                   </h3>
-                  <p className="mt-4 text-white/85 text-base lg:text-lg max-w-xl leading-relaxed">
+                  <p className="mt-3 text-white/80 text-sm lg:text-base max-w-md leading-relaxed">
                     {signatureExperiences[0].blurb}
                   </p>
                   <span className="mt-6 inline-flex items-center gap-2 text-white text-[11px] font-bold tracking-[0.24em] uppercase group-hover:gap-4 transition-all">
@@ -686,12 +686,9 @@ export default function HomePage() {
                       <p className="font-body text-tantrek-orange text-[10px] font-semibold tracking-[0.28em] uppercase mb-2">
                         {exp.eyebrow}
                       </p>
-                      <h3 className="font-display text-xl lg:text-2xl text-white font-semibold leading-tight">
+                      <h3 className="font-display text-lg lg:text-xl text-white font-semibold leading-tight">
                         {exp.title}
                       </h3>
-                      <p className="mt-2 text-white/80 text-sm leading-relaxed line-clamp-2">
-                        {exp.blurb}
-                      </p>
                     </div>
                   </Link>
                 </motion.div>
@@ -765,17 +762,14 @@ export default function HomePage() {
                       {circuit.meta}
                     </p>
                     <div>
-                      <p className="font-serif italic text-white/95 text-xl lg:text-2xl leading-snug max-w-xs">
+                      <p className="font-serif italic text-white/95 text-base lg:text-lg leading-snug max-w-xs">
                         “{circuit.pullQuote}”
                       </p>
-                      <div className="luxury-gold-line my-5" aria-hidden />
-                      <h3 className="font-display text-2xl lg:text-3xl text-white font-semibold tracking-tight">
+                      <div className="luxury-gold-line my-4" aria-hidden />
+                      <h3 className="font-display text-xl lg:text-2xl text-white font-semibold tracking-tight">
                         {circuit.title}
                       </h3>
-                      <p className="mt-3 text-white/85 text-sm lg:text-[15px] leading-relaxed">
-                        {circuit.body}
-                      </p>
-                      <span className="mt-6 inline-flex items-center gap-2 text-white text-[11px] font-bold tracking-[0.22em] uppercase group-hover:gap-4 transition-all">
+                      <span className="mt-5 inline-flex items-center gap-2 text-white text-[11px] font-bold tracking-[0.22em] uppercase group-hover:gap-4 transition-all">
                         Discover <span aria-hidden>→</span>
                       </span>
                     </div>
@@ -813,7 +807,7 @@ export default function HomePage() {
               transition={{ duration: 0.7 }}
               className="lg:col-span-5 lg:sticky lg:top-28"
             >
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,43,91,0.18)]">
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl shadow-[0_24px_60px_rgba(0,43,91,0.18)]">
                 <Image
                   src="/tour6.webp" /* PLACEHOLDER: replace with editorial portrait of a Tantrek guide or founder in the field */
                   alt="In the field with a Tantrek safari designer"
@@ -924,10 +918,10 @@ export default function HomePage() {
                   <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.28em] uppercase mb-3">
                     {accommodations[0].region}
                   </p>
-                  <h3 className="font-display text-3xl lg:text-4xl text-white font-bold leading-tight">
+                  <h3 className="font-display text-2xl lg:text-3xl text-white font-semibold leading-tight">
                     {accommodations[0].name}
                   </h3>
-                  <p className="mt-3 text-white/85 text-base lg:text-lg leading-relaxed max-w-xl">
+                  <p className="mt-3 text-white/80 text-sm lg:text-base leading-relaxed max-w-md">
                     {accommodations[0].blurb}
                   </p>
                 </div>
@@ -954,7 +948,7 @@ export default function HomePage() {
                       <p className="font-body text-tantrek-orange text-[10px] font-semibold tracking-[0.26em] uppercase mb-2">
                         {lodge.region}
                       </p>
-                      <h3 className="font-display text-xl lg:text-2xl text-white font-semibold">
+                      <h3 className="font-display text-lg lg:text-xl text-white font-semibold">
                         {lodge.name}
                       </h3>
                       <p className="mt-2 text-white/80 text-sm leading-relaxed">

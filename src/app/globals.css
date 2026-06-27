@@ -243,7 +243,7 @@ body {
   background: #ffffff;
   border: 1px solid var(--tantrek-border);
   box-shadow: 0 28px 64px rgba(17, 24, 39, 0.14);
-  border-radius: 18px;
+  border-radius: 14px;
 }
 .nav-dropdown-link {
   color: var(--tantrek-text);
@@ -518,7 +518,7 @@ body {
 .signature-stack {
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 14px;
   background: #001a3a;
   box-shadow: 0 18px 48px rgba(0, 43, 91, 0.18);
   transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -554,7 +554,7 @@ body {
 .editorial-destination {
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 14px;
   box-shadow: 0 18px 48px rgba(0, 43, 91, 0.20);
   background: #001a3a;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -577,7 +577,7 @@ body {
 .accommodation-tile {
   position: relative;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 14px;
   background: #001a3a;
   box-shadow: 0 18px 48px rgba(0, 43, 91, 0.16);
   transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -692,7 +692,7 @@ body {
 .concierge-cta-card {
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 20px;
+  border-radius: 16px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
