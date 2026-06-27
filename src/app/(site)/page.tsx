@@ -435,13 +435,15 @@ export default function HomePage() {
   const heroAccentLine = heroLines[1];
 
   // CMS-overridable section content (defaults to the built-in copy above).
-  const brand = sections.brandStatement;
+  // Brand-statement and seasonal sections were retired from the homepage to
+  // keep it a concise "trailer" — that content now lives on /about and
+  // /plan-your-safari respectively. Conservation is kept only for the one-line
+  // note grafted into the final CTA (full story lives on /sustainability).
   const conservation = sections.conservation;
   const signatureExperiences = sections.signatureJourneys.items;
   const featuredCircuits = sections.featuredCircuits;
   const reasons = sections.whyTravel.items;
   const accommodations = sections.accommodations.items;
-  const seasons = sections.seasons.items;
   const testimonials = sections.testimonials.items;
   const impactStats = sections.impactStats;
 
@@ -600,50 +602,7 @@ export default function HomePage() {
       </section>
 
       {/* ═════════════════════════════════════════════════════════════════════
-          2 · EMOTIONAL BRAND STATEMENT
-          Editorial 2-column: large serif pull-quote left, framing copy right.
-          The intent (per the report) is to set the emotional posture of the
-          whole site before the visitor reaches anything transactional.
-          ═════════════════════════════════════════════════════════════════════ */}
-      <section className="bg-white editorial-section-padding">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8 }}
-              className="lg:col-span-7"
-            >
-              <Eyebrow>{brand.eyebrow}</Eyebrow>
-              <p className="editorial-pullquote mt-8 text-3xl sm:text-4xl lg:text-[42px]">
-                {brand.pullquote}
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="lg:col-span-5 lg:pt-10 space-y-6 font-body text-tantrek-text-muted text-base leading-relaxed"
-            >
-              <p>{brand.body1}</p>
-              <p>{brand.body2}</p>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 text-tantrek-navy font-semibold tracking-wide text-sm hover:text-tantrek-orange transition-colors pt-2"
-              >
-                Read our story
-                <span aria-hidden>→</span>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═════════════════════════════════════════════════════════════════════
-          3 · SIGNATURE SAFARI EXPERIENCES
+          2 · SIGNATURE SAFARI EXPERIENCES
           Asymmetric magazine grid — one large feature tile on the left, three
           stacked smaller tiles on the right. Replaces the equal 2x2 grid the
           report flagged as "template-driven."
@@ -654,16 +613,16 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-3xl mb-14 lg:mb-20"
+            className="max-w-3xl mb-10 lg:mb-12"
           >
             <Eyebrow>{sections.signatureJourneys.eyebrow}</Eyebrow>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6">
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-5">
               Four ways to travel{" "}
               <span className="font-serif italic font-normal text-tantrek-orange">
                 Tantrek.
               </span>
             </h2>
-            <p className="mt-5 text-tantrek-text-muted text-base lg:text-lg leading-relaxed">
+            <p className="mt-4 text-tantrek-text-muted text-base lg:text-lg leading-relaxed">
               {sections.signatureJourneys.intro}
             </p>
           </motion.div>
@@ -679,24 +638,24 @@ export default function HomePage() {
             >
               <Link
                 href={signatureExperiences[0].href ?? "/experiences"}
-                className="signature-feature group block h-full min-h-[560px]"
+                className="signature-feature group block h-full min-h-[480px]"
               >
                 <div
                   className="signature-image"
                   style={{ backgroundImage: `url(${signatureExperiences[0].image})` }}
                   aria-hidden
                 />
-                <div className="relative z-10 h-full flex flex-col justify-end p-8 sm:p-10 lg:p-12">
-                  <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.30em] uppercase mb-4">
+                <div className="relative z-10 h-full flex flex-col justify-end p-7 sm:p-8 lg:p-10">
+                  <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.30em] uppercase mb-3">
                     {signatureExperiences[0].eyebrow}
                   </p>
                   <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-tight max-w-lg">
                     {signatureExperiences[0].title}
                   </h3>
-                  <p className="mt-5 text-white/85 text-base lg:text-lg max-w-xl leading-relaxed">
+                  <p className="mt-4 text-white/85 text-base lg:text-lg max-w-xl leading-relaxed">
                     {signatureExperiences[0].blurb}
                   </p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-white text-[11px] font-bold tracking-[0.24em] uppercase group-hover:gap-4 transition-all">
+                  <span className="mt-6 inline-flex items-center gap-2 text-white text-[11px] font-bold tracking-[0.24em] uppercase group-hover:gap-4 transition-all">
                     Discover the journey <span aria-hidden>→</span>
                   </span>
                 </div>
@@ -740,7 +699,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-12 lg:mt-14 text-center">
+          <div className="mt-10 lg:mt-12 text-center">
             <Link
               href="/experiences"
               className="inline-flex items-center gap-2 font-body text-tantrek-navy text-sm font-semibold tracking-wide hover:text-tantrek-orange transition-colors"
@@ -760,7 +719,7 @@ export default function HomePage() {
           ═════════════════════════════════════════════════════════════════════ */}
       <section className="bg-white editorial-section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end mb-14 lg:mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end mb-10 lg:mb-12">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -768,7 +727,7 @@ export default function HomePage() {
               className="lg:col-span-7"
             >
               {home.sanctuariesEyebrow && <Eyebrow>{home.sanctuariesEyebrow}</Eyebrow>}
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-5">
                 {home.sanctuariesTitle}
               </h2>
             </motion.div>
@@ -794,7 +753,7 @@ export default function HomePage() {
               >
                 <Link
                   href={circuit.href ?? "/destinations"}
-                  className="editorial-destination group block h-full min-h-[460px]"
+                  className="editorial-destination group block h-full min-h-[400px]"
                   style={{
                     backgroundImage: `url(${circuit.image})`,
                     backgroundSize: "cover",
@@ -826,7 +785,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="mt-12 lg:mt-14 text-center">
+          <div className="mt-10 lg:mt-12 text-center">
             <Link
               href="/destinations"
               className="inline-flex items-center gap-2 font-body text-tantrek-navy text-sm font-semibold tracking-wide hover:text-tantrek-orange transition-colors"
@@ -846,7 +805,7 @@ export default function HomePage() {
           ═════════════════════════════════════════════════════════════════════ */}
       <section className="bg-tantrek-surface luxury-section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -882,14 +841,14 @@ export default function HomePage() {
               className="lg:col-span-7"
             >
               <Eyebrow>{sections.whyTravel.eyebrow}</Eyebrow>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6 mb-10">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-5 mb-8">
                 Four quiet differences{" "}
                 <span className="font-serif italic font-normal text-tantrek-orange">
                   that matter.
                 </span>
               </h2>
 
-              <div className="space-y-9">
+              <div className="space-y-7">
                 {reasons.map((r, i) => (
                   <motion.div
                     key={r.number}
@@ -921,7 +880,7 @@ export default function HomePage() {
           ═════════════════════════════════════════════════════════════════════ */}
       <section className="bg-white editorial-section-padding">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end mb-14 lg:mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end mb-10 lg:mb-12">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -929,7 +888,7 @@ export default function HomePage() {
               className="lg:col-span-7"
             >
               <Eyebrow>{sections.accommodations.eyebrow}</Eyebrow>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-6">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-tantrek-navy font-bold leading-tight mt-5">
                 A small, careful collection of{" "}
                 <span className="font-serif italic font-normal text-tantrek-orange">
                   Tanzania&rsquo;s finest camps.
@@ -955,20 +914,20 @@ export default function HomePage() {
               transition={{ duration: 0.7 }}
               className="lg:col-span-7"
             >
-              <div className="accommodation-tile group h-full min-h-[520px]">
+              <div className="accommodation-tile group h-full min-h-[440px]">
                 <div
                   className="accommodation-image"
                   style={{ backgroundImage: `url(${accommodations[0].image})` }}
                   aria-hidden
                 />
-                <div className="relative z-10 h-full flex flex-col justify-end p-8 lg:p-10">
+                <div className="relative z-10 h-full flex flex-col justify-end p-7 lg:p-8">
                   <p className="font-body text-tantrek-orange text-[11px] font-semibold tracking-[0.28em] uppercase mb-3">
                     {accommodations[0].region}
                   </p>
                   <h3 className="font-display text-3xl lg:text-4xl text-white font-bold leading-tight">
                     {accommodations[0].name}
                   </h3>
-                  <p className="mt-4 text-white/85 text-base lg:text-lg leading-relaxed max-w-xl">
+                  <p className="mt-3 text-white/85 text-base lg:text-lg leading-relaxed max-w-xl">
                     {accommodations[0].blurb}
                   </p>
                 </div>
@@ -985,7 +944,7 @@ export default function HomePage() {
                   transition={{ duration: 0.6, delay: 0.1 + i * 0.08 }}
                   className="flex-1"
                 >
-                  <div className="accommodation-tile group h-full min-h-[248px]">
+                  <div className="accommodation-tile group h-full min-h-[210px]">
                     <div
                       className="accommodation-image"
                       style={{ backgroundImage: `url(${lodge.image})` }}
@@ -1011,76 +970,11 @@ export default function HomePage() {
       </section>
 
       {/* ═════════════════════════════════════════════════════════════════════
-          7 · SEASONAL SAFARI HIGHLIGHTS
-          A four-quadrant migration / season timeline on navy. Quietly
-          educational — the report flagged "seasonal storytelling" and a
-          "seasonal safari calendar" as gaps.
-          ═════════════════════════════════════════════════════════════════════ */}
-      <section className="seasonal-section relative py-16 lg:py-20 overflow-hidden">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mb-8 lg:mb-10"
-          >
-            <Eyebrow tone="white">{sections.seasons.eyebrow}</Eyebrow>
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-white font-bold leading-tight mt-4">
-              When to come, and{" "}
-              <span className="font-serif italic font-normal text-tantrek-orange">
-                what you&rsquo;ll find.
-              </span>
-            </h2>
-            <p className="mt-4 text-white/75 text-sm lg:text-base leading-relaxed">
-              {sections.seasons.intro}
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-            {seasons.map((s, i) => (
-              <motion.div
-                key={s.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08 }}
-                className="seasonal-card !p-5 lg:!p-6"
-              >
-                <p className="font-body text-tantrek-orange text-[10px] font-bold tracking-[0.28em] uppercase mb-3">
-                  {s.months}
-                </p>
-                <h3 className="font-serif text-xl text-white font-medium leading-tight">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-white/75 text-sm leading-relaxed">
-                  {s.body}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-8 text-center text-white/70 text-sm font-body"
-          >
-            Tell us when you&rsquo;d like to travel — we&rsquo;ll design the journey
-            around the season.{" "}
-            <Link href="/plan-your-safari" className="text-tantrek-orange font-semibold hover:text-tantrek-orange-soft transition-colors underline underline-offset-4 decoration-tantrek-orange/40">
-              Start a conversation
-            </Link>
-            .
-          </motion.p>
-        </div>
-      </section>
-
-      {/* ═════════════════════════════════════════════════════════════════════
-          8 · TRAVELER STORIES + INTEGRATED IMPACT STATS
+          6 · TRAVELER STORIES + INTEGRATED IMPACT STATS
           Editorial pull-quote treatment, with the impact stats anchored
           quietly below — establishing trust without a separate stat strip.
           ═════════════════════════════════════════════════════════════════════ */}
-      <section className="bg-tantrek-surface py-16 lg:py-20">
+      <section className="bg-tantrek-surface py-12 lg:py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -1164,7 +1058,7 @@ export default function HomePage() {
           </div>
 
           {/* Impact stats — quietly anchored below testimonials */}
-          <div className="mt-12 lg:mt-14 pt-8 border-t border-tantrek-border grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="mt-10 lg:mt-12 pt-7 border-t border-tantrek-border grid grid-cols-1 sm:grid-cols-3 gap-6">
             {impactStats.map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -1187,76 +1081,7 @@ export default function HomePage() {
       </section>
 
       {/* ═════════════════════════════════════════════════════════════════════
-          9 · CONSERVATION & HERITAGE
-          The existing integrity/our-story section, reframed as a conservation
-          and local-roots story. Preserves the CMS-driven copy
-          (ourStoryQuote, ourStoryBody, ourStoryBgImage).
-          ═════════════════════════════════════════════════════════════════════ */}
-      <section className="section-bg-our-story relative editorial-section-padding overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${home.ourStoryBgImage || "/tour8.webp"})` }}
-          aria-hidden
-        />
-        <div className="absolute inset-0 our-story-overlay" aria-hidden />
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <Eyebrow tone="white">{conservation.eyebrow}</Eyebrow>
-            {home.ourStoryQuote && (
-              <p className="font-serif italic mt-8 text-3xl sm:text-4xl lg:text-[44px] text-white leading-[1.15] font-medium max-w-3xl">
-                “{home.ourStoryQuote}”
-              </p>
-            )}
-            <div className="luxury-gold-line-wide mt-8" aria-hidden />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="mt-10 lg:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-10"
-          >
-            <div className="lg:col-span-7 text-white/90 text-base lg:text-lg leading-relaxed space-y-5 font-body">
-              {home.ourStoryBody.split("\n\n").map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
-            <div className="lg:col-span-5 lg:pl-8 lg:border-l lg:border-white/15 space-y-7">
-              <div>
-                <p className="font-body text-[10px] tracking-[0.28em] uppercase text-tantrek-orange font-bold">
-                  Where it goes
-                </p>
-                <p className="mt-3 text-white/85 text-sm leading-relaxed">
-                  {conservation.whereItGoes}
-                </p>
-              </div>
-              <div>
-                <p className="font-body text-[10px] tracking-[0.28em] uppercase text-tantrek-orange font-bold">
-                  Who we work with
-                </p>
-                <p className="mt-3 text-white/85 text-sm leading-relaxed">
-                  {conservation.whoWeWorkWith}
-                </p>
-              </div>
-              <Link
-                href="/sustainability"
-                className="inline-flex items-center gap-2 text-white font-semibold tracking-wide text-sm hover:text-tantrek-orange transition-colors pt-2"
-              >
-                Our sustainability work
-                <span aria-hidden>→</span>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═════════════════════════════════════════════════════════════════════
-          10 · CONCIERGE CTA
+          7 · CONCIERGE CTA
           Reframed from transactional ("Speak to an Expert") to concierge
           ("Speak with a Safari Designer"). Preserves all final CTA CMS
           fields. Uses concierge-cta-card glass treatment.
@@ -1274,7 +1099,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="concierge-cta-card p-10 sm:p-14 lg:p-16 text-center"
+            className="concierge-cta-card p-8 sm:p-12 lg:p-14 text-center"
           >
             <Eyebrow tone="white">Begin Your 360° Journey</Eyebrow>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold leading-[1.12] mt-6">
@@ -1325,6 +1150,19 @@ export default function HomePage() {
             <p className="mt-10 text-white/55 text-xs tracking-wide max-w-md mx-auto">
               Every enquiry is read by a Tantrek safari designer — never an
               auto-responder. Most replies arrive within 24 hours.
+            </p>
+
+            {/* Conservation note — grafted from the retired Conservation section so
+                the value is preserved without a full standalone block. */}
+            <p className="mt-5 text-white/55 text-xs tracking-wide max-w-md mx-auto">
+              {conservation.whereItGoes}{" "}
+              <Link
+                href="/sustainability"
+                className="text-tantrek-orange/90 font-semibold hover:text-tantrek-orange transition-colors underline underline-offset-4 decoration-tantrek-orange/40"
+              >
+                Our conservation work
+              </Link>
+              .
             </p>
           </motion.div>
         </div>
