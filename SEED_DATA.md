@@ -431,6 +431,6 @@ Three pages: `privacy` (Privacy Policy), `terms` (Terms), `cookies` (Cookie Poli
 
 Local files in [public/](./public/) used as current defaults (seed these URLs; upload to MinIO during seeding if you want them served from object storage):
 
-`logo.png`, `logo-footer.png`, `icon-512.png`, `favicon-source.png` · hero videos `tembo.mp4`, `beach.mp4`, `safari.mp4`, `wanyama.mp4`, `wild.mp4`, `map.mp4` · imagery `tour1–8.webp`, `land.jpg`, `lodge.jpg`, `safari.jpg`, `wild.jpg`, `wildmaker.png`, `green-bg-logo.png`, `green-head.png`, `map.png`, `footer-image.png`.
+`logo.png`, `logo-footer.png`, `icon-512.png`, `favicon-source.png` · hero videos `tembo.mp4`, `beach.mp4`, `safari.mp4`, `wanyama.mp4`, `wild.mp4`, `map-h264.mp4` · imagery `tour1–8.webp`, `land.jpg`, `lodge.jpg`, `safari.jpg`, `wild.jpg`, `wildmaker.png`, `green-bg-logo.png`, `green-head.png`, `map.png`, `footer-image.png`.
 
 Some sections also reference **Unsplash** URLs (destinations, journal images, sustainability) — seed those exactly as they appear in the data files. All of these remain the defaults until an admin replaces them through the media library.

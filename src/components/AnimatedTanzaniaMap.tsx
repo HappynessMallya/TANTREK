@@ -8,6 +8,8 @@ interface AnimatedTanzaniaMapProps {
   isActive: boolean;
 }
 
+const LOADING_TIMEOUT_MS = 12000;
+
 export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMapProps) {
   const [messageVisible, setMessageVisible] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
@@ -27,6 +29,13 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
     videoRef.current?.play().catch(() => {});
     return () => clearTimeout(t);
   }, [isActive]);
+
+  // Never leave visitors stuck on the spinner: if the video still isn't playable, go back to the hero.
+  useEffect(() => {
+    if (!isActive || videoReady || videoError) return;
+    const t = setTimeout(onComplete, LOADING_TIMEOUT_MS);
+    return () => clearTimeout(t);
+  }, [isActive, videoReady, videoError, onComplete]);
 
   const onCanPlay = useCallback(() => {
     setVideoReady(true);
@@ -127,7 +136,7 @@ export function AnimatedTanzaniaMap({ onComplete, isActive }: AnimatedTanzaniaMa
         <video
           key={videoKey}
           ref={videoRef}
-          src="/map.mp4"
+          src="/map-h264.mp4"
           muted
           playsInline
           preload="auto"
